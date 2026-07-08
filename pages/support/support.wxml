@@ -1,0 +1,23 @@
+<view class="page safe-bottom" wx:if="{{settings}}">
+  <view class="title">售后 / 客服</view>
+  <view class="muted">第一版售后走人工处理，退款在微信支付商户后台完成。</view>
+
+  <view class="section card">
+    <view class="h2">服务说明</view>
+    <view class="muted">{{settings.support.serviceText}}</view>
+    <view class="list-item" wx:if="{{orderId}}">关联订单：{{orderId}}</view>
+  </view>
+
+  <view class="section card">
+    <view class="h2">联系方式</view>
+    <view class="list-item between">
+      <view>客服电话</view>
+      <view>{{settings.support.phone}}</view>
+    </view>
+    <view class="list-item between">
+      <view>客服微信</view>
+      <view>{{settings.support.wechat}}</view>
+    </view>
+    <button class="btn secondary" bindtap="copyWechat">复制客服微信</button>
+  </view>
+</view>

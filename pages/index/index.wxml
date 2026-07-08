@@ -1,0 +1,70 @@
+<wxs src="../../common/format.wxs" module="fmt" />
+<view class="page home-page safe-bottom">
+  <view class="home-head">
+    <view>
+      <view class="brand-kicker">云咖铺子 GO</view>
+      <view class="title">今日咖啡</view>
+      <view class="muted">云南咖啡豆、茶咖和挂耳礼袋，快递到家。</view>
+    </view>
+    <button class="mini-action" bindtap="goCoupons">领券</button>
+  </view>
+
+  <view class="mode-card">
+    <view class="mode active">商城购买</view>
+    <view class="mode">会员积分</view>
+    <view class="mode">复购提醒</view>
+  </view>
+
+  <view class="notice-strip" wx:if="{{coupon}}" bindtap="goCoupons">
+    <view class="notice-title">{{coupon.title}}</view>
+    <view class="notice-copy">满 {{fmt.money(coupon.minSpendCents)}} 减 {{fmt.money(coupon.amountOffCents)}}，下单还能攒积分</view>
+  </view>
+
+  <view class="hero-product" wx:if="{{heroProduct}}" data-id="{{heroProduct.id}}" bindtap="goProduct">
+    <view class="hero-copy">
+      <view class="pill">本周主推</view>
+      <view class="hero-title">{{heroProduct.title}}</view>
+      <view class="muted">{{heroProduct.subtitle}}</view>
+      <view class="hero-price">{{fmt.money(heroProduct.skus[0].priceCents)}}</view>
+      <button class="btn hero-btn">立即选购</button>
+    </view>
+    <image class="hero-image" mode="aspectFill" src="{{heroProduct.cover}}"></image>
+  </view>
+
+  <view class="service-grid">
+    <view class="service-item">
+      <view class="service-value">99</view>
+      <view class="muted">满额包邮</view>
+    </view>
+    <view class="service-item">
+      <view class="service-value">1:1</view>
+      <view class="muted">实付得积分</view>
+    </view>
+    <view class="service-item">
+      <view class="service-value">20%</view>
+      <view class="muted">积分抵扣上限</view>
+    </view>
+  </view>
+
+  <view class="section-header">
+    <view>
+      <view class="h2">人气推荐</view>
+      <view class="muted">轻负担茶咖与精品挂耳</view>
+    </view>
+    <view class="link-text" bindtap="goProducts">全部商品</view>
+  </view>
+
+  <view class="featured-list">
+    <view class="featured-card" wx:for="{{products}}" wx:key="id" data-id="{{item.id}}" bindtap="goProduct">
+      <image class="product-image" mode="aspectFill" src="{{item.cover}}"></image>
+      <view class="featured-body">
+        <view class="product-name">{{item.title}}</view>
+        <view class="product-subtitle">{{item.subtitle}}</view>
+        <view class="between">
+          <view class="price">{{fmt.money(item.skus[0].priceCents)}}</view>
+          <view class="add-chip">选购</view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

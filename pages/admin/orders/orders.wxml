@@ -1,0 +1,22 @@
+<wxs src="../../../common/format.wxs" module="fmt" />
+<view class="page safe-bottom">
+  <view class="title">订单发货</view>
+  <view class="muted">第一版只做快递发货和人工售后标记。</view>
+
+  <view class="section card">
+    <input class="input" data-field="expressCompany" value="{{expressCompany}}" bindinput="input" placeholder="快递公司" />
+    <input class="input field" data-field="expressNo" value="{{expressNo}}" bindinput="input" placeholder="快递单号，留空自动生成体验单号" />
+  </view>
+
+  <view class="section card" wx:for="{{orders}}" wx:key="id">
+    <view class="between">
+      <view>
+        <view class="h2">{{item.orderNo}}</view>
+        <view class="muted">{{item.status}} · {{fmt.money(item.payableAmountCents)}}</view>
+      </view>
+      <button class="btn secondary" data-id="{{item.id}}" bindtap="ship" disabled="{{item.status === 'pending_payment'}}">发货</button>
+    </view>
+    <view class="muted">{{item.address.name}} {{item.address.phone}} · {{item.address.detail}}</view>
+    <view class="muted" wx:if="{{item.expressNo}}">{{item.expressCompany}} {{item.expressNo}}</view>
+  </view>
+</view>

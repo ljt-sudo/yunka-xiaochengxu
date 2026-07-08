@@ -1,0 +1,104 @@
+.product-page {
+  padding-top: 24rpx;
+}
+
+.hero-image {
+  height: 420rpx;
+  border-radius: 16rpx;
+}
+
+.product-panel,
+.spec-panel {
+  margin-top: 24rpx;
+  padding: 28rpx;
+  border-radius: 16rpx;
+  background: #ffffff;
+}
+
+.product-topline {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20rpx;
+  margin-bottom: 20rpx;
+}
+
+.stock-text {
+  color: #a0a59d;
+  font-size: 23rpx;
+}
+
+.tags {
+  display: flex;
+  gap: 12rpx;
+  flex-wrap: wrap;
+  margin: 22rpx 0;
+}
+
+.description {
+  color: #565b54;
+  font-size: 27rpx;
+  line-height: 1.6;
+}
+
+.spec-row {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 20rpx;
+  margin-top: 16rpx;
+  padding: 22rpx;
+  border-radius: 14rpx;
+  background: #f7f8f5;
+}
+
+.spec-name {
+  font-size: 28rpx;
+  font-weight: 800;
+}
+
+.quantity {
+  margin-top: 24rpx;
+}
+
+.quantity .row {
+  gap: 12rpx;
+}
+
+.small {
+  width: 64rpx;
+  min-width: 64rpx;
+  height: 64rpx;
+  flex: 0 0 64rpx;
+  line-height: 64rpx;
+  padding: 0;
+}
+
+.qty {
+  width: 82rpx;
+  text-align: center;
+}
+
+.footer-actions {
+  position: sticky;
+  bottom: 0;
+  display: grid;
+  grid-template-columns: 1fr 120rpx 168rpx;
+  gap: 14rpx;
+  align-items: center;
+  margin: 32rpx -24rpx 0;
+  padding: 20rpx 24rpx calc(20rpx + env(safe-area-inset-bottom));
+  background: #ffffff;
+  box-shadow: 0 -10rpx 30rpx rgba(17, 17, 17, 0.06);
+}
+
+.footer-price {
+  min-width: 0;
+}
+
+.footer-actions .btn {
+  width: 100%;
+  min-width: 0;
+  padding: 0;
+  font-size: 26rpx;
+}

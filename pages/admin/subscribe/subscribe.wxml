@@ -1,0 +1,23 @@
+<view class="page safe-bottom">
+  <view class="title">订阅唤醒</view>
+  <view class="muted">只对授权订阅的用户发送，避免非授权群发。</view>
+
+  <view class="section card">
+    <view class="h2">新建任务草稿</view>
+    <input class="input" data-field="title" value="{{form.title}}" bindinput="input" placeholder="任务名称" />
+    <input class="input field" data-field="scene" value="{{form.scene}}" bindinput="input" placeholder="couponArrived / repurchaseReminder / pointsChanged" />
+    <input class="input field" data-field="audience" value="{{form.audience}}" bindinput="input" placeholder="目标人群" />
+    <input class="input field" data-field="scheduledAt" value="{{form.scheduledAt}}" bindinput="input" placeholder="计划发送时间" />
+    <button class="btn" bindtap="save">保存草稿</button>
+  </view>
+
+  <view class="section card" wx:for="{{tasks}}" wx:key="id">
+    <view class="between">
+      <view>
+        <view class="h2">{{item.title}}</view>
+        <view class="muted">{{item.scene}} · {{item.audience}}</view>
+      </view>
+      <view class="pill">{{item.status}}</view>
+    </view>
+  </view>
+</view>

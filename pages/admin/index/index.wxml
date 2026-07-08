@@ -1,0 +1,33 @@
+<view class="page safe-bottom" wx:if="{{user && user.isAdmin}}">
+  <view class="title">商家后台</view>
+  <view class="muted">轻量运营后台：商品、订单、会员、优惠券和订阅消息任务。</view>
+
+  <view class="section admin-grid">
+    <view class="card admin-card" data-url="/pages/admin/products/products" bindtap="go">
+      <view class="h2">商品与库存</view>
+      <view class="muted">上架、下架、价格和库存</view>
+    </view>
+    <view class="card admin-card" data-url="/pages/admin/orders/orders" bindtap="go">
+      <view class="h2">订单发货</view>
+      <view class="muted">录入快递公司和单号</view>
+    </view>
+    <view class="card admin-card" data-url="/pages/admin/members/members" bindtap="go">
+      <view class="h2">会员积分</view>
+      <view class="muted">查询和人工调整积分</view>
+    </view>
+    <view class="card admin-card" data-url="/pages/admin/coupons/coupons" bindtap="go">
+      <view class="h2">优惠券</view>
+      <view class="muted">创建发券活动</view>
+    </view>
+    <view class="card admin-card" data-url="/pages/admin/subscribe/subscribe" bindtap="go">
+      <view class="h2">订阅唤醒</view>
+      <view class="muted">复购提醒和券到账任务</view>
+    </view>
+  </view>
+</view>
+<view class="page" wx:else>
+  <view class="card">
+    <view class="h2">无后台权限</view>
+    <view class="muted">请在 admin_users 白名单中配置管理员。</view>
+  </view>
+</view>

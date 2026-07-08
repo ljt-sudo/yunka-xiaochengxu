@@ -1,0 +1,29 @@
+<wxs src="../../common/format.wxs" module="fmt" />
+<view class="page safe-bottom">
+  <view class="title">优惠券</view>
+  <view class="muted">适合用来做老客唤醒和复购承接。</view>
+
+  <view class="section card coupon" wx:for="{{coupons}}" wx:key="id">
+    <view class="between">
+      <view>
+        <view class="h2">{{item.title}}</view>
+        <view class="muted">满 {{fmt.money(item.minSpendCents)}} 可用 · 有效至 {{fmt.dateText(item.expiresAt)}}</view>
+      </view>
+      <view class="discount">-{{fmt.money(item.amountOffCents)}}</view>
+    </view>
+    <button class="btn secondary" data-id="{{item.id}}" bindtap="claim">领取</button>
+  </view>
+
+  <view class="section card">
+    <view class="h2">我的券</view>
+    <view class="list-item" wx:for="{{claims}}" wx:key="id">
+      <view class="between">
+        <view>
+          <view>{{item.coupon.title}}</view>
+          <view class="muted">{{item.status}}</view>
+        </view>
+        <view class="price">-{{fmt.money(item.coupon.amountOffCents)}}</view>
+      </view>
+    </view>
+  </view>
+</view>

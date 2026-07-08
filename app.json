@@ -1,0 +1,40 @@
+{
+  "pages": [
+    "pages/index/index",
+    "pages/products/products",
+    "pages/product/product",
+    "pages/cart/cart",
+    "pages/checkout/checkout",
+    "pages/orders/orders",
+    "pages/order-detail/order-detail",
+    "pages/member/member",
+    "pages/coupons/coupons",
+    "pages/support/support",
+    "pages/admin/index/index",
+    "pages/admin/products/products",
+    "pages/admin/orders/orders",
+    "pages/admin/members/members",
+    "pages/admin/coupons/coupons",
+    "pages/admin/subscribe/subscribe"
+  ],
+  "window": {
+    "navigationBarTitleText": "云咖铺子",
+    "navigationBarBackgroundColor": "#f7f8f5",
+    "navigationBarTextStyle": "black",
+    "backgroundColor": "#f7f8f5"
+  },
+  "tabBar": {
+    "color": "#8b8f89",
+    "selectedColor": "#111111",
+    "backgroundColor": "#ffffff",
+    "borderStyle": "white",
+    "list": [
+      { "pagePath": "pages/index/index", "text": "首页" },
+      { "pagePath": "pages/products/products", "text": "商品" },
+      { "pagePath": "pages/cart/cart", "text": "购物车" },
+      { "pagePath": "pages/member/member", "text": "会员" }
+    ]
+  },
+  "style": "v2",
+  "sitemapLocation": "sitemap.json"
+}

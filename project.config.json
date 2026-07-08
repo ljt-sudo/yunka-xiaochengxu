@@ -1,85 +1,47 @@
 {
-  "miniprogramRoot": "miniprogram/",
+  "description": "云咖铺子微信原生小程序 MVP",
+  "appid": "wx9d9d4da3c962254a",
+  "projectname": "yunkapuzi-miniprogram",
+  "miniprogramRoot": "./",
   "cloudfunctionRoot": "cloudfunctions/",
   "setting": {
-    "urlCheck": true,
+    "urlCheck": false,
     "es6": true,
-    "enhance": true,
     "postcss": true,
-    "preloadBackgroundData": false,
     "minified": true,
-    "newFeature": true,
-    "coverView": true,
-    "nodeModules": false,
-    "autoAudits": false,
-    "showShadowRootInWxmlPanel": true,
-    "scopeDataCheck": false,
+    "compileWorklet": false,
     "uglifyFileName": false,
-    "checkInvalidKey": true,
-    "checkSiteMap": true,
     "uploadWithSourceMap": true,
-    "compileHotReLoad": false,
-    "useMultiFrameRuntime": true,
-    "useApiHook": true,
-    "useApiHostProcess": true,
-    "babelSetting": {
-      "ignore": [],
-      "disablePlugins": [],
-      "outputPath": ""
-    },
-    "enableEngineNative": false,
-    "useIsolateContext": true,
-    "useCompilerModule": true,
-    "userConfirmedUseCompilerModuleSwitch": false,
-    "userConfirmedBundleSwitch": false,
+    "enhance": false,
     "packNpmManually": false,
     "packNpmRelationList": [],
     "minifyWXSS": true,
-    "compileWorklet": false,
     "minifyWXML": true,
     "localPlugins": false,
     "disableUseStrict": false,
     "useCompilerPlugins": false,
     "condition": false,
     "swc": false,
-    "disableSWC": true
-  },
-  "appid": "wx9d9d4da3c962254a",
-  "projectname": "quickstart-wx-cloud",
-  "libVersion": "2.20.1",
-  "cloudfunctionTemplateRoot": "cloudfunctionTemplate/",
-  "condition": {
-    "search": {
-      "list": []
-    },
-    "conversation": {
-      "list": []
-    },
-    "plugin": {
-      "list": []
-    },
-    "game": {
-      "list": []
-    },
-    "miniprogram": {
-      "list": [
-        {
-          "id": -1,
-          "name": "db guide",
-          "pathName": "pages/databaseGuide/databaseGuide"
-        }
-      ]
+    "disableSWC": true,
+    "babelSetting": {
+      "ignore": [],
+      "disablePlugins": [],
+      "outputPath": ""
     }
   },
   "compileType": "miniprogram",
-  "srcMiniprogramRoot": "miniprogram/",
+  "simulatorPluginLibVersion": {},
   "packOptions": {
-    "ignore": [],
+    "ignore": [
+      { "type": "folder", "value": "docs" },
+      { "type": "folder", "value": "tests" },
+      { "type": "folder", "value": "scripts" },
+      { "type": "folder", "value": "cloudfunctions" },
+      { "type": "file", "value": "README.md" },
+      { "type": "file", "value": "package.json" },
+      { "type": "file", "value": "project.private.config.json" }
+    ],
     "include": []
   },
-  "editorSetting": {
-    "tabIndent": "insertSpaces",
-    "tabSize": 2
-  },
-  "simulatorPluginLibVersion": {}
+  "editorSetting": {}
 }

@@ -1,0 +1,36 @@
+.cart-row {
+  align-items: stretch;
+  gap: 22rpx;
+}
+
+.thumb {
+  width: 170rpx;
+  height: 170rpx;
+  flex: 0 0 170rpx;
+}
+
+.cart-info {
+  flex: 1;
+}
+
+.small {
+  width: 60rpx;
+  height: 60rpx;
+  line-height: 60rpx;
+  padding: 0;
+}
+
+.qty {
+  width: 72rpx;
+  text-align: center;
+}
+
+.cart-footer {
+  position: sticky;
+  bottom: 0;
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 22rpx 0 calc(22rpx + env(safe-area-inset-bottom));
+  background: #f8f3ea;
+}

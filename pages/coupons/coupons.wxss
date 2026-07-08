@@ -1,0 +1,9 @@
+.coupon .btn {
+  margin-top: 20rpx;
+}
+
+.discount {
+  font-size: 42rpx;
+  color: #7a351f;
+  font-weight: 700;
+}

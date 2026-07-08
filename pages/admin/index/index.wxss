@@ -1,0 +1,8 @@
+.admin-grid {
+  display: grid;
+  gap: 18rpx;
+}
+
+.admin-card {
+  min-height: 120rpx;
+}

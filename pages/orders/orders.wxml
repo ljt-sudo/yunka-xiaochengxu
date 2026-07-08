@@ -1,0 +1,21 @@
+<wxs src="../../common/format.wxs" module="fmt" />
+<view class="page safe-bottom">
+  <view class="title">我的订单</view>
+  <view class="muted">查看支付、发货和人工售后状态。</view>
+
+  <view class="section card" wx:if="{{orders.length === 0}}">
+    <view class="h2">暂无订单</view>
+    <view class="muted">完成第一单后会出现在这里。</view>
+  </view>
+
+  <view class="section card" wx:for="{{orders}}" wx:key="id" data-id="{{item.id}}" bindtap="goDetail">
+    <view class="between">
+      <view>
+        <view>{{item.orderNo}}</view>
+        <view class="muted">{{fmt.dateText(item.createdAt)}} · {{item.status}}</view>
+      </view>
+      <view class="price">{{fmt.money(item.payableAmountCents)}}</view>
+    </view>
+    <view class="muted">{{item.items[0].title}} 等 {{item.items.length}} 件商品</view>
+  </view>
+</view>

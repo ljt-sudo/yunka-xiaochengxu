@@ -1,0 +1,17 @@
+function money(cents) {
+  var value = cents || 0;
+  return '¥' + (value / 100).toFixed(2);
+}
+
+function dateText(value) {
+  if (!value) return '';
+  var date = getDate(value);
+  var month = date.getMonth() + 1;
+  var day = date.getDate();
+  return date.getFullYear() + '-' + (month < 10 ? '0' + month : month) + '-' + (day < 10 ? '0' + day : day);
+}
+
+module.exports = {
+  money: money,
+  dateText: dateText
+};

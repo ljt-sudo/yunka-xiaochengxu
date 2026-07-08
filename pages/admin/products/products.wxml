@@ -1,0 +1,22 @@
+<wxs src="../../../common/format.wxs" module="fmt" />
+<view class="page safe-bottom">
+  <view class="title">商品与库存</view>
+  <view class="muted">首版保留轻量操作，完整图文上新可后续接云存储。</view>
+
+  <view class="section card" wx:for="{{products}}" wx:key="id">
+    <view class="between">
+      <view>
+        <view class="h2">{{item.title}}</view>
+        <view class="muted">{{item.status}} · {{fmt.money(item.skus[0].priceCents)}}</view>
+      </view>
+      <button class="btn secondary" data-id="{{item.id}}" bindtap="toggleStatus">{{item.status === 'on_sale' ? '下架' : '上架'}}</button>
+    </view>
+    <view class="between stock-row">
+      <view>库存 {{item.skus[0].stock}}</view>
+      <view class="row">
+        <button class="btn ghost small" data-id="{{item.id}}" data-delta="-1" bindtap="stock">-</button>
+        <button class="btn ghost small" data-id="{{item.id}}" data-delta="1" bindtap="stock">+</button>
+      </view>
+    </view>
+  </view>
+</view>

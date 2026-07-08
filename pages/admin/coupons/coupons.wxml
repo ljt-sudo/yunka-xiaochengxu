@@ -1,0 +1,23 @@
+<wxs src="../../../common/format.wxs" module="fmt" />
+<view class="page safe-bottom">
+  <view class="title">优惠券管理</view>
+  <view class="muted">用于领券、下单抵扣和老客订阅提醒。</view>
+
+  <view class="section card">
+    <view class="h2">新建金额券</view>
+    <input class="input" data-field="title" value="{{form.title}}" bindinput="input" placeholder="优惠券名称" />
+    <input class="input field" type="digit" data-field="amountOffYuan" value="{{form.amountOffYuan}}" bindinput="input" placeholder="减免金额" />
+    <input class="input field" type="digit" data-field="minSpendYuan" value="{{form.minSpendYuan}}" bindinput="input" placeholder="使用门槛" />
+    <button class="btn" bindtap="save">创建优惠券</button>
+  </view>
+
+  <view class="section card" wx:for="{{coupons}}" wx:key="id">
+    <view class="between">
+      <view>
+        <view class="h2">{{item.title}}</view>
+        <view class="muted">满 {{fmt.money(item.minSpendCents)}} 减 {{fmt.money(item.amountOffCents)}}</view>
+      </view>
+      <view class="pill">{{item.status}}</view>
+    </view>
+  </view>
+</view>

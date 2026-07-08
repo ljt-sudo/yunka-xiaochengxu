@@ -1,0 +1,50 @@
+<wxs src="../../common/format.wxs" module="fmt" />
+<view class="page products-page safe-bottom">
+  <view class="products-head">
+    <view>
+      <view class="brand-kicker">线上点单</view>
+      <view class="title">选咖啡</view>
+      <view class="muted">清爽茶咖、精品挂耳和会员优惠。</view>
+    </view>
+  </view>
+
+  <view class="order-shell">
+    <view class="category-rail">
+      <view
+        class="category-tab {{activeCategory == item.id ? 'active' : ''}}"
+        wx:for="{{categories}}"
+        wx:key="id"
+        data-id="{{item.id}}"
+        bindtap="switchCategory"
+      >
+        {{item.name}}
+      </view>
+    </view>
+
+    <view class="product-feed">
+      <view class="feed-banner">
+        <view class="feed-title">提前下单</view>
+        <view class="feed-copy">快递发货，积分和优惠券自动计算。</view>
+      </view>
+
+      <view class="product-card" wx:for="{{filteredProducts}}" wx:key="id" data-id="{{item.id}}" bindtap="goProduct">
+        <image class="product-image thumb" mode="aspectFill" src="{{item.cover}}"></image>
+        <view class="product-info">
+          <view class="product-title-row">
+            <view class="product-title">{{item.title}}</view>
+            <view class="pill">{{item.tags[0]}}</view>
+          </view>
+          <view class="product-desc">{{item.subtitle}}</view>
+          <view class="product-meta">{{item.category}} · 库存 {{item.skus[0].stock}}</view>
+          <view class="product-bottom">
+            <view>
+              <view class="price">{{fmt.money(item.skus[0].priceCents)}}</view>
+              <view class="sku-name">{{item.skus[0].name}}</view>
+            </view>
+            <button class="order-chip" data-id="{{item.id}}" catchtap="goProduct">选规格</button>
+          </view>
+        </view>
+      </view>
+    </view>
+  </view>
+</view>

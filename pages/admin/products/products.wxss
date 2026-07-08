@@ -1,0 +1,10 @@
+.stock-row {
+  margin-top: 22rpx;
+}
+
+.small {
+  width: 64rpx;
+  height: 64rpx;
+  line-height: 64rpx;
+  padding: 0;
+}

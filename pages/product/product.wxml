@@ -1,0 +1,42 @@
+<wxs src="../../common/format.wxs" module="fmt" />
+<view class="page product-page safe-bottom" wx:if="{{product}}">
+  <image class="hero-image" mode="aspectFill" src="{{product.cover}}"></image>
+
+  <view class="product-panel">
+    <view class="product-topline">
+      <view class="pill">{{product.category}}</view>
+      <view class="stock-text">库存 {{sku.stock}}</view>
+    </view>
+    <view class="title">{{product.title}}</view>
+    <view class="muted">{{product.subtitle}}</view>
+    <view class="tags">
+      <view class="pill" wx:for="{{product.tags}}" wx:key="*this">{{item}}</view>
+    </view>
+    <view class="description">{{product.description}}</view>
+  </view>
+
+  <view class="section spec-panel">
+    <view class="h2">选择规格</view>
+    <view class="spec-row">
+      <view class="spec-name">{{sku.name}}</view>
+      <view class="price">{{fmt.money(sku.priceCents)}}</view>
+    </view>
+    <view class="between quantity">
+      <view>数量</view>
+      <view class="row">
+        <button class="btn ghost small" data-delta="-1" bindtap="step">-</button>
+        <view class="qty">{{quantity}}</view>
+        <button class="btn ghost small" data-delta="1" bindtap="step">+</button>
+      </view>
+    </view>
+  </view>
+
+  <view class="footer-actions">
+    <view class="footer-price">
+      <view class="muted">合计</view>
+      <view class="price">{{fmt.money(sku.priceCents * quantity)}}</view>
+    </view>
+    <button class="btn secondary" bindtap="addCart">加购</button>
+    <button class="btn" bindtap="buyNow">立即购买</button>
+  </view>
+</view>

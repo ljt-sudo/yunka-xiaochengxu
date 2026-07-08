@@ -1,0 +1,49 @@
+<wxs src="../../common/format.wxs" module="fmt" />
+<view class="page safe-bottom" wx:if="{{order}}">
+  <view class="title">订单详情</view>
+  <view class="muted">{{order.orderNo}}</view>
+
+  <view class="section card">
+    <view class="between">
+      <view>
+        <view class="h2">{{order.status}}</view>
+        <view class="muted">创建于 {{fmt.dateText(order.createdAt)}}</view>
+      </view>
+      <view wx:if="{{order.status === 'pending_payment'}}">
+        <button class="btn secondary" bindtap="payAgain">模拟支付</button>
+        <button class="btn ghost cancel-btn" bindtap="cancelOrder">取消订单</button>
+      </view>
+    </view>
+  </view>
+
+  <view class="section card">
+    <view class="h2">商品</view>
+    <view class="list-item" wx:for="{{order.items}}" wx:key="skuId">
+      <view class="between">
+        <view>
+          <view>{{item.title}}</view>
+          <view class="muted">× {{item.quantity}}</view>
+        </view>
+        <view>{{fmt.money(item.subtotalCents)}}</view>
+      </view>
+    </view>
+  </view>
+
+  <view class="section card">
+    <view class="between"><view>商品金额</view><view>{{fmt.money(order.goodsAmountCents)}}</view></view>
+    <view class="between"><view>运费</view><view>{{fmt.money(order.shippingFeeCents)}}</view></view>
+    <view class="between"><view>优惠券</view><view>-{{fmt.money(order.couponDiscountCents)}}</view></view>
+    <view class="between"><view>积分抵扣</view><view>-{{fmt.money(order.pointsDiscountCents)}}</view></view>
+    <view class="between total"><view>实付</view><view class="price">{{fmt.money(order.payableAmountCents)}}</view></view>
+  </view>
+
+  <view class="section card">
+    <view class="h2">收货与物流</view>
+    <view>{{order.address.name}} {{order.address.phone}}</view>
+    <view class="muted">{{order.address.detail}}</view>
+    <view class="muted" wx:if="{{order.expressNo}}">{{order.expressCompany}} · {{order.expressNo}}</view>
+    <view class="muted" wx:else>商家发货后会展示快递信息。</view>
+  </view>
+
+  <button class="btn ghost" bindtap="goSupport">售后 / 客服</button>
+</view>
