@@ -1,0 +1,110 @@
+<wxs src="../../common/format.wxs" module="fmt" />
+
+<view class="page safe-bottom">
+  <!-- 加载中 -->
+  <view class="loading-center" wx:if="{{loading}}">
+    <text>加载中...</text>
+  </view>
+
+  <view wx:else>
+    <!-- ===== 会员等级卡片 ===== -->
+    <view class="tier-card {{currentTier._id || 'tier_default'}}">
+      <view class="tier-badge">
+        <text class="tier-name">{{currentTier.name || '青豆会员'}}</text>
+      </view>
+      <view class="tier-user">{{member.nickname || '云咖会员'}}</view>
+      <view class="tier-points-row">
+        <text class="tier-points-num">{{member.totalPoints || 0}}</text>
+        <text class="tier-points-label">总积分</text>
+      </view>
+      <text class="tier-month-points">本月获得 {{monthPoints}} 积分</text>
+
+      <!-- 进度条 -->
+      <view class="upgrade-section" wx:if="{{nextTier}}">
+        <text class="upgrade-label">距 {{nextTier.name}} 还差</text>
+        <view class="upgrade-bar-track">
+          <view class="upgrade-bar-fill" style="width: {{upgradePct}}%;"></view>
+        </view>
+        <view class="upgrade-text">
+          <text>已消费 ¥{{spendDisplay}}</text>
+          <text>目标 ¥{{targetDisplay}}</text>
+        </view>
+        <button class="btn-upgrade" bindtap="checkUpgrade">检查升级</button>
+      </view>
+    </view>
+
+    <!-- ===== 快捷操作 ===== -->
+    <view class="action-grid">
+      <view class="action-item" bindtap="goOrders">
+        <text class="action-icon">📋</text>
+        <text>我的订单</text>
+      </view>
+      <view class="action-item" bindtap="goCoupons">
+        <text class="action-icon">🎫</text>
+        <text>优惠券</text>
+      </view>
+      <view class="action-item" bindtap="goBenefits">
+        <text class="action-icon">🎁</text>
+        <text>我的权益</text>
+        <text class="badge" wx:if="{{benefits.length > 0}}">{{benefits.length}}</text>
+      </view>
+      <view class="action-item" bindtap="goPointsDetail">
+        <text class="action-icon">📊</text>
+        <text>积分明细</text>
+      </view>
+    </view>
+
+    <!-- ===== 当前等级权益 ===== -->
+    <view class="section" wx:if="{{currentTier}}">
+      <view class="section-title"><text>🏅 {{currentTier.name}} 权益</text></view>
+      <view class="benefits-list">
+        <view class="benefit-tag" wx:for="{{currentTier.benefits}}" wx:key="type" wx:for-item="b">
+          <text>✅ {{b.desc}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- ===== 下一级权益 ===== -->
+    <view class="section" wx:if="{{nextTier}}">
+      <view class="section-title"><text>⬆️ {{nextTier.name}} 升级权益</text></view>
+      <view class="benefits-list next">
+        <view class="benefit-tag" wx:for="{{nextTier.benefits}}" wx:key="type" wx:for-item="b">
+          <text>⭐ {{b.desc}}</text>
+        </view>
+      </view>
+    </view>
+
+    <!-- ===== 可用权益 ===== -->
+    <view class="section" wx:if="{{benefits.length > 0}}">
+      <view class="section-title"><text>🎁 可用权益（{{benefits.length}}）</text></view>
+      <view class="benefit-card" wx:for="{{benefits}}" wx:key="_id" data-id="{{item._id}}" bindtap="useBenefit">
+        <view class="benefit-left">
+          <text class="benefit-title">{{item.title}}</text>
+          <text class="benefit-desc">{{item.description}}</text>
+          <text class="benefit-date muted">{{fmt.dateText(item.validUntil)}} 前有效</text>
+        </view>
+        <view class="benefit-btn">使用</view>
+      </view>
+    </view>
+
+    <!-- ===== 最近积分流水 ===== -->
+    <view class="section">
+      <view class="section-title"><text>📈 最近积分</text></view>
+      <view class="points-item" wx:for="{{pointsLog}}" wx:key="_id">
+        <view class="points-left">
+          <text class="points-source">{{item.remark || item.source}}</text>
+          <text class="points-date muted">{{fmt.dateText(item.createdAt)}}</text>
+        </view>
+        <text class="points-amt {{item.amount > 0 ? 'earn' : 'redeem'}}">
+          {{item.amount > 0 ? '+' : ''}}{{item.amount}}
+        </text>
+      </view>
+      <view class="empty" wx:if="{{pointsLog.length === 0}}">暂无积分记录</view>
+    </view>
+
+    <!-- ===== 后台 ===== -->
+    <view class="section" wx:if="{{member.isAdmin}}">
+      <button class="btn-admin" bindtap="goAdmin">进入商家后台</button>
+    </view>
+  </view>
+</view>

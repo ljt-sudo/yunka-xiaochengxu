@@ -8,6 +8,8 @@
     "pages/orders/orders",
     "pages/order-detail/order-detail",
     "pages/member/member",
+    "pages/member/points/points",
+    "pages/member/benefits/benefits",
     "pages/coupons/coupons",
     "pages/support/support",
     "pages/admin/index/index",

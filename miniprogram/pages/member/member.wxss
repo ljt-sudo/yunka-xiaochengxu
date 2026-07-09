@@ -1,0 +1,350 @@
+.page {
+  padding: 20rpx 30rpx;
+  min-height: 100vh;
+  background: #f7f8f5;
+  padding-bottom: 120rpx;
+}
+
+.loading-center {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  height: 60vh;
+  color: #999;
+  font-size: 28rpx;
+}
+
+/* === 会员卡片 === */
+.tier-card {
+  border-radius: 24rpx;
+  padding: 40rpx 36rpx;
+  margin-bottom: 24rpx;
+  position: relative;
+  overflow: hidden;
+  border: 2rpx solid;
+}
+
+.tier-card.tier_default {
+  background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+  border-color: #4CAF50;
+}
+
+.tier-card.tier_green_bean {
+  background: linear-gradient(135deg, #e8f5e9, #c8e6c9);
+  border-color: #4CAF50;
+}
+
+.tier-card.tier_silver_roast {
+  background: linear-gradient(135deg, #f5f5f5, #e0e0e0);
+  border-color: #9E9E9E;
+}
+
+.tier-card.tier_premium_gold {
+  background: linear-gradient(135deg, #fff8e1, #ffecb3);
+  border-color: #FFD700;
+}
+
+.tier-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 8rpx;
+  padding: 10rpx 24rpx;
+  border-radius: 30rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+}
+
+.tier-card.tier_green_bean .tier-badge {
+  background: #4CAF50;
+  color: #fff;
+}
+
+.tier-card.tier_silver_roast .tier-badge {
+  background: #757575;
+  color: #fff;
+}
+
+.tier-card.tier_premium_gold .tier-badge {
+  background: #FFD700;
+  color: #5a3e00;
+}
+
+.tier-card.tier_default .tier-badge {
+  background: #4CAF50;
+  color: #fff;
+}
+
+.tier-name {
+  font-size: 24rpx;
+}
+
+.tier-user {
+  font-size: 32rpx;
+  font-weight: 600;
+  color: #333;
+  margin-top: 20rpx;
+}
+
+.tier-points-row {
+  display: flex;
+  align-items: baseline;
+  gap: 10rpx;
+  margin-top: 16rpx;
+}
+
+.tier-points-num {
+  font-size: 72rpx;
+  font-weight: 700;
+  color: #2f2118;
+}
+
+.tier-points-label {
+  font-size: 26rpx;
+  color: #666;
+}
+
+.tier-month-points {
+  font-size: 24rpx;
+  color: #999;
+  margin-top: 8rpx;
+}
+
+/* === 升级进度 === */
+.upgrade-section {
+  margin-top: 24rpx;
+  padding-top: 24rpx;
+  border-top: 2rpx solid rgba(0,0,0,0.06);
+}
+
+.upgrade-label {
+  font-size: 24rpx;
+  color: #999;
+  margin-bottom: 12rpx;
+}
+
+.upgrade-bar-track {
+  height: 8rpx;
+  background: rgba(0,0,0,0.08);
+  border-radius: 4rpx;
+  overflow: hidden;
+}
+
+.upgrade-bar-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4CAF50, #8BC34A);
+  border-radius: 4rpx;
+}
+
+.upgrade-text {
+  display: flex;
+  justify-content: space-between;
+  font-size: 22rpx;
+  color: #999;
+  margin-top: 8rpx;
+}
+
+.btn-upgrade {
+  margin-top: 16rpx;
+  width: 100%;
+  padding: 18rpx;
+  border-radius: 40rpx;
+  border: 2rpx solid #2f2118;
+  background: transparent;
+  color: #2f2118;
+  font-size: 26rpx;
+  font-weight: 600;
+  text-align: center;
+}
+
+/* === 快捷操作 === */
+.action-grid {
+  display: grid;
+  grid-template-columns: 1fr 1fr 1fr 1fr;
+  gap: 16rpx;
+  margin-bottom: 24rpx;
+}
+
+.action-item {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 8rpx;
+  padding: 24rpx 8rpx;
+  background: #fff;
+  border-radius: 16rpx;
+  font-size: 22rpx;
+  color: #333;
+  position: relative;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.04);
+}
+
+.action-item:active {
+  background: #f5f5f5;
+}
+
+.action-icon {
+  font-size: 44rpx;
+}
+
+.badge {
+  position: absolute;
+  top: 8rpx;
+  right: 8rpx;
+  background: #ff4757;
+  color: #fff;
+  font-size: 20rpx;
+  min-width: 32rpx;
+  height: 32rpx;
+  line-height: 32rpx;
+  text-align: center;
+  border-radius: 16rpx;
+  padding: 0 8rpx;
+}
+
+/* === 通用区块 === */
+.section {
+  margin-bottom: 24rpx;
+}
+
+.section-title {
+  font-size: 28rpx;
+  font-weight: 600;
+  color: #333;
+  margin-bottom: 16rpx;
+}
+
+/* === 权益标签 === */
+.benefits-list {
+  background: #fff;
+  border-radius: 16rpx;
+  padding: 20rpx 24rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.04);
+}
+
+.benefits-list.next {
+  opacity: 0.7;
+}
+
+.benefit-tag {
+  padding: 10rpx 0;
+  font-size: 24rpx;
+  color: #555;
+  line-height: 1.6;
+  border-bottom: 2rpx solid #f0f0f0;
+}
+
+.benefit-tag:last-child {
+  border-bottom: none;
+}
+
+/* === 权益卡片 === */
+.benefit-card {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  padding: 24rpx;
+  border-radius: 16rpx;
+  margin-bottom: 12rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.04);
+}
+
+.benefit-card:active {
+  background: #f5f5f5;
+}
+
+.benefit-left {
+  flex: 1;
+  margin-right: 16rpx;
+}
+
+.benefit-title {
+  font-size: 26rpx;
+  font-weight: 600;
+  color: #333;
+}
+
+.benefit-desc {
+  font-size: 22rpx;
+  color: #666;
+  margin-top: 4rpx;
+}
+
+.benefit-date {
+  font-size: 20rpx;
+  color: #999;
+  margin-top: 4rpx;
+}
+
+.benefit-btn {
+  padding: 12rpx 28rpx;
+  background: linear-gradient(135deg, #2f2118, #5a3e2e);
+  color: #fff;
+  border-radius: 30rpx;
+  font-size: 24rpx;
+  font-weight: 600;
+  flex-shrink: 0;
+}
+
+/* === 积分流水 === */
+.points-item {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  background: #fff;
+  padding: 20rpx 24rpx;
+  border-radius: 12rpx;
+  margin-bottom: 8rpx;
+  box-shadow: 0 2rpx 6rpx rgba(0,0,0,0.03);
+}
+
+.points-left {
+  flex: 1;
+  margin-right: 16rpx;
+}
+
+.points-source {
+  font-size: 24rpx;
+  color: #333;
+}
+
+.points-date {
+  font-size: 20rpx;
+}
+
+.points-amt {
+  font-size: 32rpx;
+  font-weight: 700;
+}
+
+.points-amt.earn {
+  color: #4CAF50;
+}
+
+.points-amt.redeem {
+  color: #ff4757;
+}
+
+.empty {
+  text-align: center;
+  padding: 40rpx;
+  font-size: 24rpx;
+  color: #999;
+  background: #fff;
+  border-radius: 12rpx;
+}
+
+.muted {
+  color: #999;
+}
+
+.btn-admin {
+  width: 100%;
+  padding: 24rpx;
+  background: #2f2118;
+  color: #fff;
+  border-radius: 16rpx;
+  font-size: 28rpx;
+  font-weight: 600;
+  text-align: center;
+}

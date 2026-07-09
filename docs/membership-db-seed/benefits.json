@@ -1,0 +1,54 @@
+[
+  {
+    "_id": "benefit_001",
+    "openid": "replace_with_real_openid_2",
+    "type": "bogo_monthly",
+    "title": "买一送一券",
+    "description": "购买任意饮品，免费获赠同价或低价饮品 1 杯",
+    "status": "active",
+    "validFrom": "2026-07-01T00:00:00.000Z",
+    "validUntil": "2026-07-31T23:59:59.000Z",
+    "usedAt": null,
+    "grantedAt": "2026-07-01T00:00:00.000Z",
+    "tierSource": "tier_silver_roast"
+  },
+  {
+    "_id": "benefit_002",
+    "openid": "replace_with_real_openid_3",
+    "type": "free_drinks_monthly",
+    "title": "免费饮品 x2",
+    "description": "本月可免费兑换任意 2 杯饮品",
+    "status": "active",
+    "validFrom": "2026-07-01T00:00:00.000Z",
+    "validUntil": "2026-07-31T23:59:59.000Z",
+    "usedAt": null,
+    "grantedAt": "2026-07-01T00:00:00.000Z",
+    "tierSource": "tier_premium_gold"
+  },
+  {
+    "_id": "benefit_003",
+    "openid": "replace_with_real_openid_3",
+    "type": "free_upgrade",
+    "title": "免费升杯",
+    "description": "不限次免费升杯（中→大 / 大→超大）",
+    "status": "active",
+    "validFrom": "2026-03-15T00:00:00.000Z",
+    "validUntil": "2099-12-31T23:59:59.000Z",
+    "usedAt": null,
+    "grantedAt": "2026-03-15T00:00:00.000Z",
+    "tierSource": "tier_premium_gold"
+  },
+  {
+    "_id": "benefit_004",
+    "openid": "replace_with_real_openid_1",
+    "type": "birthday_coupon",
+    "title": "生日 8 折券",
+    "description": "生日当月享 8 折优惠（限 1 次）",
+    "status": "used",
+    "validFrom": "2026-06-01T00:00:00.000Z",
+    "validUntil": "2026-06-30T23:59:59.000Z",
+    "usedAt": "2026-06-15T10:00:00.000Z",
+    "grantedAt": "2026-06-01T00:00:00.000Z",
+    "tierSource": "tier_green_bean"
+  }
+]

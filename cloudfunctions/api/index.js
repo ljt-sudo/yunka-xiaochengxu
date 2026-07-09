@@ -315,6 +315,18 @@ async function paymentCallback({ orderId, transactionId }) {
     data: { status: claim.status }
   })));
   await Promise.all(result.pointsLedger.map((entry) => collection('points_ledger').add({ data: entry })));
+  
+  // 会员积分同步（不影响主流程）
+  try {
+    await earnPointsOnPayment({
+      openid: order.openid,
+      orderAmountCents: order.payableAmountCents || order.goodsAmountCents || 0,
+      orderId
+    });
+  } catch (e) {
+    console.error('Member points sync failed:', e);
+  }
+  
   return result.order;
 }
 
@@ -475,6 +487,199 @@ async function sendSubscribeTask({ taskId }) {
   };
 }
 
+// ===== 会员等级与积分系统 ====
+
+const TIERS = {
+  tier_green_bean: { level: 1, name: '青豆会员', multiplier: 1.0 },
+  tier_silver_roast: { level: 2, name: '银焙会员', multiplier: 1.5 },
+  tier_premium_gold: { level: 3, name: '臻金会员', multiplier: 2.0 }
+};
+
+async function getOrCreateMember() {
+  const openid = await getOpenId();
+  const found = await collection('members').where({ openid }).limit(1).get();
+  if (found.data[0]) return withId(found.data[0]);
+  const newMember = {
+    openid,
+    nickname: '云咖会员',
+    avatar: '',
+    tier: 'tier_green_bean',
+    tierName: '青豆会员',
+    totalPoints: 0,
+    usedPoints: 0,
+    totalSpendCents: 0,
+    totalOrders: 0,
+    birthday: '',
+    createdAt: new Date(),
+    lastVisitAt: new Date(),
+    status: 'active'
+  };
+  const created = await collection('members').add({ data: newMember });
+  return { _id: created._id, id: created._id, ...newMember };
+}
+
+async function getTierConfig() {
+  const result = await collection('tier_config').get();
+  return result.data.map(withId);
+}
+
+async function getMemberProfile() {
+  const openid = await getOpenId();
+  let member = await collection('members').where({ openid }).limit(1).get();
+  if (!member.data[0]) member = await getOrCreateMember();
+  else member = withId(member.data[0]);
+  
+  const tiers = await getTierConfig();
+  const currentTier = tiers.find(t => t._id === member.tier) || tiers[0];
+  const nextTier = tiers.find(t => t.level === (currentTier?.level || 0) + 1) || null;
+  
+  // 统计本月积分
+  const now = new Date();
+  const monthStart = new Date(now.getFullYear(), now.getMonth(), 1);
+  const thisMonth = await collection('points_log')
+    .where({ openid, createdAt: _.gte(monthStart) })
+    .get();
+  const monthPoints = thisMonth.data.reduce((sum, r) => sum + r.amount, 0);
+  
+  return {
+    member,
+    currentTier,
+    nextTier,
+    monthPoints,
+    upgradeProgress: nextTier ? {
+      currentSpendCents: member.totalSpendCents,
+      targetSpendCents: nextTier.conditions?.entryRequirements?.totalSpendCents || 0,
+      percent: Math.min(100, Math.round(member.totalSpendCents / (nextTier.conditions?.entryRequirements?.totalSpendCents || 1) * 100))
+    } : null
+  };
+}
+
+async function getMemberBenefits() {
+  const openid = await getOpenId();
+  const now = new Date();
+  const benefits = await collection('benefits')
+    .where({ openid, status: 'active', validUntil: _.gte(now) })
+    .orderBy('validFrom', 'asc')
+    .get();
+  return benefits.data.map(withId);
+}
+
+async function getPointsHistory({ limit = 20, offset = 0 }) {
+  const openid = await getOpenId();
+  const result = await collection('points_log')
+    .where({ openid })
+    .orderBy('createdAt', 'desc')
+    .skip(offset)
+    .limit(Math.min(limit, 50))
+    .get();
+  return result.data.map(withId);
+}
+
+async function useBenefit({ benefitId }) {
+  const openid = await getOpenId();
+  const doc = await collection('benefits').doc(benefitId).get();
+  if (!doc.data) throw new Error('权益不存在');
+  if (doc.data.openid !== openid) throw new Error('无权操作此权益');
+  if (doc.data.status !== 'active') throw new Error('权益已使用或已过期');
+  if (new Date(doc.data.validUntil) < new Date()) throw new Error('权益已过期');
+  await collection('benefits').doc(benefitId).update({
+    data: { status: 'used', usedAt: new Date() }
+  });
+  return { benefitId, status: 'used' };
+}
+
+async function checkAndUpgrade() {
+  const openid = await getOpenId();
+  const member = await collection('members').where({ openid }).limit(1).get();
+  if (!member.data[0]) return { upgraded: false, reason: '非会员用户' };
+  const memberData = withId(member.data[0]);
+  
+  const tiers = await getTierConfig();
+  const currentTier = tiers.find(t => t._id === memberData.tier);
+  if (!currentTier) return { upgraded: false, reason: '等级配置异常' };
+  
+  const nextTier = tiers.find(t => t.level === currentTier.level + 1);
+  if (!nextTier) return { upgraded: false, reason: '已达最高等级' };
+  
+  const entryReq = nextTier.conditions?.entryRequirements;
+  if (!entryReq) return { upgraded: false, reason: '无升级条件配置' };
+  
+  const spendMet = memberData.totalSpendCents >= (entryReq.totalSpendCents || Infinity);
+  if (!spendMet) {
+    return {
+      upgraded: false,
+      reason: '消费未达标',
+      requiredSpendCents: entryReq.totalSpendCents,
+      currentSpendCents: memberData.totalSpendCents
+    };
+  }
+  
+  await collection('members').doc(memberData.id).update({
+    data: {
+      tier: nextTier._id,
+      tierName: nextTier.name,
+      lastVisitAt: new Date()
+    }
+  });
+  
+  return { upgraded: true, newTier: nextTier._id, newTierName: nextTier.name };
+}
+
+// ===== 激活支付时的会员积分处理 =====
+
+async function earnPointsOnPayment({ openid, orderAmountCents, orderId }) {
+  const member = await collection('members').where({ openid }).limit(1).get();
+  if (!member.data[0]) return null;
+  const m = member.data[0];
+  const tier = TIERS[m.tier] || TIERS.tier_green_bean;
+  const points = Math.floor(orderAmountCents / 100 * tier.multiplier);
+  
+  // 更新会员积分
+  await collection('members').doc(m._id).update({
+    data: {
+      totalPoints: _.inc(points),
+      totalSpendCents: _.inc(orderAmountCents),
+      totalOrders: _.inc(1),
+      lastVisitAt: new Date()
+    }
+  });
+  
+  // 记录积分流水
+  await collection('points_log').add({
+    data: {
+      openid,
+      type: 'earn',
+      amount: points,
+      balance: m.totalPoints + points,
+      source: 'order',
+      sourceId: orderId,
+      remark: `消费 ${(orderAmountCents/100).toFixed(2)} 元（${tier.name} ${tier.multiplier} 倍）得 ${points} 积分`,
+      createdAt: new Date()
+    }
+  });
+  
+  // 自动检查升级
+  try {
+    const tiers = await collection('tier_config').get();
+    const currentTierConfig = tiers.data.find(t => t._id === m.tier);
+    const nextTierConfig = tiers.data.find(t => t.level === (currentTierConfig?.level || 0) + 1);
+    if (nextTierConfig) {
+      const entryReq = nextTierConfig.conditions?.entryRequirements;
+      const newTotalSpend = m.totalSpendCents + orderAmountCents;
+      if (entryReq && newTotalSpend >= (entryReq.totalSpendCents || Infinity)) {
+        await collection('members').doc(m._id).update({
+          data: { tier: nextTierConfig._id, tierName: nextTierConfig.name }
+        });
+      }
+    }
+  } catch (e) {
+    // 升级失败不影响主流程
+    console.error('Auto upgrade failed:', e);
+  }
+  
+  return { points, multiplier: tier.multiplier };
+}
+
 exports.main = async (event) => {
   try {
     const action = event.action;
@@ -506,7 +711,13 @@ exports.main = async (event) => {
       saveProduct,
       saveCoupon,
       saveSubscribeTask,
-      sendSubscribeTask
+      sendSubscribeTask,
+      getTierConfig,
+      getMemberProfile,
+      getMemberBenefits,
+      getPointsHistory,
+      useBenefit,
+      checkAndUpgrade
     };
     if (!handlers[action]) throw new Error(`未知操作: ${action}`);
     return ok(await handlers[action](payload));

@@ -1,0 +1,53 @@
+[
+  {
+    "_id": "member_001",
+    "openid": "replace_with_real_openid_1",
+    "phone": "13800000001",
+    "nickname": "咖啡爱好者小王",
+    "avatar": "",
+    "tier": "tier_green_bean",
+    "tierName": "青豆会员",
+    "totalPoints": 150,
+    "usedPoints": 0,
+    "totalSpendCents": 6800,
+    "totalOrders": 2,
+    "birthday": "1995-06-15",
+    "createdAt": "2026-06-20T10:30:00.000Z",
+    "lastVisitAt": "2026-07-08T14:20:00.000Z",
+    "status": "active"
+  },
+  {
+    "_id": "member_002",
+    "openid": "replace_with_real_openid_2",
+    "phone": "13800000002",
+    "nickname": "丽江度假常客",
+    "avatar": "",
+    "tier": "tier_silver_roast",
+    "tierName": "银焙会员",
+    "totalPoints": 860,
+    "usedPoints": 200,
+    "totalSpendCents": 35600,
+    "totalOrders": 8,
+    "birthday": "1990-12-01",
+    "createdAt": "2026-05-01T09:00:00.000Z",
+    "lastVisitAt": "2026-07-09T08:15:00.000Z",
+    "status": "active"
+  },
+  {
+    "_id": "member_003",
+    "openid": "replace_with_real_openid_3",
+    "phone": "13800000003",
+    "nickname": "度假村老板",
+    "avatar": "",
+    "tier": "tier_premium_gold",
+    "tierName": "臻金会员",
+    "totalPoints": 3200,
+    "usedPoints": 500,
+    "totalSpendCents": 156800,
+    "totalOrders": 25,
+    "birthday": "1985-03-20",
+    "createdAt": "2026-03-15T08:00:00.000Z",
+    "lastVisitAt": "2026-07-08T16:45:00.000Z",
+    "status": "active"
+  }
+]

@@ -1,0 +1,72 @@
+[
+  {
+    "_id": "tier_green_bean",
+    "level": 1,
+    "name": "青豆会员",
+    "nameEn": "Green Bean",
+    "badgeColor": "#4CAF50",
+    "icon": "🟢",
+    "conditions": {
+      "registerFree": true,
+      "upgradeToNext": {
+        "minTotalSpendCents": 20000,
+        "orPurchaseCardCents": 1990
+      }
+    },
+    "benefits": [
+      { "type": "points_multiplier", "value": 1.0, "desc": "消费积 1 倍积分" },
+      { "type": "birthday_coupon", "value": "20_percent_off", "desc": "生日赠 8 折券 1 张" },
+      { "type": "new_product_discount", "value": 0.95, "desc": "新品尝鲜 9.5 折" }
+    ]
+  },
+  {
+    "_id": "tier_silver_roast",
+    "level": 2,
+    "name": "银焙会员",
+    "nameEn": "Silver Roast",
+    "badgeColor": "#9E9E9E",
+    "icon": "🥈",
+    "conditions": {
+      "registerFree": false,
+      "upgradeToNext": {
+        "minTotalSpendCents": 80000,
+        "orPurchaseCardCents": 9900
+      },
+      "entryRequirements": {
+        "totalSpendCents": 20000,
+        "orPurchaseCardCents": 1990
+      }
+    },
+    "benefits": [
+      { "type": "points_multiplier", "value": 1.5, "desc": "消费积 1.5 倍积分" },
+      { "type": "discount", "value": 0.90, "desc": "全场 9 折" },
+      { "type": "bogo_monthly", "value": 1, "desc": "每月买一送一券 1 张" },
+      { "type": "free_upgrade", "value": true, "desc": "免费升杯" },
+      { "type": "birthday_free_drink", "value": 1, "desc": "生日赠免费饮品 1 杯" }
+    ]
+  },
+  {
+    "_id": "tier_premium_gold",
+    "level": 3,
+    "name": "臻金会员",
+    "nameEn": "Premium Gold",
+    "badgeColor": "#FFD700",
+    "icon": "🏆",
+    "conditions": {
+      "registerFree": false,
+      "entryRequirements": {
+        "totalSpendCents": 80000,
+        "orPurchaseCardCents": 9900
+      }
+    },
+    "benefits": [
+      { "type": "points_multiplier", "value": 2.0, "desc": "消费积 2 倍积分" },
+      { "type": "discount", "value": 0.85, "desc": "全场 8.5 折" },
+      { "type": "free_drinks_monthly", "value": 2, "desc": "每月免费饮品 2 杯" },
+      { "type": "free_upgrade", "value": true, "desc": "不限次免费升杯" },
+      { "type": "priority_tasting", "value": true, "desc": "新品优先试饮" },
+      { "type": "gift_box_quarterly", "value": true, "desc": "专属臻金礼盒" },
+      { "type": "birthday_gift", "value": true, "desc": "生日赠蛋糕 + 定制杯" }
+    ]
+  }
+]

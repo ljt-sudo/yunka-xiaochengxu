@@ -1,0 +1,18 @@
+<view class="page">
+  <view class="header">
+    <view class="back" bindtap="wx.navigateBack">←</view>
+    <text class="title">我的权益</text>
+  </view>
+  <view class="loading-center" wx:if="{{loading}}">加载中...</view>
+  <view class="list" wx:else>
+    <view class="item" wx:for="{{benefits}}" wx:key="_id" data-id="{{item._id}}" bindtap="useBenefit" wx:if="{{item.status === 'active'}}">
+      <view class="item-left">
+        <text class="item-title">{{item.title}}</text>
+        <text class="item-desc">{{item.description}}</text>
+        <text class="item-date muted">{{dateText(item.validUntil)}} 前有效</text>
+      </view>
+      <text class="item-btn">使用</text>
+    </view>
+    <view class="empty" wx:if="{{benefits.length === 0}}">暂无可用权益</view>
+  </view>
+</view>

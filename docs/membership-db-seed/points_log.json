@@ -1,0 +1,112 @@
+[
+  {
+    "_id": "points_001",
+    "openid": "replace_with_real_openid_1",
+    "type": "earn",
+    "amount": 68,
+    "balance": 68,
+    "source": "order",
+    "sourceId": "order_2026062001",
+    "remark": "茉莉花茶拿铁购买 68 积分",
+    "createdAt": "2026-06-20T10:35:00.000Z"
+  },
+  {
+    "_id": "points_002",
+    "openid": "replace_with_real_openid_1",
+    "type": "earn",
+    "amount": 82,
+    "balance": 150,
+    "source": "order",
+    "sourceId": "order_2026070801",
+    "remark": "卜少挂耳咖啡购买 82 积分",
+    "createdAt": "2026-07-08T14:25:00.000Z"
+  },
+  {
+    "_id": "points_003",
+    "openid": "replace_with_real_openid_2",
+    "type": "earn",
+    "amount": 356,
+    "balance": 356,
+    "source": "order",
+    "sourceId": "order_2026050101",
+    "remark": "首次消费 356 积分",
+    "createdAt": "2026-05-01T09:05:00.000Z"
+  },
+  {
+    "_id": "points_004",
+    "openid": "replace_with_real_openid_2",
+    "type": "redeem",
+    "amount": -200,
+    "balance": 560,
+    "source": "points_exchange",
+    "sourceId": "exchange_2026060101",
+    "remark": "积分兑换 4 元优惠",
+    "createdAt": "2026-06-01T11:00:00.000Z"
+  },
+  {
+    "_id": "points_005",
+    "openid": "replace_with_real_openid_2",
+    "type": "earn",
+    "amount": 300,
+    "balance": 860,
+    "source": "order",
+    "sourceId": "order_2026070501",
+    "remark": "消费 200 元（银焙 1.5 倍）得 300 积分",
+    "createdAt": "2026-07-05T16:20:00.000Z"
+  },
+  {
+    "_id": "points_006",
+    "openid": "replace_with_real_openid_3",
+    "type": "earn",
+    "amount": 500,
+    "balance": 1000,
+    "source": "signup_bonus",
+    "sourceId": "signup_20260315",
+    "remark": "注册赠送 500 积分",
+    "createdAt": "2026-03-15T08:00:00.000Z"
+  },
+  {
+    "_id": "points_007",
+    "openid": "replace_with_real_openid_3",
+    "type": "earn",
+    "amount": 1080,
+    "balance": 2080,
+    "source": "order",
+    "sourceId": "order_2026040101",
+    "remark": "消费 540 元（臻金 2 倍）得 1080 积分",
+    "createdAt": "2026-04-01T10:00:00.000Z"
+  },
+  {
+    "_id": "points_008",
+    "openid": "replace_with_real_openid_3",
+    "type": "redeem",
+    "amount": -500,
+    "balance": 2080,
+    "source": "points_exchange",
+    "sourceId": "exchange_2026050101",
+    "remark": "积分兑换 10 元优惠",
+    "createdAt": "2026-05-01T14:30:00.000Z"
+  },
+  {
+    "_id": "points_009",
+    "openid": "replace_with_real_openid_3",
+    "type": "earn",
+    "amount": 1120,
+    "balance": 3200,
+    "source": "order",
+    "sourceId": "order_2026061501",
+    "remark": "消费 560 元（臻金 2 倍）得 1120 积分",
+    "createdAt": "2026-06-15T11:20:00.000Z"
+  },
+  {
+    "_id": "points_010",
+    "openid": "replace_with_real_openid_3",
+    "type": "redeem",
+    "amount": -500,
+    "balance": 2700,
+    "source": "points_exchange",
+    "sourceId": "exchange_2026070101",
+    "remark": "积分兑换免费饮品 1 杯",
+    "createdAt": "2026-07-01T09:00:00.000Z"
+  }
+]

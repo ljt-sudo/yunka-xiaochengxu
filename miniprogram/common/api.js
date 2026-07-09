@@ -129,5 +129,24 @@ module.exports = {
   resetDemo() {
     return Promise.resolve(store.resetState());
   },
+  // ===== 会员等级系统 =====
+  getTierConfig() {
+    return run('getTierConfig', {}, () => []);
+  },
+  getMemberProfile() {
+    return run('getMemberProfile', {}, () => store.getMemberData());
+  },
+  getMemberBenefits() {
+    return run('getMemberBenefits', {}, () => []);
+  },
+  getPointsHistory(limit = 20, offset = 0) {
+    return run('getPointsHistory', { limit, offset }, () => []);
+  },
+  useBenefit(benefitId) {
+    return run('useBenefit', { benefitId }, () => null);
+  },
+  checkAndUpgrade() {
+    return run('checkAndUpgrade', {}, () => ({ upgraded: false }));
+  },
   localState
 };
