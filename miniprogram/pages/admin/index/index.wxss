@@ -1,8 +1,34 @@
-.admin-grid {
-  display: grid;
-  gap: 18rpx;
-}
+.page { padding: 20rpx 30rpx; min-height: 100vh; background: #f5f5f5; }
 
-.admin-card {
-  min-height: 120rpx;
+.header { margin-bottom: 24rpx; }
+.header-title { font-size: 36rpx; font-weight: 700; color: #1a1a2e; display: block; }
+.header-sub { font-size: 24rpx; color: #999; margin-top: 6rpx; display: block; }
+
+/* 统计行 */
+.stat-row { display: grid; grid-template-columns: 1fr 1fr 1fr 1fr; gap: 12rpx; margin-bottom: 28rpx; }
+.stat-card {
+  background: #fff; border-radius: 12rpx; padding: 16rpx; text-align: center;
+  font-size: 22rpx; color: #666; box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.04);
 }
+.stat-num { font-size: 36rpx; font-weight: 700; color: #1a1a2e; display: block; margin-bottom: 4rpx; }
+
+/* 区块标题 */
+.section-title { font-size: 26rpx; font-weight: 600; color: #333; margin-bottom: 14rpx; margin-top: 8rpx; }
+
+/* 卡片网格 */
+.card-grid { display: grid; gap: 14rpx; margin-bottom: 24rpx; }
+
+.card {
+  background: #fff; border-radius: 16rpx; padding: 24rpx;
+  box-shadow: 0 2rpx 8rpx rgba(0,0,0,0.04); position: relative;
+}
+.card:active { background: #f9f9f9; }
+.card-icon { font-size: 36rpx; display: block; margin-bottom: 8rpx; }
+.card-title { font-size: 28rpx; font-weight: 600; color: #1a1a2e; display: block; }
+.card-desc { font-size: 22rpx; color: #999; margin-top: 4rpx; display: block; }
+
+/* 无权限 */
+.no-auth { display: flex; flex-direction: column; align-items: center; padding: 120rpx 0; }
+.no-auth-icon { font-size: 80rpx; margin-bottom: 20rpx; }
+.no-auth-text { font-size: 32rpx; font-weight: 600; color: #333; }
+.no-auth-desc { font-size: 24rpx; color: #999; margin-top: 8rpx; }

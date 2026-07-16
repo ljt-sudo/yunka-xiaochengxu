@@ -1,0 +1,22 @@
+<view class="page">
+  <view class="page-header">
+    <view class="back" bindtap="wx.navigateBack">← 返回</view>
+    <text class="page-title">权益管理</text>
+    <view class="header-btn" bindtap="showForm">+ 发放</view>
+  </view>
+  <view class="loading" wx:if="{{loading}}">加载中...</view>
+  <view class="stat-row" wx:else>
+    <view class="s-card"><text class="s-num">{{benefits.length}}</text><text>总权益</text></view>
+    <view class="s-card"><text class="s-num">{{benefits.filter(b=>b.status==='active').length}}</text><text>可用</text></view>
+    <view class="s-card"><text class="s-num">{{benefits.filter(b=>b.status==='used').length}}</text><text>已使用</text></view>
+  </view>
+  <view class="benefit-item" wx:for="{{benefits}}" wx:key="_id">
+    <view class="bi-left">
+      <text class="bi-title">{{item.title || item.description}}</text>
+      <text class="bi-tier">等级：{{item.tierSource || '通用'}}</text>
+      <text class="bi-date">{{dateText(item.createdAt)}}</text>
+    </view>
+    <text class="bi-status {{item.status}}">{{item.status === 'active' ? '可用' : item.status === 'used' ? '已使用' : '已过期'}}</text>
+  </view>
+  <view class="empty" wx:if="{{benefits.length === 0 && !loading}}">暂无权益记录</view>
+</view>

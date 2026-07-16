@@ -1,0 +1,52 @@
+<view class="page">
+  <view class="page-header">
+    <view class="back" bindtap="wx.navigateBack">← 返回</view>
+    <text class="page-title">等级配置</text>
+  </view>
+  <view class="loading" wx:if="{{loading}}">加载中...</view>
+
+  <view wx:else>
+    <!-- 等级列表 -->
+    <view class="tier-card" wx:for="{{tiers}}" wx:key="_id" wx:if="{{editing === null}}">
+      <view class="tier-header">
+        <text class="tier-icon">🏅</text>
+        <text class="tier-name">{{item.name}}</text>
+        <text class="tier-level">Lv.{{item.level}}</text>
+      </view>
+      <view class="tier-info">
+        <text class="tier-info-row">入会方式：{{item.conditions.registerFree ? '免费注册' : '消费达标/付费购买'}}</text>
+        <text class="tier-info-row" wx:if="{{item.conditions.entryRequirements}}">
+          升级条件：消费 ¥{{(item.conditions.entryRequirements.totalSpendCents/100).toFixed(0)}} 或购卡 ¥{{(item.conditions.entryRequirements.orPurchaseCardCents/100).toFixed(0)}}
+        </text>
+      </view>
+      <view class="tier-benefits">
+        <text class="benefit-tag" wx:for="{{item.benefits}}" wx:key="type">✅ {{item.desc}}</text>
+      </view>
+      <button class="btn-edit" data-index="{{index}}" bindtap="editTier">编辑</button>
+    </view>
+
+    <!-- 编辑表单 -->
+    <view class="edit-form" wx:if="{{editing}}">
+      <text class="form-title">编辑：{{editing.name}}</text>
+      <label class="form-field">
+        <text>等级名称</text>
+        <input value="{{editing.name}}" data-field="name" bindinput="inputField" />
+      </label>
+      <label class="form-field">
+        <text>升级消费门槛（元）</text>
+        <input type="number" value="{{editing.conditions.entryRequirements.totalSpendCents/100}}" data-field="totalSpendCents" bindinput="inputField" />
+      </label>
+      <view class="form-benefits">
+        <text class="form-subtitle">权益列表</text>
+        <view class="benefit-field" wx:for="{{editing.benefits}}" wx:key="type" wx:for-item="b" wx:for-index="i">
+          <text class="benefit-idx">{{i+1}}.</text>
+          <input value="{{b.desc}}" data-idx="{{i}}" data-field="desc" bindinput="inputBenefit" placeholder="权益描述" />
+        </view>
+      </view>
+      <view class="form-btns">
+        <button class="btn-save" bindtap="saveTier">保存</button>
+        <button class="btn-cancel" bindtap="cancelEdit">取消</button>
+      </view>
+    </view>
+  </view>
+</view>

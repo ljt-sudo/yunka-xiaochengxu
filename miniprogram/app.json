@@ -17,7 +17,10 @@
     "pages/admin/orders/orders",
     "pages/admin/members/members",
     "pages/admin/coupons/coupons",
-    "pages/admin/subscribe/subscribe"
+    "pages/admin/subscribe/subscribe",
+    "pages/admin/tiers/tiers",
+    "pages/admin/benefits/benefits",
+    "pages/admin/settings/settings"
   ],
   "window": {
     "navigationBarTitleText": "云咖铺子",

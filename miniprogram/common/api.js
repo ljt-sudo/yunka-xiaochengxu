@@ -142,6 +142,22 @@ module.exports = {
   getPointsHistory(limit = 20, offset = 0) {
     return run('getPointsHistory', { limit, offset }, () => []);
   },
+  // ===== 管理后台 =====
+  getMembers() {
+    return run('getMembers', {}, () => []);
+  },
+  updateMemberTier(payload) {
+    return run('updateMemberTier', payload, () => null);
+  },
+  updateTierConfig(payload) {
+    return run('updateTierConfig', payload, () => null);
+  },
+  createBenefit(payload) {
+    return run('createBenefit', payload, () => null);
+  },
+  saveSettings(payload) {
+    return run('saveSettings', payload, () => null);
+  },
   useBenefit(benefitId) {
     return run('useBenefit', { benefitId }, () => null);
   },

@@ -1,0 +1,39 @@
+<view class="page">
+  <view class="page-header">
+    <view class="back" bindtap="wx.navigateBack">← 返回</view>
+    <text class="page-title">基础设置</text>
+    <view class="header-btn" bindtap="save">保存</view>
+  </view>
+  <view class="loading" wx:if="{{loading}}">加载中...</view>
+
+  <view wx:else>
+    <!-- 积分规则 -->
+    <view class="section">
+      <text class="s-title">💰 积分规则</text>
+      <label class="field"><text>获取说明</text><input value="{{settings.points.earnText}}" data-field="points.earnText" bindinput="input" /></label>
+      <label class="field"><text>兑换说明</text><input value="{{settings.points.redeemText}}" data-field="points.redeemText" bindinput="input" /></label>
+    </view>
+
+    <!-- 运费 -->
+    <view class="section">
+      <text class="s-title">🚚 运费设置</text>
+      <label class="field"><text>运费（元）</text><input type="number" value="{{settings.shippingRule.feeCents/100}}" data-field="shippingRule.feeCents" bindinput="input" /></label>
+      <label class="field"><text>包邮门槛（元）</text><input type="number" value="{{settings.shippingRule.freeThresholdCents/100}}" data-field="shippingRule.freeThresholdCents" bindinput="input" /></label>
+    </view>
+
+    <!-- 客服 -->
+    <view class="section">
+      <text class="s-title">📞 客服信息</text>
+      <label class="field"><text>电话</text><input value="{{settings.support.phone}}" data-field="support.phone" bindinput="input" /></label>
+      <label class="field"><text>微信</text><input value="{{settings.support.wechat}}" data-field="support.wechat" bindinput="input" /></label>
+    </view>
+
+    <!-- 订阅模板 -->
+    <view class="section">
+      <text class="s-title">🔔 订阅模板 ID</text>
+      <label class="field"><text>优惠券到账</text><input value="{{settings.subscribeTemplates.couponArrived}}" data-field="subscribeTemplates.couponArrived" bindinput="input" /></label>
+      <label class="field"><text>复购提醒</text><input value="{{settings.subscribeTemplates.repurchaseReminder}}" data-field="subscribeTemplates.repurchaseReminder" bindinput="input" /></label>
+      <label class="field"><text>积分变动</text><input value="{{settings.subscribeTemplates.pointsChanged}}" data-field="subscribeTemplates.pointsChanged" bindinput="input" /></label>
+    </view>
+  </view>
+</view>

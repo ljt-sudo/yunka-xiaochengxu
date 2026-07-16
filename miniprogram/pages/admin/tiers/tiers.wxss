@@ -1,0 +1,27 @@
+.page { padding: 0 30rpx; min-height: 100vh; background: #f5f5f5; }
+.page-header { display: flex; align-items: center; gap: 16rpx; padding: 30rpx 0; }
+.back { font-size: 28rpx; color: #2f54a0; }
+.page-title { font-size: 32rpx; font-weight: 600; color: #333; }
+.loading { text-align: center; padding: 60rpx; color: #999; }
+.tier-card { background: #fff; border-radius: 16rpx; padding: 24rpx; margin-bottom: 16rpx; }
+.tier-header { display: flex; align-items: center; gap: 10rpx; margin-bottom: 12rpx; }
+.tier-icon { font-size: 36rpx; }
+.tier-name { font-size: 28rpx; font-weight: 700; }
+.tier-level { font-size: 22rpx; color: #999; background: #f5f5f5; padding: 4rpx 14rpx; border-radius: 20rpx; }
+.tier-info { margin-bottom: 12rpx; }
+.tier-info-row { display: block; font-size: 22rpx; color: #666; margin-bottom: 4rpx; }
+.tier-benefits { display: flex; flex-wrap: wrap; gap: 6rpx; margin-bottom: 12rpx; }
+.benefit-tag { font-size: 22rpx; color: #555; background: #f9f9f9; padding: 4rpx 12rpx; border-radius: 6rpx; }
+.btn-edit { width: 100%; padding: 16rpx; background: #2f2118; color: #fff; border-radius: 8rpx; font-size: 26rpx; }
+.edit-form { background: #fff; border-radius: 16rpx; padding: 24rpx; }
+.form-title { font-size: 28rpx; font-weight: 600; margin-bottom: 20rpx; display: block; }
+.form-field { display: block; margin-bottom: 16rpx; }
+.form-field text { font-size: 24rpx; color: #666; display: block; margin-bottom: 6rpx; }
+.form-field input { width: 100%; padding: 16rpx; border: 2rpx solid #ddd; border-radius: 8rpx; font-size: 26rpx; }
+.form-subtitle { font-size: 24rpx; font-weight: 600; margin-bottom: 8rpx; display: block; }
+.benefit-field { display: flex; align-items: center; gap: 8rpx; margin-bottom: 8rpx; }
+.benefit-idx { font-size: 24rpx; color: #999; width: 40rpx; }
+.benefit-field input { flex: 1; padding: 12rpx; border: 2rpx solid #ddd; border-radius: 8rpx; font-size: 24rpx; }
+.form-btns { display: flex; gap: 16rpx; margin-top: 24rpx; }
+.btn-save { flex: 1; padding: 18rpx; background: #2f2118; color: #fff; border-radius: 8rpx; font-size: 26rpx; }
+.btn-cancel { flex: 1; padding: 18rpx; background: #f5f5f5; border-radius: 8rpx; font-size: 26rpx; color: #666; }

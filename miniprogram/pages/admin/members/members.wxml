@@ -1,35 +1,36 @@
-<wxs src="../../../common/format.wxs" module="fmt" />
-<view class="page safe-bottom" wx:if="{{user}}">
-  <view class="title">会员积分</view>
-  <view class="muted">当前只做单管理员、单体验会员；接云开发后按 openid 查询。</view>
+<view class="page">
+  <view class="page-header">
+    <view class="back" bindtap="wx.navigateBack">← 返回</view>
+    <text class="page-title">会员列表</text>
+  </view>
+  <input class="search" placeholder="搜索会员姓名或手机号" bindinput="input" value="{{keyword}}" />
+  
+  <view class="loading" wx:if="{{loading}}">加载中...</view>
 
-  <view class="section card">
-    <view class="between">
-      <view>
-        <view class="h2">{{user.nickname}}</view>
-        <view class="muted">积分余额</view>
-      </view>
-      <view class="points">{{user.pointsBalance}}</view>
+  <!-- 会员详情 -->
+  <view class="detail-card" wx:if="{{detail}}">
+    <view class="detail-row"><text class="label">昵称</text><text>{{detail.nickname}}</text></view>
+    <view class="detail-row"><text class="label">等级</text><text class="tier-tag">{{detail.tierName}}</text></view>
+    <view class="detail-row"><text class="label">总积分</text><text class="points">{{detail.totalPoints}}</text></view>
+    <view class="detail-row"><text class="label">已使用</text><text>{{detail.usedPoints}}</text></view>
+    <view class="detail-row"><text class="label">累计消费</text><text>¥{{(detail.totalSpendCents/100).toFixed(2)}}</text></view>
+    <view class="detail-row"><text class="label">订单数</text><text>{{detail.totalOrders}} 单</text></view>
+    <view class="detail-row"><text class="label">手机</text><text>{{detail.phone || '未填写'}}</text></view>
+    <view class="detail-row"><text class="label">生日</text><text>{{detail.birthday || '未设置'}}</text></view>
+    <view class="detail-row"><text class="label">注册时间</text><text>{{dateText(detail.createdAt)}}</text></view>
+    <view class="detail-btns">
+      <button class="btn-sm" data-id="{{detail.id}}" data-tier="{{detail.tier}}" bindtap="changeTier">调整等级</button>
+      <button class="btn-sm btn-outline" bindtap="givePoints">调整积分</button>
     </view>
   </view>
 
-  <view class="section card">
-    <view class="h2">人工调整</view>
-    <input class="input" type="number" data-field="points" value="{{points}}" bindinput="input" placeholder="积分，可填负数" />
-    <input class="input field" data-field="note" value="{{note}}" bindinput="input" placeholder="备注" />
-    <button class="btn" bindtap="adjust">保存调整</button>
-  </view>
-
-  <view class="section card">
-    <view class="h2">流水</view>
-    <view class="list-item" wx:for="{{pointsLedger}}" wx:key="id">
-      <view class="between">
-        <view>
-          <view>{{item.type}}</view>
-          <view class="muted">{{fmt.dateText(item.createdAt)}} {{item.note || ''}}</view>
-        </view>
-        <view class="price">{{item.points > 0 ? '+' : ''}}{{item.points}}</view>
-      </view>
+  <!-- 全部会员列表 -->
+  <view class="section-title" wx:if="{{!keyword}}"><text>全部会员（{{members.length}}）</text></view>
+  <view class="member-item" wx:for="{{members}}" wx:key="_id" data-id="{{item._id}}" bindtap="input" data-keyword="{{item.nickname}}">
+    <text class="member-name">{{item.nickname}}</text>
+    <view class="member-info">
+      <text class="tier-tag sm">{{item.tierName}}</text>
+      <text class="member-points">{{item.totalPoints}}分</text>
     </view>
   </view>
 </view>

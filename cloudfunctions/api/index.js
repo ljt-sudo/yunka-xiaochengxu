@@ -680,6 +680,74 @@ async function earnPointsOnPayment({ openid, orderAmountCents, orderId }) {
   return { points, multiplier: tier.multiplier };
 }
 
+// ===== 管理后台接口 =====
+
+async function getMembers() {
+  const openid = await getOpenId();
+  await requireAdmin(openid);
+  const result = await collection('members').orderBy('createdAt', 'desc').get();
+  return result.data.map(withId);
+}
+
+async function updateMemberTier({ memberId, tierId }) {
+  const openid = await getOpenId();
+  await requireAdmin(openid);
+  const tier = await collection('tier_config').doc(tierId).get();
+  if (!tier.data) throw new Error('等级不存在');
+  await collection('members').doc(memberId).update({
+    data: { tier: tierId, tierName: tier.data.name }
+  });
+  return { memberId, tier: tierId, tierName: tier.data.name };
+}
+
+async function updateTierConfig({ tier }) {
+  const openid = await getOpenId();
+  await requireAdmin(openid);
+  const payload = { ...tier };
+  const id = payload._id;
+  delete payload._id;
+  delete payload.id;
+  await collection('tier_config').doc(id).set({ data: payload });
+  return { id, ...payload };
+}
+
+async function createBenefit({ desc, tierSource }) {
+  const openid = await getOpenId();
+  await requireAdmin(openid);
+  // 获取该等级的所有会员
+  const members = await collection('members').where({ tier: tierSource }).get();
+  const now = new Date();
+  const validUntil = new Date(now.getTime() + 30 * 24 * 60 * 60 * 1000); // 30天后过期
+  
+  const benefits = members.data.map(m => ({
+    openid: m.openid,
+    type: 'admin_grant',
+    title: desc || '管理员发放权益',
+    description: desc || '',
+    status: 'active',
+    validFrom: now,
+    validUntil,
+    usedAt: null,
+    grantedAt: now,
+    tierSource
+  }));
+  
+  if (benefits.length > 0) {
+    // 批量插入（云数据库一次最多100条）
+    for (const b of benefits) {
+      await collection('benefits').add({ data: b });
+    }
+  }
+  return { count: benefits.length, desc, tierSource };
+}
+
+async function saveSettings({ settings }) {
+  const openid = await getOpenId();
+  await requireAdmin(openid);
+  await collection('settings').doc('commerce').set({ data: settings });
+  return { ok: true };
+}
+
 exports.main = async (event) => {
   try {
     const action = event.action;
@@ -717,7 +785,12 @@ exports.main = async (event) => {
       getMemberBenefits,
       getPointsHistory,
       useBenefit,
-      checkAndUpgrade
+      checkAndUpgrade,
+      getMembers,
+      updateMemberTier,
+      updateTierConfig,
+      createBenefit,
+      saveSettings
     };
     if (!handlers[action]) throw new Error(`未知操作: ${action}`);
     return ok(await handlers[action](payload));
