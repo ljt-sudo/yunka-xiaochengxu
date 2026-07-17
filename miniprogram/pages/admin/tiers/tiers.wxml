@@ -16,7 +16,7 @@
       <view class="tier-info">
         <text class="tier-info-row">入会方式：{{item.conditions.registerFree ? '免费注册' : '消费达标/付费购买'}}</text>
         <text class="tier-info-row" wx:if="{{item.conditions.entryRequirements}}">
-          升级条件：消费 ¥{{(item.conditions.entryRequirements.totalSpendCents/100).toFixed(0)}} 或购卡 ¥{{(item.conditions.entryRequirements.orPurchaseCardCents/100).toFixed(0)}}
+          升级条件：消费 ¥{{item.spendReqText}} 或购卡 ¥{{item.cardReqText}}
         </text>
       </view>
       <view class="tier-benefits">

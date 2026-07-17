@@ -5,6 +5,12 @@ Page({
   async loadTiers() {
     this.setData({ loading: true });
     const tiers = await api.getTierConfig();
+    tiers.forEach(t => {
+      if (t.conditions && t.conditions.entryRequirements) {
+        t.spendReqText = Math.round(t.conditions.entryRequirements.totalSpendCents / 100);
+        t.cardReqText = Math.round(t.conditions.entryRequirements.orPurchaseCardCents / 100);
+      }
+    });
     this.setData({ tiers, loading: false });
   },
   editTier(e) {

@@ -1,5 +1,5 @@
-const api = require('../../common/api');
-const { dateText } = require('../../common/format');
+const api = require('../../../common/api');
+const { dateText } = require('../../../common/format');
 
 Page({
   data: {
