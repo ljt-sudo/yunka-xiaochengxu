@@ -1,3 +1,4 @@
+<wxs src="../../../common/format.wxs" module="fmt" />
 <view class="page">
   <view class="header">
     <view class="back" bindtap="wx.navigateBack">←</view>
@@ -10,7 +11,7 @@
     <view class="item" wx:for="{{list}}" wx:key="_id">
       <view class="item-left">
         <text class="item-remark">{{item.remark || item.source}}</text>
-        <text class="item-date muted">{{dateText(item.createdAt)}}</text>
+        <text class="item-date muted">{{fmt.dateText(item.createdAt)}}</text>
       </view>
       <text class="item-amt {{item.amount > 0 ? 'earn' : 'redeem'}}">
         {{item.amount > 0 ? '+' : ''}}{{item.amount}}

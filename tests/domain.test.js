@@ -10,7 +10,7 @@ const {
   ORDER_STATUS,
   POINTS_LEDGER_TYPE,
   COUPON_CLAIM_STATUS
-} = require('../common/domain');
+} = require('../miniprogram/common/domain');
 
 test('points redemption uses 50 points per yuan and caps at 20 percent of goods amount', () => {
   assert.deepEqual(calculatePointsRedemption({

@@ -2,17 +2,17 @@ const fs = require('node:fs');
 const path = require('node:path');
 
 const root = path.resolve(__dirname, '..');
-const appJson = JSON.parse(fs.readFileSync(path.join(root, 'app.json'), 'utf8'));
+const appJson = JSON.parse(fs.readFileSync(path.join(root, 'miniprogram/app.json'), 'utf8'));
 
 const missing = [];
 for (const page of appJson.pages) {
   for (const ext of ['js', 'wxml', 'json', 'wxss']) {
-    const file = path.join(root, `${page}.${ext}`);
+    const file = path.join(root, 'miniprogram', `${page}.${ext}`);
     if (!fs.existsSync(file)) missing.push(path.relative(root, file));
   }
 }
 
-const wxmlFiles = appJson.pages.map((page) => path.join(root, `${page}.wxml`));
+const wxmlFiles = appJson.pages.map((page) => path.join(root, 'miniprogram', `${page}.wxml`));
 const invalidWxml = wxmlFiles.filter((file) => {
   const text = fs.readFileSync(file, 'utf8');
   return /\{\{(?:money|dateText)\(/.test(text);
@@ -20,11 +20,11 @@ const invalidWxml = wxmlFiles.filter((file) => {
 
 const requiredFiles = [
   'project.config.json',
-  'app.js',
-  'app.wxss',
-  'common/api.js',
-  'common/domain.js',
-  'common/store.js',
+  'miniprogram/app.js',
+  'miniprogram/app.wxss',
+  'miniprogram/common/api.js',
+  'miniprogram/common/domain.js',
+  'miniprogram/common/store.js',
   'cloudfunctions/api/index.js',
   'docs/launch-checklist.md',
   'docs/cloud-database-seed.json'
@@ -46,4 +46,4 @@ if (missing.length || invalidWxml.length) {
   process.exit(1);
 }
 
-console.log(`Project check passed: ${appJson.pages.length} pages, cloud function, docs, and seed data are present.`);
+console.log('✅ All project files verified.');

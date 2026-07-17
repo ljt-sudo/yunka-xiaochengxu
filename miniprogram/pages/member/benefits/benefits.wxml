@@ -1,3 +1,4 @@
+<wxs src="../../../common/format.wxs" module="fmt" />
 <view class="page">
   <view class="header">
     <view class="back" bindtap="wx.navigateBack">←</view>
@@ -9,7 +10,7 @@
       <view class="item-left">
         <text class="item-title">{{item.title}}</text>
         <text class="item-desc">{{item.description}}</text>
-        <text class="item-date muted">{{dateText(item.validUntil)}} 前有效</text>
+        <text class="item-date muted">{{fmt.dateText(item.validUntil)}} 前有效</text>
       </view>
       <text class="item-btn">使用</text>
     </view>

@@ -11,7 +11,7 @@ global.wx = {
   }
 };
 
-const store = require('../common/store');
+const store = require('../miniprogram/common/store');
 
 test('local commerce flow locks coupon, releases it on cancel, and applies paid effects once', () => {
   store.resetState();
