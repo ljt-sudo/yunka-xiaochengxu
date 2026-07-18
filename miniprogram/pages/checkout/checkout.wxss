@@ -29,3 +29,26 @@
 .checkout-btn {
   margin-top: 28rpx;
 }
+
+.agree-row {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  margin-top: 30rpx;
+  padding: 20rpx 0;
+  gap: 4rpx;
+}
+.agree-icon {
+  font-size: 30rpx;
+  margin-right: 8rpx;
+}
+.agree-text {
+  font-size: 24rpx;
+  color: #666;
+}
+.agree-link {
+  font-size: 24rpx;
+  color: #8b7355;
+  text-decoration: underline;
+  padding: 4rpx;
+}

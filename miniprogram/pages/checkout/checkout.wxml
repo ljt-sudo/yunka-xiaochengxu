@@ -58,5 +58,15 @@
     <view class="muted">{{error}}</view>
   </view>
 
-  <button class="btn checkout-btn" bindtap="createOrder" disabled="{{!totals}}">提交订单</button>
+  <!-- ===== 隐私协议 ===== -->
+  <view class="agree-row">
+    <icon class="agree-icon {{agreed ? 'checked' : ''}}" bindtap="toggleAgree" wx:if="{{!agreed}}">⬜</icon>
+    <icon class="agree-icon {{agreed ? 'checked' : ''}}" bindtap="toggleAgree" wx:else>✅</icon>
+    <text class="agree-text">我已阅读并同意</text>
+    <text class="agree-link" bindtap="goAgreement">《用户服务协议》</text>
+    <text class="agree-text">和</text>
+    <text class="agree-link" bindtap="goPrivacy">《隐私政策》</text>
+  </view>
+
+  <button class="btn checkout-btn" bindtap="createOrder" disabled="{{!totals || !agreed}}">提交订单</button>
 </view>

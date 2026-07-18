@@ -15,7 +15,8 @@ Page({
       detail: '海南省海口市云咖铺子体验地址'
     },
     error: '',
-    money
+    money,
+    agreed: false
   },
   async onShow() {
     try {
@@ -54,6 +55,10 @@ Page({
     this.setData({ [`address.${field}`]: event.detail.value });
   },
   async createOrder() {
+    if (!this.data.agreed) {
+      wx.showToast({ title: '请先同意服务协议和隐私政策', icon: 'none' });
+      return;
+    }
     try {
       const order = await api.createOrder({
         cartIds: this.data.cartIds,
@@ -79,5 +84,14 @@ Page({
     } catch (error) {
       wx.showToast({ title: error.message, icon: 'none' });
     }
+  },
+  toggleAgree() {
+    this.setData({ agreed: !this.data.agreed });
+  },
+  goPrivacy() {
+    wx.navigateTo({ url: '/pages/privacy/privacy' });
+  },
+  goAgreement() {
+    wx.navigateTo({ url: '/pages/agreement/agreement' });
   }
 });
