@@ -122,5 +122,15 @@ Page({
   // 后台管理
   goAdmin() {
     wx.navigateTo({ url: '/pages/admin/index/index' });
+  },
+
+  // 隐私政策
+  goPrivacy() {
+    wx.navigateTo({ url: '/pages/privacy/privacy' });
+  },
+
+  // 用户协议
+  goAgreement() {
+    wx.navigateTo({ url: '/pages/agreement/agreement' });
   }
 });

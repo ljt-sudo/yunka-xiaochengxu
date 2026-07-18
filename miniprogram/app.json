@@ -20,7 +20,9 @@
     "pages/admin/subscribe/subscribe",
     "pages/admin/tiers/tiers",
     "pages/admin/benefits/benefits",
-    "pages/admin/settings/settings"
+    "pages/admin/settings/settings",
+    "pages/privacy/privacy",
+    "pages/agreement/agreement"
   ],
   "window": {
     "navigationBarTitleText": "云咖铺子",

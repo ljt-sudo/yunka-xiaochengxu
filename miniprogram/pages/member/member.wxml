@@ -106,5 +106,12 @@
     <view class="section" wx:if="{{member.isAdmin}}">
       <button class="btn-admin" bindtap="goAdmin">进入商家后台</button>
     </view>
+
+    <!-- ===== 协议入口 ===== -->
+    <view class="legal-links">
+      <text class="legal-link" bindtap="goPrivacy">隐私政策</text>
+      <text class="legal-sep">|</text>
+      <text class="legal-link" bindtap="goAgreement">用户服务协议</text>
+    </view>
   </view>
 </view>

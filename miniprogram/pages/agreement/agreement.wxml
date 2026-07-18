@@ -1,0 +1,99 @@
+<view class="page-policy">
+  <view class="header">
+    <text class="back" bindtap="wx.navigateBack">← 返回</text>
+    <text class="title">用户服务协议</text>
+  </view>
+
+  <view class="content">
+    <text class="update-date">更新日期：2026年7月</text>
+
+    <view class="section">
+      <text class="section-title">欢迎您使用云咖铺子！</text>
+      <text class="para">本协议是您（以下简称"用户"或"您"）与云咖铺子（以下简称"我们"）之间关于使用本小程序服务所订立的协议。请您仔细阅读本协议的全部内容，如您使用本小程序，即视为您已充分阅读、理解并同意本协议的全部内容。</text>
+    </view>
+
+    <view class="section">
+      <text class="section-title">一、服务内容</text>
+      <text class="para">1.1 我们通过本小程序为您提供咖啡豆及相关产品的浏览、选购、下单购买、配送追踪等服务。</text>
+      <text class="para">1.2 我们为注册会员提供积分累计、优惠券发放、会员等级及权益等增值服务。</text>
+      <text class="para">1.3 我们保留根据需要调整、变更服务内容的权利，变更后的内容将通过小程序公告等方式通知您。</text>
+    </view>
+
+    <view class="section">
+      <text class="section-title">二、用户注册与账户管理</text>
+      <text class="para">2.1 您在使用本小程序的部分功能前，需要注册会员账户。注册时您应提供真实、准确的手机号码，并确保信息的及时更新。</text>
+      <text class="para">2.2 您应妥善保管您的账户信息，因账户信息泄露导致的损失由您自行承担。</text>
+      <text class="para">2.3 如您发现账户被他人盗用，请立即联系我们，我们将协助您采取措施。</text>
+      <text class="para">2.4 每个手机号码只能注册一个账户。如您存在恶意注册、滥用账户等行为，我们有权暂停或终止您的账户。</text>
+    </view>
+
+    <view class="section">
+      <text class="section-title">三、商品购买与订单</text>
+      <text class="para">3.1 本小程序展示的商品信息（包括价格、规格、库存等）仅供参考，实际以订单确认为准。</text>
+      <text class="para">3.2 您在提交订单前，应仔细核对商品信息、数量、价格、收货地址等。订单提交成功后，我们将为您安排配送。</text>
+      <text class="para">3.3 我们保留因商品库存不足、价格错误等原因取消订单的权利，并将及时通知您并全额退款。</text>
+      <text class="para">3.4 如因不可抗力或物流原因导致配送延迟，我们不承担相应责任，但会尽力协调解决。</text>
+    </view>
+
+    <view class="section">
+      <text class="section-title">四、支付与配送</text>
+      <text class="para">4.1 本小程序支持微信支付等在线支付方式。支付成功后，订单状态将更新为"已支付"。</text>
+      <text class="para">4.2 我们将根据您提供的收货地址安排配送，配送时效因物流公司及地区差异可能有所不同。</text>
+      <text class="para">4.3 如因收货信息填写错误导致配送失败或商品丢失，相关损失由您自行承担。</text>
+    </view>
+
+    <view class="section">
+      <text class="section-title">五、退换货政策</text>
+      <text class="para">5.1 咖啡豆属于食品类商品，除质量问题外，拆封后不支持无理由退换货。</text>
+      <text class="para">5.2 如收到的商品存在质量问题（如包装破损、商品变质等），请在签收后24小时内联系客服，我们将为您处理退换货事宜。</text>
+    </view>
+
+    <view class="section">
+      <text class="section-title">六、积分与优惠券</text>
+      <text class="para">6.1 积分规则：每消费1元获得1积分，积分可用于抵扣订单金额（10积分=1元），单笔订单最高抵扣¥20。</text>
+      <text class="para">6.2 积分有效期为自获取之日起12个月，过期未使用的积分将自动失效。</text>
+      <text class="para">6.3 优惠券分为折扣券和满减券，使用规则以券面说明为准。优惠券不可叠加使用，不可兑换现金。</text>
+      <text class="para">6.4 我们有权根据运营需要调整积分和优惠券的规则，调整后的规则以公告为准。</text>
+    </view>
+
+    <view class="section">
+      <text class="section-title">七、用户行为规范</text>
+      <text class="para">7.1 您在使用本小程序时，应遵守国家法律法规，不得利用本小程序从事违法违规活动。</text>
+      <text class="para">7.2 您不得对本小程序进行反向工程、破解、攻击或干扰其正常运行。</text>
+      <text class="para">7.3 如您违反本协议，我们有权暂停或终止您的服务，并保留追究法律责任的权利。</text>
+    </view>
+
+    <view class="section">
+      <text class="section-title">八、知识产权</text>
+      <text class="para">8.1 本小程序的所有内容，包括但不限于文字、图片、标识、界面设计等，均受著作权法、商标法等法律法规保护。</text>
+      <text class="para">8.2 未经我们书面许可，您不得以任何方式复制、转载、修改或商业使用本小程序的任何内容。</text>
+    </view>
+
+    <view class="section">
+      <text class="section-title">九、免责声明</text>
+      <text class="para">9.1 我们将尽力保证服务的稳定运行，但不对因不可抗力、网络故障、系统维护等原因导致的服务中断承担责任。</text>
+      <text class="para">9.2 我们不对第三方服务（如微信支付、物流配送等）的可用性和安全性承担责任。</text>
+      <text class="para">9.3 在法律允许的范围内，我们对因使用本小程序所产生的间接损失不承担责任。</text>
+    </view>
+
+    <view class="section">
+      <text class="section-title">十、协议的变更与终止</text>
+      <text class="para">10.1 我们有权根据需要修改本协议，修改后的协议将通过小程序公告或弹窗的方式通知您。继续使用本小程序即视为接受修改后的协议。</text>
+      <text class="para">10.2 如您不同意本协议的任何修改，您应停止使用本小程序并申请注销账户。</text>
+      <text class="para">10.3 我们有权在必要时终止本服务，并提前公告通知。</text>
+    </view>
+
+    <view class="section">
+      <text class="section-title">十一、争议解决</text>
+      <text class="para">11.1 本协议的订立、执行和解释均适用中华人民共和国法律。</text>
+      <text class="para">11.2 因本协议引起的或与本协议有关的争议，双方应友好协商解决；协商不成的，任何一方均可向有管辖权的法院提起诉讼。</text>
+    </view>
+
+    <view class="section">
+      <text class="section-title">十二、联系我们</text>
+      <text class="para">如您对本协议有任何疑问，请通过以下方式联系我们：</text>
+      <text class="para">客服邮箱：[请填写您的邮箱]</text>
+      <text class="para">客服电话：[请填写您的电话]</text>
+    </view>
+  </view>
+</view>

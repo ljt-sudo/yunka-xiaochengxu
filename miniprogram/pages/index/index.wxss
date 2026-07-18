@@ -202,3 +202,20 @@
   font-size: 22rpx;
   font-weight: 800;
 }
+
+.legal-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40rpx 0 20rpx;
+  gap: 20rpx;
+}
+.legal-link {
+  font-size: 24rpx;
+  color: #999;
+  padding: 10rpx;
+}
+.legal-sep {
+  font-size: 24rpx;
+  color: #ddd;
+}

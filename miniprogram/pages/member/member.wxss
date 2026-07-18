@@ -340,11 +340,28 @@
 
 .btn-admin {
   width: 100%;
-  padding: 24rpx;
-  background: #2f2118;
+  margin-top: 20rpx;
+  background: #8b7355;
   color: #fff;
-  border-radius: 16rpx;
+  border-radius: 12rpx;
   font-size: 28rpx;
-  font-weight: 600;
-  text-align: center;
+  padding: 20rpx;
+}
+
+.legal-links {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 40rpx 0 20rpx;
+  gap: 20rpx;
+}
+.legal-link {
+  font-size: 24rpx;
+  color: #999;
+  padding: 10rpx;
+}
+.legal-sep {
+  font-size: 24rpx;
+  color: #ddd;
+}
 }

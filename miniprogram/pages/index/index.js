@@ -28,5 +28,11 @@ Page({
   },
   goCoupons() {
     wx.navigateTo({ url: '/pages/coupons/coupons' });
+  },
+  goPrivacy() {
+    wx.navigateTo({ url: '/pages/privacy/privacy' });
+  },
+  goAgreement() {
+    wx.navigateTo({ url: '/pages/agreement/agreement' });
   }
 });
