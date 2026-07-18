@@ -64,7 +64,8 @@ Page({
         cartIds: this.data.cartIds,
         couponClaimId: this.data.selectedCouponClaimId,
         requestedPoints: Number(this.data.requestedPoints || 0),
-        address: this.data.address
+        address: this.data.address,
+        source: wx.getStorageSync('orderSource') || ''
       });
       const payment = await api.createPayment(order.id);
       wx.showModal({

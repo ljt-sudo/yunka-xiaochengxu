@@ -162,7 +162,7 @@ function previewOrderItems({ items, couponClaimId, requestedPoints }) {
   });
 }
 
-function createOrder({ cartIds, couponClaimId, requestedPoints, address }) {
+function createOrder({ cartIds, couponClaimId, requestedPoints, address, source }) {
   const state = loadState();
   const selected = state.cart.filter((item) => cartIds.includes(item.id));
   if (selected.length === 0) throw new Error('购物车为空');
@@ -190,6 +190,7 @@ function createOrder({ cartIds, couponClaimId, requestedPoints, address }) {
     items: totals.lineItems,
     address,
     couponClaimId: couponClaim ? couponClaim.id : '',
+    source: source || '',
     createdAt: now,
     ...totals
   };

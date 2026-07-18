@@ -7,3 +7,12 @@
 .cancel-btn {
   margin-top: 12rpx;
 }
+.source-tag {
+  font-size: 22rpx;
+  color: #8b7355;
+  margin-top: 6rpx;
+  background: #faf3eb;
+  display: inline-block;
+  padding: 4rpx 12rpx;
+  border-radius: 6rpx;
+}

@@ -1,11 +1,14 @@
 <wxs src="../../../common/format.wxs" module="fmt" />
 <view class="page safe-bottom">
   <view class="title">订单发货</view>
-  <view class="muted">第一版只做快递发货和人工售后标记。</view>
+  <view class="muted">发货管理和来源追踪</view>
 
-  <view class="section card">
-    <input class="input" data-field="expressCompany" value="{{expressCompany}}" bindinput="input" placeholder="快递公司" />
-    <input class="input field" data-field="expressNo" value="{{expressNo}}" bindinput="input" placeholder="快递单号，留空自动生成体验单号" />
+  <view class="section card" style="display:flex;align-items:center;gap:12px;flex-wrap:wrap">
+    <input class="input" style="flex:1;min-width:140px" data-field="expressCompany" value="{{expressCompany}}" bindinput="input" placeholder="快递公司" />
+    <input class="input field" style="flex:1;min-width:200px" data-field="expressNo" value="{{expressNo}}" bindinput="input" placeholder="快递单号，留空自动生成" />
+    <picker mode="selector" range="{{sourceList}}" bindchange="filterSource" style="flex:0 0 auto">
+      <view class="btn secondary" style="padding:12rpx 20rpx;font-size:24rpx">{{filterSourceText || '📋 全部来源'}}</view>
+    </picker>
   </view>
 
   <view class="section card" wx:for="{{orders}}" wx:key="id">
@@ -13,6 +16,7 @@
       <view>
         <view class="h2">{{item.orderNo}}</view>
         <view class="muted">{{item.status}} · {{fmt.money(item.payableAmountCents)}}</view>
+        <view wx:if="{{item.source}}" class="muted" style="margin-top:4rpx;color:#8b7355">📱 {{item.source}}</view>
       </view>
       <button class="btn secondary" data-id="{{item.id}}" bindtap="ship" disabled="{{item.status === 'pending_payment'}}">发货</button>
     </view>

@@ -8,6 +8,7 @@
       <view>
         <view class="h2">{{order.status}}</view>
         <view class="muted">创建于 {{fmt.dateText(order.createdAt)}}</view>
+        <view wx:if="{{order.source}}" class="source-tag">📱 来源：{{order.source}}</view>
       </view>
       <view wx:if="{{order.status === 'pending_payment'}}">
         <button class="btn secondary" bindtap="payAgain">模拟支付</button>

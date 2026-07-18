@@ -6,7 +6,17 @@ Page({
     products: [],
     heroProduct: null,
     coupon: null,
-    money
+    money,
+    orderSource: ''
+  },
+  onLoad(options) {
+    // 捕获带参二维码场景值
+    if (options.scene) {
+      const scene = decodeURIComponent(options.scene);
+      wx.setStorageSync('orderSource', scene);
+      this.setData({ orderSource: scene });
+      console.log('[QR来源]', scene);
+    }
   },
   async onShow() {
     try {

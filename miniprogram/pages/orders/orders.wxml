@@ -13,6 +13,7 @@
       <view>
         <view>{{item.orderNo}}</view>
         <view class="muted">{{fmt.dateText(item.createdAt)}} · {{item.status}}</view>
+        <view wx:if="{{item.source}}" class="muted">📱 来源：{{item.source}}</view>
       </view>
       <view class="price">{{fmt.money(item.payableAmountCents)}}</view>
     </view>
