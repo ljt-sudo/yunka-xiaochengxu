@@ -1,0 +1,2078 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>云咖铺子 · 商家管理后台</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+:root {
+  --primary: #2f2118; --primary-light: #5a3d2b; --primary-dark: #1a1109;
+  --accent: #c8a26d; --accent-light: #e8d5b8; --accent-bg: #faf3eb;
+  --bg: #f5f2ed; --card: #fff; --text: #2f2118; --text2: #666; --text3: #999;
+  --border: #e8e0d6; --radius: 12px; --shadow: 0 2px 8px rgba(47,33,24,0.06);
+  --success: #2e7d32; --warning: #e67e22; --danger: #c0392b;
+  --sidebar: 240px;
+}
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'PingFang SC', 'Hiragino Sans GB', sans-serif; background: var(--bg); color: var(--text); min-height: 100vh; }
+body.sidebar-collapsed { --sidebar: 60px; }
+
+/* Layout */
+.app { display: flex; min-height: 100vh; }
+
+/* Sidebar */
+.sidebar {
+  width: var(--sidebar); background: var(--primary); color: #fff;
+  display: flex; flex-direction: column; transition: width .3s;
+  position: fixed; top: 0; left: 0; height: 100vh; z-index: 100;
+  overflow: hidden;
+}
+.sidebar-header {
+  padding: 20px 16px; border-bottom: 1px solid rgba(255,255,255,0.08);
+  display: flex; align-items: center; gap: 10px; white-space: nowrap;
+}
+.sidebar-header .logo { font-size: 24px; }
+.sidebar-header .title { font-size: 16px; font-weight: 700; }
+.sidebar-header .sub { font-size: 11px; color: var(--accent); }
+.sidebar-nav { flex: 1; padding: 8px 0; overflow-y: auto; }
+.nav-item {
+  display: flex; align-items: center; gap: 10px; padding: 10px 16px;
+  color: rgba(255,255,255,0.7); cursor: pointer; transition: all .2s;
+  font-size: 14px; white-space: nowrap; border-left: 3px solid transparent;
+}
+.nav-item:hover { background: rgba(255,255,255,0.08); color: #fff; }
+.nav-item.active { background: rgba(255,255,255,0.12); color: #fff; border-left-color: var(--accent); }
+.nav-item .icon { font-size: 18px; width: 24px; text-align: center; flex-shrink: 0; }
+.nav-item .label { overflow: hidden; text-overflow: ellipsis; }
+
+/* Main */
+.main {
+  flex: 1; margin-left: var(--sidebar); transition: margin-left .3s;
+  padding: 0; min-height: 100vh;
+}
+.topbar {
+  background: var(--card); padding: 12px 24px; border-bottom: 1px solid var(--border);
+  display: flex; align-items: center; justify-content: space-between;
+  position: sticky; top: 0; z-index: 50;
+}
+.topbar .toggle-sidebar {
+  font-size: 20px; cursor: pointer; padding: 4px 8px; border-radius: 6px;
+  background: none; border: none; color: var(--text); 
+}
+.topbar .toggle-sidebar:hover { background: var(--bg); }
+.topbar .page-title { font-size: 18px; font-weight: 600; }
+.topbar .user-info { display: flex; align-items: center; gap: 12px; font-size: 13px; color: var(--text2); }
+
+.content { padding: 24px; }
+
+/* Page header */
+.page-header { margin-bottom: 24px; }
+.page-header h2 { font-size: 22px; font-weight: 700; }
+.page-header p { font-size: 13px; color: var(--text3); margin-top: 4px; }
+
+/* Search */
+.search-bar { position: relative; margin-bottom: 20px; }
+.search-bar input {
+  width: 100%; padding: 10px 16px; border: 1px solid var(--border);
+  border-radius: 8px; font-size: 14px; background: var(--card);
+  outline: none; transition: border .2s;
+}
+.search-bar input:focus { border-color: var(--accent); }
+
+/* Cards */
+.card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 16px; }
+.card-header { padding: 16px 20px; border-bottom: 1px solid var(--border); font-weight: 600; font-size: 15px; display: flex; align-items: center; gap: 8px; }
+.card-body { padding: 20px; }
+
+/* Stats */
+.stats-row { display: grid; grid-template-columns: repeat(auto-fit, minmax(160px, 1fr)); gap: 16px; margin-bottom: 24px; }
+.stat-card {
+  background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 20px; text-align: center;
+}
+.stat-card .num { font-size: 32px; font-weight: 700; color: var(--primary); }
+.stat-card .label { font-size: 12px; color: var(--text3); margin-top: 4px; }
+
+/* Menu Grid */
+.menu-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(220px, 1fr)); gap: 16px; margin-bottom: 32px; }
+.menu-section { margin-bottom: 24px; }
+.menu-section-title { font-size: 14px; font-weight: 600; color: var(--text3); margin-bottom: 12px; text-transform: uppercase; letter-spacing: 1px; }
+.menu-card {
+  background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 20px; cursor: pointer; transition: all .2s; border: 1px solid transparent;
+}
+.menu-card:hover { border-color: var(--accent); transform: translateY(-2px); box-shadow: 0 4px 16px rgba(47,33,24,0.1); }
+.menu-card .icon { font-size: 28px; display: block; margin-bottom: 8px; }
+.menu-card .name { font-size: 15px; font-weight: 600; }
+.menu-card .desc { font-size: 12px; color: var(--text3); margin-top: 4px; }
+
+/* Tables */
+.table-wrap { overflow-x: auto; }
+table { width: 100%; border-collapse: collapse; font-size: 13px; }
+th, td { padding: 10px 12px; text-align: left; border-bottom: 1px solid var(--border); }
+th { font-weight: 600; color: var(--text3); font-size: 11px; text-transform: uppercase; letter-spacing: .5px; background: var(--bg); }
+tr:hover td { background: var(--accent-bg); }
+
+/* Tags */
+.tag { display: inline-block; padding: 2px 10px; border-radius: 20px; font-size: 11px; font-weight: 600; }
+.tag-sm { font-size: 10px; padding: 1px 8px; }
+.tag-1 { background: #d4e6c3; color: #33691e; }
+.tag-2 { background: #e3e0f3; color: #4a148c; }
+.tag-3 { background: #fce4c8; color: #bf360c; }
+.tag-active { background: #e8f5e9; color: #2e7d32; }
+.tag-used { background: #f5f5f5; color: #999; }
+.tag-expired { background: #fbe9e7; color: #bf360c; }
+.tag-pending { background: #fff8e1; color: #f57f17; }
+.tag-shipped { background: #e3f2fd; color: #1565c0; }
+.tag-delivered { background: #e8f5e9; color: #2e7d32; }
+
+/* Buttons */
+.btn {
+  padding: 8px 20px; border-radius: 8px; border: none; cursor: pointer;
+  font-size: 13px; font-weight: 500; transition: all .2s;
+}
+.btn-primary { background: var(--primary); color: #fff; }
+.btn-primary:hover { background: var(--primary-light); }
+.btn-sm { padding: 4px 12px; font-size: 12px; border-radius: 6px; }
+.btn-outline { background: transparent; border: 1px solid var(--primary); color: var(--primary); }
+.btn-outline:hover { background: var(--primary); color: #fff; }
+.btn-danger { background: var(--danger); color: #fff; }
+.btn-danger:hover { opacity: .8; }
+.btn + .btn { margin-left: 8px; }
+
+/* Form */
+.form-group { margin-bottom: 16px; }
+.form-group label { display: block; font-size: 12px; color: var(--text2); margin-bottom: 4px; font-weight: 500; }
+.form-group input, .form-group select, .form-group textarea {
+  width: 100%; padding: 10px 12px; border: 1px solid var(--border);
+  border-radius: 8px; font-size: 13px; outline: none; transition: border .2s;
+  background: #fff;
+}
+.form-group input:focus, .form-group select:focus, .form-group textarea:focus {
+  border-color: var(--accent);
+}
+.form-group textarea { min-height: 80px; resize: vertical; }
+.form-row { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.form-actions { display: flex; gap: 12px; margin-top: 24px; justify-content: flex-end; }
+
+/* Member */
+.member-detail { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 24px; margin-bottom: 16px; }
+.member-detail .row { display: flex; justify-content: space-between; padding: 8px 0; border-bottom: 1px solid var(--border); font-size: 13px; }
+.member-detail .row:last-child { border: none; }
+.member-detail .label { color: var(--text3); }
+.member-detail .value { font-weight: 500; }
+
+/* Tier */
+.tier-card {
+  background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow);
+  padding: 24px; margin-bottom: 16px; border-left: 4px solid var(--accent);
+}
+.tier-card .header { display: flex; align-items: center; gap: 10px; margin-bottom: 12px; }
+.tier-card .name { font-size: 18px; font-weight: 700; }
+.tier-card .level { font-size: 12px; color: var(--text3); background: var(--bg); padding: 2px 10px; border-radius: 20px; }
+.tier-card .info { margin-bottom: 12px; }
+.tier-card .info-row { display: block; font-size: 12px; color: var(--text2); margin-bottom: 4px; }
+.tier-card .benefits { display: flex; flex-wrap: wrap; gap: 6px; margin-bottom: 12px; }
+.tier-card .benefit-tag { font-size: 12px; color: #555; background: var(--accent-bg); padding: 4px 12px; border-radius: 6px; }
+.tier-card .btn-area { display: flex; gap: 8px; }
+
+/* Modal */
+.modal-overlay {
+  display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.4);
+  z-index: 1000; align-items: center; justify-content: center;
+}
+.modal-overlay.show { display: flex; }
+.modal {
+  background: var(--card); border-radius: 16px; padding: 32px;
+  width: 90%; max-width: 760px; max-height: 85vh; overflow-y: auto;
+  box-shadow: 0 20px 60px rgba(0,0,0,0.2);
+}
+.modal h3 { font-size: 18px; margin-bottom: 20px; }
+.modal-actions { display: flex; gap: 12px; justify-content: flex-end; margin-top: 24px; }
+
+/* Toast */
+.toast {
+  position: fixed; top: 20px; right: 20px; z-index: 2000;
+  padding: 12px 24px; border-radius: 10px; font-size: 14px;
+  background: var(--primary); color: #fff; box-shadow: 0 4px 20px rgba(0,0,0,0.15);
+  transform: translateX(120%); transition: transform .3s;
+}
+.toast.show { transform: translateX(0); }
+.toast.success { background: #2e7d32; }
+.toast.error { background: #c0392b; }
+
+/* Benefits */
+.benefit-item {
+  display: flex; justify-content: space-between; align-items: center;
+  background: var(--card); padding: 16px 20px; border-radius: var(--radius);
+  margin-bottom: 8px; box-shadow: var(--shadow);
+}
+.benefit-item .left { flex: 1; }
+.benefit-item .title { font-size: 14px; font-weight: 600; }
+.benefit-item .meta { font-size: 12px; color: var(--text3); margin-top: 4px; }
+
+/* Setting sections */
+.setting-section { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 24px; margin-bottom: 16px; }
+.setting-section .section-title { font-size: 14px; font-weight: 600; margin-bottom: 16px; display: flex; align-items: center; gap: 8px; }
+
+/* Empty state */
+.empty-state { text-align: center; padding: 60px 20px; color: var(--text3); }
+.empty-state .icon { font-size: 48px; display: block; margin-bottom: 12px; }
+.empty-state .text { font-size: 14px; }
+
+/* Charts */
+.chart-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 24px; }
+.chart-card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); padding: 20px; }
+.chart-card h4 { font-size: 14px; font-weight: 600; margin-bottom: 12px; display: flex; align-items: center; gap: 6px; }
+.chart-card canvas { width: 100% !important; height: 220px !important; display: block; }
+@media (max-width: 768px) { .chart-grid { grid-template-columns: 1fr; } }
+
+/* Tracking */
+.tracking-card { background: var(--card); border-radius: var(--radius); box-shadow: var(--shadow); margin-bottom: 12px; padding: 16px 20px; display: flex; justify-content: space-between; align-items: center; cursor: pointer; transition: all .2s; }
+.tracking-card:hover { border-color: var(--accent); transform: translateY(-1px); box-shadow: 0 4px 12px rgba(47,33,24,0.08); }
+.tracking-card .left { flex: 1; }
+.tracking-card .num { font-size: 15px; font-weight: 600; }
+.tracking-card .num .carrier { font-weight: 400; font-size: 12px; color: var(--text3); margin-left: 6px; }
+.tracking-card .meta { font-size: 12px; color: var(--text3); margin-top: 4px; display: flex; gap: 16px; flex-wrap: wrap; }
+.tracking-card .right { text-align: right; }
+.tracking-card .time { font-size: 11px; color: var(--text3); margin-top: 4px; }
+.timeline { padding: 8px 0; position: relative; }
+.timeline-item { display: flex; gap: 16px; padding-bottom: 24px; position: relative; }
+.timeline-item:last-child { padding-bottom: 0; }
+.timeline-item::before { content: ''; position: absolute; left: 11px; top: 22px; bottom: 0; width: 2px; background: var(--border); }
+.timeline-item:last-child::before { display: none; }
+.timeline-dot { width: 24px; height: 24px; border-radius: 50%; flex-shrink: 0; display: flex; align-items: center; justify-content: center; font-size: 12px; position: relative; z-index: 1; }
+.timeline-dot.done { background: #2e7d32; color: #fff; }
+.timeline-dot.current { background: #e67e22; color: #fff; }
+.timeline-dot.pending { background: var(--border); color: var(--text3); }
+.timeline-body { flex: 1; }
+.timeline-body .desc { font-size: 13px; }
+.timeline-body .time { font-size: 11px; color: var(--text3); margin-top: 2px; }
+.tag-carrier { font-size: 11px; padding: 1px 8px; border-radius: 4px; background: #e3f2fd; color: #1565c0; }
+
+/* Loading */
+.loading { text-align: center; padding: 60px 20px; color: var(--text3); }
+.loading .spinner { display: inline-block; width: 32px; height: 32px; border: 3px solid var(--border); border-top-color: var(--accent); border-radius: 50%; animation: spin .8s linear infinite; margin-bottom: 12px; }
+@keyframes spin { to { transform: rotate(360deg); } }
+
+/* Responsive */
+@media (max-width: 768px) {
+  .sidebar { width: 60px; }
+  .sidebar .title, .sidebar .sub, .sidebar .label { display: none; }
+  .sidebar-header { padding: 16px 10px; justify-content: center; }
+  .nav-item { justify-content: center; padding: 10px; }
+  .main { margin-left: 60px; }
+  .form-row { grid-template-columns: 1fr; }
+  .stats-row { grid-template-columns: 1fr 1fr; }
+  .menu-grid { grid-template-columns: 1fr 1fr; }
+  .content { padding: 16px; }
+}
+</style>
+</head>
+<body>
+
+<div class="app">
+  <!-- Sidebar -->
+  <aside class="sidebar" id="sidebar">
+    <div class="sidebar-header">
+      <span class="logo">☕</span>
+      <div>
+        <div class="title">云咖铺子</div>
+        <div class="sub">商家管理后台</div>
+      </div>
+    </div>
+    <nav class="sidebar-nav" id="sidebarNav">
+      <div class="nav-item active" data-page="dashboard"><span class="icon">📊</span><span class="label">仪表盘</span></div>
+      <div class="nav-item" data-page="coupons"><span class="icon">🎟️</span><span class="label">卡券配置</span></div>
+      <div class="nav-item" data-page="products"><span class="icon">📦</span><span class="label">商品管理</span></div>
+      <div class="nav-item" data-page="orders"><span class="icon">🚚</span><span class="label">订单管理</span></div>
+      <div class="nav-item" data-page="members"><span class="icon">👥</span><span class="label">会员管理</span></div>
+      <div class="nav-item" data-page="tiers"><span class="icon">🏅</span><span class="label">等级配置</span></div>
+      <div class="nav-item" data-page="benefits"><span class="icon">🎁</span><span class="label">权益管理</span></div>
+      <div class="nav-item" data-page="tracking"><span class="icon">🚚</span><span class="label">物流查询</span></div>
+      <div class="nav-item" data-page="qrcodes"><span class="icon">📱</span><span class="label">二维码管理</span></div>
+      <div class="nav-item" data-page="settings"><span class="icon">⚙️</span><span class="label">系统设置</span></div>
+    </nav>
+  </aside>
+
+  <!-- Main -->
+  <main class="main" id="main">
+    <div class="topbar">
+      <div style="display:flex;align-items:center;gap:12px;">
+        <button class="toggle-sidebar" onclick="toggleSidebar()">☰</button>
+        <span class="page-title" id="pageTitle">仪表盘</span>
+      </div>
+      <div class="user-info">
+        <span>🛡️ 管理员</span>
+      </div>
+    </div>
+
+    <div class="content" id="pageContent">
+      <!-- Content rendered by JS -->
+    </div>
+  </main>
+</div>
+
+<!-- Modal -->
+<div class="modal-overlay" id="modalOverlay">
+  <div class="modal" id="modalContent"></div>
+</div>
+
+<!-- Toast -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ===== MOCK DATA =====
+const MOCK = {
+  products: [
+    { id: 1, name: '埃塞俄比亚·耶加雪菲 G1', price: 68, stock: 200, sales: 186, status: '上架', image: '🫘', category: '单品豆', code: 'GB-001', memory: '200g/袋', showStock: true },
+    { id: 2, name: '哥伦比亚·蕙兰', price: 58, stock: 180, sales: 142, status: '上架', image: '🌱', category: '单品豆', code: 'GB-002', memory: '200g/袋', showStock: true },
+    { id: 3, name: '巴西·喜拉多', price: 48, stock: 250, sales: 98, status: '上架', image: '🏔️', category: '单品豆', code: 'GB-003', memory: '200g/袋', showStock: true },
+    { id: 4, name: '意式经典拼配', price: 55, stock: 300, sales: 215, status: '上架', image: '☕', category: '拼配豆', code: 'GB-004', memory: '500g/袋', showStock: true },
+    { id: 5, name: '深蓝意式拼配（深烘）', price: 62, stock: 120, sales: 167, status: '上架', image: '🌋', category: '拼配豆', code: 'GB-005', memory: '500g/袋', showStock: true },
+    { id: 6, name: '挂耳咖啡·综合装', price: 45, stock: 400, sales: 234, status: '上架', image: '☕', category: '挂耳包', code: 'GB-006', memory: '10包/盒', showStock: true },
+    { id: 7, name: '冷萃专用豆·瑰夏拼配', price: 52, stock: 0, sales: 89, status: '下架', image: '🧊', category: '单品豆', code: 'GB-007', memory: '200g/袋', showStock: true },
+    { id: 8, name: '肯尼亚 AA 水洗', price: 72, stock: 60, sales: 76, status: '上架', image: '🌍', category: '单品豆', code: 'GB-008', memory: '200g/袋', showStock: true },
+    { id: 9, name: '新年臻选礼盒（含手冲壶）', price: 198, stock: 30, sales: 54, status: '上架', image: '🎁', category: '礼盒', code: 'GB-009', memory: '综合装', showStock: true },
+  ],
+  orders: [
+    { id: 'ORD001', customer: '李小明', total: 126, items: ['耶加雪菲 G1', '意式经典拼配'], status: '已完成', date: '2026-07-15', source: '' },
+    { id: 'ORD002', customer: '王芳', total: 58, items: ['哥伦比亚·蕙兰'], status: '配送中', date: '2026-07-15', tracking: 'SF1234567890', source: '抖音推广' },
+    { id: 'ORD003', customer: '张伟', total: 163, items: ['挂耳咖啡·综合装', '巴西·喜拉多', '意式经典拼配'], status: '待发货', date: '2026-07-15', source: '' },
+    { id: 'ORD004', customer: '赵婷', total: 68, items: ['耶加雪菲 G1'], status: '已完成', date: '2026-07-14', source: '' },
+    { id: 'ORD005', customer: '刘洋', total: 62, items: ['深蓝意式拼配'], status: '待发货', date: '2026-07-14', source: '朋友推荐' },
+    { id: 'ORD006', customer: '陈磊', total: 103, items: ['肯尼亚 AA', '哥伦比亚·蕙兰'], status: '已取消', date: '2026-07-14', source: '' },
+    { id: 'ORD007', customer: '周静', total: 120, items: ['冷萃专用豆', '肯尼亚 AA'], status: '已完成', date: '2026-07-13', source: '朋友圈广告' },
+    { id: 'ORD008', customer: '吴涛', total: 45, items: ['挂耳咖啡·综合装'], status: '配送中', date: '2026-07-13', tracking: 'SF0987654321', source: '抖音推广' },
+  ],
+  members: [
+    { id: 'M001', nickname: '咖啡小王子', tier: 3, tierName: '臻金', totalPoints: 3680, usedPoints: 1200, totalSpendCents: 456000, totalOrders: 42, phone: '138****5678', birthday: '03-15', createdAt: '2026-01-10', avatar: '👑' },
+    { id: 'M002', nickname: '喵喵咖啡控', tier: 2, tierName: '银焙', totalPoints: 1850, usedPoints: 600, totalSpendCents: 128000, totalOrders: 18, phone: '139****2345', birthday: '07-22', createdAt: '2026-02-14', avatar: '🐱' },
+    { id: 'M003', nickname: '一天三杯', tier: 3, tierName: '臻金', totalPoints: 5200, usedPoints: 2500, totalSpendCents: 680000, totalOrders: 55, phone: '136****8901', birthday: '11-03', createdAt: '2025-12-01', avatar: '☕' },
+    { id: 'M004', nickname: '拿铁女孩', tier: 2, tierName: '银焙', totalPoints: 920, usedPoints: 300, totalSpendCents: 76000, totalOrders: 10, phone: '158****3456', birthday: '05-18', createdAt: '2026-03-08', avatar: '👩' },
+    { id: 'M005', nickname: '抹茶星人', tier: 1, tierName: '青豆', totalPoints: 350, usedPoints: 50, totalSpendCents: 32000, totalOrders: 5, phone: '186****7890', birthday: '09-28', createdAt: '2026-04-20', avatar: '🍵' },
+    { id: 'M006', nickname: '冰美式yyds', tier: 1, tierName: '青豆', totalPoints: 180, usedPoints: 0, totalSpendCents: 15000, totalOrders: 3, phone: '187****1234', birthday: '', createdAt: '2026-05-01', avatar: '🧊' },
+    { id: 'M007', nickname: '食甜专家', tier: 2, tierName: '银焙', totalPoints: 1600, usedPoints: 800, totalSpendCents: 98000, totalOrders: 14, phone: '135****5678', birthday: '01-08', createdAt: '2026-02-28', avatar: '🧁' },
+    { id: 'M008', nickname: '悠闲周末', tier: 1, tierName: '青豆', totalPoints: 120, usedPoints: 0, totalSpendCents: 8000, totalOrders: 2, phone: '159****9012', birthday: '', createdAt: '2026-06-15', avatar: '😌' },
+  ],
+  tiers: [
+    { _id: 'T1', name: '青豆', level: 1, conditions: { registerFree: true, entryRequirements: { totalSpendCents: 0, orPurchaseCardCents: 0 } }, benefits: [{ type: 'birthday', desc: '生日赠饮一杯' }, { type: 'pointMultiplier', desc: '消费积分 ×1' }] },
+    { _id: 'T2', name: '银焙', level: 2, conditions: { registerFree: false, entryRequirements: { totalSpendCents: 20000, orPurchaseCardCents: 29900 } }, benefits: [{ type: 'birthday', desc: '生日赠饮一杯' }, { type: 'pointMultiplier', desc: '消费积分 ×1.5' }, { type: 'freeMonthly', desc: '每月免费饮品券 ×1' }, { type: 'discount', desc: '全场消费 9 折' }] },
+    { _id: 'T3', name: '臻金', level: 3, conditions: { registerFree: false, entryRequirements: { totalSpendCents: 80000, orPurchaseCardCents: 99900 } }, benefits: [{ type: 'birthday', desc: '生日赠饮一杯' }, { type: 'pointMultiplier', desc: '消费积分 ×2' }, { type: 'freeMonthly', desc: '每月免费饮品券 ×2' }, { type: 'discount', desc: '全场消费 8 折' }, { type: 'newProduct', desc: '新品优先品尝权' }, { type: 'custom', desc: '专属杯刻字服务' }] },
+  ],
+  benefits: [
+    { _id: 'B1', description: '免费饮品券', tierSource: '臻金', status: 'active', createdAt: '2026-07-01' },
+    { _id: 'B2', description: '免费饮品券', tierSource: '银焙', status: 'active', createdAt: '2026-07-01' },
+    { _id: 'B3', description: '包厢优先预订券', tierSource: '臻金', status: 'used', createdAt: '2026-06-20' },
+    { _id: 'B4', description: '新品试饮券', tierSource: '臻金', status: 'active', createdAt: '2026-06-15' },
+    { _id: 'B5', description: '甜品买一送一券', tierSource: '通用', status: 'active', createdAt: '2026-06-10' },
+    { _id: 'B6', description: '免费饮品券', tierSource: '银焙', status: 'used', createdAt: '2026-06-01' },
+    { _id: 'B7', description: '周边帆布袋兑换', tierSource: '臻金', status: 'expired', createdAt: '2026-05-15' },
+  ],
+  coupons: [
+    { id: 'C2', code: 'CPN-FULL50', name: '满50减15', total: 300, used: 98, type: '满减', discount: 15, minSpend: 5000, status: '进行中', validUntil: '2026-12-31' },
+    { id: 'C3', code: 'CPN-DIS9', name: '全场9折券', total: 200, used: 45, type: '折扣', discount: 0.9, minSpend: 0, status: '进行中', validUntil: '2026-09-30' },
+    { id: 'C5', code: 'CPN-DIS85', name: '咖啡类85折券', total: 150, used: 32, type: '折扣', discount: 0.85, minSpend: 0, status: '进行中', validUntil: '2026-10-31' },
+  ],
+  // 卡券发放记录（卡券查询用）
+  couponRecords: [
+    { id: 'R004', couponCode: 'CPN-FULL50', couponName: '满50减15', instanceCode: 'CPN-INST-004', issuedTo: '张伟', phone: '136****8901', memberId: 'M003', issuedAt: '2026-07-05 08:00', status: 'active', redeemedAt: '' },
+    { id: 'R005', couponCode: 'CPN-FULL50', couponName: '满50减15', instanceCode: 'CPN-INST-005', issuedTo: '刘洋', phone: '186****7890', memberId: 'M005', issuedAt: '2026-07-06 14:30', status: 'used', redeemedAt: '2026-07-10 17:50' },
+    { id: 'R006', couponCode: 'CPN-DIS9', couponName: '全场9折券', instanceCode: 'CPN-INST-006', issuedTo: '陈磊', phone: '187****1234', memberId: 'M006', issuedAt: '2026-07-08 11:20', status: 'used', redeemedAt: '2026-07-12 09:38' },
+    { id: 'R007', couponCode: 'CPN-DIS9', couponName: '全场9折券', instanceCode: 'CPN-INST-007', issuedTo: '周静', phone: '135****5678', memberId: 'M007', issuedAt: '2026-07-09 15:00', status: 'active', redeemedAt: '' },
+    { id: 'R009', couponCode: 'CPN-FULL50', couponName: '满50减15', instanceCode: 'CPN-INST-009', issuedTo: '咖啡小王子', phone: '138****5678', memberId: 'M001', issuedAt: '2026-07-11 09:30', status: 'used', redeemedAt: '2026-07-13 16:20' },
+    { id: 'R010', couponCode: 'CPN-DIS9', couponName: '全场9折券', instanceCode: 'CPN-INST-010', issuedTo: '喵喵咖啡控', phone: '139****2345', memberId: 'M002', issuedAt: '2026-07-12 13:45', status: 'active', redeemedAt: '' },
+    { id: 'R013', couponCode: 'CPN-DIS85', couponName: '咖啡类85折券', instanceCode: 'CPN-INST-013', issuedTo: '赵婷', phone: '158****3456', memberId: 'M004', issuedAt: '2026-07-15 10:00', status: 'active', redeemedAt: '' },
+    { id: 'R014', couponCode: 'CPN-DIS85', couponName: '咖啡类85折券', instanceCode: 'CPN-INST-014', issuedTo: '拿铁女孩', phone: '158****3456', memberId: 'M004', issuedAt: '2026-07-16 14:30', status: 'used', redeemedAt: '2026-07-18 11:15' },
+  ],
+  // 快递物流数据
+  tracking: [
+    { id: 'T001', number: 'SF1234567890', carrier: '顺丰速运', status: 'delivered', sender: '云咖铺子总部', receiver: '李小明', address: '云南省丽江市古城区...', updateTime: '2026-07-15 14:32', traces: [
+      { time: '2026-07-15 14:30', desc: '已签收，签收人：本人' },
+      { time: '2026-07-15 10:15', desc: '正在派送中，派送员：王师傅（138****5678）' },
+      { time: '2026-07-15 06:00', desc: '已到达【丽江古城】配送站' },
+      { time: '2026-07-14 23:30', desc: '已到达【昆明】中转中心' },
+      { time: '2026-07-14 15:00', desc: '已到达【广州】分拣中心' },
+      { time: '2026-07-13 18:20', desc: '快件已揽收' },
+    ]},
+    { id: 'T002', number: 'SF0987654321', carrier: '顺丰速运', status: 'shipping', sender: '云咖铺子总部', receiver: '赵婷', address: '云南省大理市下关镇...', updateTime: '2026-07-15 11:00', traces: [
+      { time: '2026-07-15 10:50', desc: '已到达【大理】配送站' },
+      { time: '2026-07-15 03:00', desc: '已到达【昆明】中转中心' },
+      { time: '2026-07-14 20:00', desc: '已到达【深圳】分拣中心' },
+      { time: '2026-07-14 12:00', desc: '快件已揽收' },
+    ]},
+    { id: 'T003', number: 'SF1122334455', carrier: '顺丰速运', status: 'pending', sender: '云咖铺子总部', receiver: '张伟', address: '云南省丽江市束河古镇...', updateTime: '2026-07-15 09:00', traces: [
+      { time: '2026-07-15 08:30', desc: '快递员已取件，等待运输' },
+    ]},
+    { id: 'T004', number: 'YT5566778899', carrier: '圆通速递', status: 'delivered', sender: '云咖铺子总部', receiver: '周静', address: '云南省丽江市...', updateTime: '2026-07-13 16:00', traces: [
+      { time: '2026-07-13 15:50', desc: '已签收，签收人：家人代收' },
+      { time: '2026-07-13 10:00', desc: '正在派送中' },
+      { time: '2026-07-12 22:00', desc: '已到达【丽江】配送站' },
+      { time: '2026-07-12 08:00', desc: '已到达【昆明】中转中心' },
+      { time: '2026-07-11 14:00', desc: '已到达【成都】分拣中心' },
+      { time: '2026-07-10 18:00', desc: '快件已揽收' },
+    ]},
+  ],
+  // 带参二维码
+  qrcodes: [
+    { id: 'Q1', name: '抖音推广', scene: 'qr_douyin', createdAt: '2026-07-10', scanCount: 156, orderCount: 23 },
+    { id: 'Q2', name: '朋友圈广告', scene: 'qr_friend', createdAt: '2026-07-12', scanCount: 89, orderCount: 12 },
+    { id: 'Q3', name: '朋友推荐', scene: 'qr_refer', createdAt: '2026-07-14', scanCount: 45, orderCount: 7 },
+  ],
+  settings: {
+    points: { earnText: '消费每满 1 元获得 1 积分，首单翻倍', redeemText: '100 积分可抵扣 1 元' },
+    pointsDeduction: { ratio: 10, maxDiscountCents: 2000 },
+    shippingRule: { feeCents: 800, freeThresholdCents: 6800 },
+    support: { phone: '400-888-9999', wechat: 'yunka_coffee' },
+    subscribeTemplates: { couponArrived: 'tmpl_coupon_001', repurchaseReminder: 'tmpl_repurchase_002', pointsChange: 'tmpl_points_003' },
+    wechat: { appid: 'wx9d9d4da3c962254a', appsecret: '' },
+  },
+  // 月度趋势数据
+  monthlyLabels: ['1月','2月','3月','4月','5月','6月','7月'],
+  monthlyStats: {
+    members: [1, 2, 3, 5, 7, 9, 12],          // 新注册会员数
+    orderCount: [4, 7, 5, 9, 11, 8, 12],       // 订单量
+    orderAmount: [320, 580, 450, 720, 890, 650, 960], // 订单金额
+    couponsIssued: [50, 80, 60, 120, 150, 90, 200],   // 卡券发放
+    couponsRedeemed: [20, 35, 28, 55, 70, 42, 85],    // 卡券核销
+    pointsIssued: [500, 1200, 800, 1800, 2500, 1500, 3200],   // 积分发放
+    pointsRedeemed: [200, 400, 300, 600, 800, 500, 1000],     // 积分核销
+  },
+};
+
+// ===== STATE =====
+let currentPage = 'dashboard';
+let editingTier = null;
+let dashboardDateFrom = '2026-01-01';
+let dashboardDateTo = '2026-07-31';
+
+function filterByDateRange(items, field, from, to) {
+  if (!items || items.length === 0) return [];
+  return items.filter(i => {
+    const d = i[field];
+    if (!d) return false;
+    return d >= from && d <= to;
+  });
+}
+
+function monthInRange(monthIdx, from, to) {
+  // monthIdx: 0=Jan, 1=Feb, ... 6=Jul
+  // from/to format: '2026-01-01'
+  const baseYear = 2026;
+  const m = monthIdx + 1;
+  const monthStart = `${baseYear}-${String(m).padStart(2,'0')}-01`;
+  const lastDay = new Date(baseYear, m, 0).getDate();
+  const monthEnd = `${baseYear}-${String(m).padStart(2,'0')}-${String(lastDay).padStart(2,'0')}`;
+  // Check if month range overlaps with [from, to]
+  // A month is included if its end >= from AND its start <= to
+  return monthEnd >= from && monthStart <= to;
+}
+
+// ===== HELPERS =====
+function $(id) { return document.getElementById(id); }
+
+function showToast(msg, type = '') {
+  const t = $('toast');
+  t.textContent = msg; t.className = 'toast show ' + type;
+  setTimeout(() => t.classList.remove('show'), 2500);
+}
+
+function openModal(html) {
+  $('modalContent').innerHTML = html;
+  $('modalOverlay').classList.add('show');
+}
+function closeModal() { $('modalOverlay').classList.remove('show'); }
+$('modalOverlay').addEventListener('click', e => { if (e.target === $('modalOverlay')) closeModal(); });
+
+function toggleSidebar() { document.body.classList.toggle('sidebar-collapsed'); }
+
+function formatMoney(cents) { return (cents / 100).toFixed(2); }
+function dateText(d) { return d || ''; }
+
+function navigate(page) {
+  const parts = page.split('?');
+  const pageName = parts[0];
+  const params = new URLSearchParams(parts[1] || '');
+  currentPage = pageName;
+  // 更新 URL hash 保留查询参数，让各页面渲染函数能读到
+  if (parts[1]) {
+    location.hash = '#' + parts[1];
+  } else {
+    // 切页面时清掉旧 hash（但保留页面名让 hashchange 不误触）
+    location.hash = '';
+  }
+  document.querySelectorAll('.nav-item').forEach(el => {
+    el.classList.toggle('active', el.dataset.page === pageName);
+  });
+  const titles = { dashboard:'仪表盘', products:'商品管理', orders:'订单管理', members:'会员管理', tiers:'等级配置', benefits:'权益管理', coupons:'优惠券', tracking:'物流查询', qrcodes:'二维码管理', settings:'系统设置' };
+  $('pageTitle').textContent = titles[pageName] || pageName;
+  renderPage(pageName);
+}
+
+document.querySelectorAll('.nav-item').forEach(el => {
+  el.addEventListener('click', () => navigate(el.dataset.page));
+});
+
+// ===== PAGE RENDERERS =====
+
+function renderPage(page) {
+  switch(page) {
+    case 'dashboard': renderDashboard(); break;
+    case 'products': renderProducts(); break;
+    case 'orders': renderOrders(); break;
+    case 'members': renderMembers(); break;
+    case 'tiers': renderTiers(); break;
+    case 'benefits': renderBenefits(); break;
+    case 'coupons': renderCoupons(); break;
+    case 'tracking': renderTracking(); break;
+    case 'qrcodes': renderQRCodes(); break;
+    case 'settings': renderSettings(); break;
+  }
+}
+
+// ===== CHART RENDERER =====
+function drawLineChart(canvasId, labels, datasets, colors) {
+  const canvas = document.getElementById(canvasId);
+  if (!canvas) return;
+  const ctx = canvas.getContext('2d');
+  const dpr = window.devicePixelRatio || 1;
+  const rect = canvas.parentElement.getBoundingClientRect();
+  const W = rect.width - 20;
+  const H = 220;
+  canvas.width = W * dpr;
+  canvas.height = H * dpr;
+  canvas.style.width = W + 'px';
+  canvas.style.height = H + 'px';
+  ctx.scale(dpr, dpr);
+
+  const pad = { top: 20, right: 20, bottom: 36, left: 48 };
+  const cw = W - pad.left - pad.right;
+  const ch = H - pad.top - pad.bottom;
+
+  // Find data range
+  let allVals = [];
+  datasets.forEach(ds => allVals = allVals.concat(ds.data));
+  const maxVal = Math.max(...allVals);
+  const minVal = Math.min(0, ...allVals);
+  const range = maxVal - minVal || 1;
+  const ySteps = 4;
+  const step = range / ySteps;
+
+  // Background
+  ctx.clearRect(0, 0, W, H);
+  ctx.fillStyle = '#fff';
+  ctx.fillRect(0, 0, W, H);
+
+  // Grid lines
+  ctx.strokeStyle = '#f0ece6';
+  ctx.lineWidth = 1;
+  for (let i = 0; i <= ySteps; i++) {
+    const y = pad.top + ch - (i / ySteps) * ch;
+    ctx.beginPath();
+    ctx.moveTo(pad.left, y);
+    ctx.lineTo(W - pad.right, y);
+    ctx.stroke();
+    // Y label
+    const val = Math.round(minVal + step * i);
+    ctx.fillStyle = '#aaa';
+    ctx.font = '11px sans-serif';
+    ctx.textAlign = 'right';
+    ctx.fillText(val, pad.left - 6, y + 4);
+  }
+
+  // X labels
+  ctx.fillStyle = '#aaa';
+  ctx.font = '11px sans-serif';
+  ctx.textAlign = 'center';
+  labels.forEach((l, i) => {
+    const x = pad.left + (i / (labels.length - 1)) * cw;
+    ctx.fillText(l, x, H - pad.bottom + 16);
+  });
+
+  // Draw lines
+  datasets.forEach((ds, di) => {
+    const color = colors[di % colors.length];
+    const points = ds.data.map((v, i) => ({
+      x: pad.left + (i / (ds.data.length - 1)) * cw,
+      y: pad.top + ch - ((v - minVal) / range) * ch,
+    }));
+
+    // Fill area
+    if (ds.fill !== false) {
+      ctx.beginPath();
+      ctx.moveTo(points[0].x, pad.top + ch);
+      points.forEach(p => ctx.lineTo(p.x, p.y));
+      ctx.lineTo(points[points.length - 1].x, pad.top + ch);
+      ctx.closePath();
+      ctx.fillStyle = color + '18';
+      ctx.fill();
+    }
+
+    // Line
+    ctx.beginPath();
+    points.forEach((p, i) => i === 0 ? ctx.moveTo(p.x, p.y) : ctx.lineTo(p.x, p.y));
+    ctx.strokeStyle = color;
+    ctx.lineWidth = 2.5;
+    ctx.lineJoin = 'round';
+    ctx.stroke();
+
+    // Dots
+    points.forEach(p => {
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, 3.5, 0, Math.PI * 2);
+      ctx.fillStyle = '#fff';
+      ctx.fill();
+      ctx.strokeStyle = color;
+      ctx.lineWidth = 2;
+      ctx.stroke();
+    });
+  });
+
+  // Legend
+  if (datasets.length > 1) {
+    const legendX = pad.left;
+    const legendY = 4;
+    datasets.forEach((ds, i) => {
+      const cx = legendX + i * 160;
+      ctx.fillStyle = colors[i % colors.length];
+      ctx.fillRect(cx, legendY + 4, 12, 3);
+      ctx.fillStyle = '#666';
+      ctx.font = '11px sans-serif';
+      ctx.textAlign = 'left';
+      ctx.fillText(ds.label, cx + 16, legendY + 10);
+    });
+  }
+}
+
+// ---- Dashboard ----
+function renderDashboard() {
+    const from = dashboardDateFrom;
+    const to = dashboardDateTo;
+
+    // Snapshot data
+    const totalProducts = MOCK.products.length;
+    const totalMembers = MOCK.members.length;
+    const lowStock = MOCK.products.filter(p => p.stock > 0 && p.stock < 20).length;
+    const outOfStock = MOCK.products.filter(p => p.stock === 0).length;
+    const stockWarnings = lowStock + outOfStock;
+
+    // Date-filtered order data
+    const filteredOrders = filterByDateRange(MOCK.orders, 'date', from, to);
+    const totalOrders = filteredOrders.length;
+    const totalRevenue = filteredOrders.filter(o => o.status === '已完成').reduce((s, o) => s + o.total, 0);
+    const pendingOrders = filteredOrders.filter(o => o.status === '待发货').length;
+
+    // Filter monthly stats for charts
+    const labels = MOCK.monthlyLabels;
+    const raw = MOCK.monthlyStats;
+    const filteredIdx = labels.map((_, i) => i).filter(i => monthInRange(i, from, to));
+    const chartLabels = filteredIdx.map(i => labels[i]);
+    function f(arr) { return filteredIdx.map(i => arr[i]); }
+
+    $('pageContent').innerHTML = `
+      <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
+        <div>
+          <h2>☕ 运营仪表盘</h2>
+          <p>云咖铺子 · 数据概览</p>
+        </div>
+        <div style="display:flex;gap:10px;align-items:center;background:var(--bg);padding:8px 12px;border-radius:8px">
+          <label style="font-size:12px;color:var(--text2)">从</label>
+          <input type="date" id="dateFrom" value="${from}"
+            onchange="dashboardDateFrom=this.value;renderDashboard()"
+            style="border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:13px;outline:none">
+          <label style="font-size:12px;color:var(--text2)">至</label>
+          <input type="date" id="dateTo" value="${to}"
+            onchange="dashboardDateTo=this.value;renderDashboard()"
+            style="border:1px solid var(--border);border-radius:6px;padding:4px 8px;font-size:13px;outline:none">
+        </div>
+      </div>
+      <div class="stats-row">
+        <div class="stat-card"><div class="num">${totalProducts}</div><div class="label">📦 在售商品</div></div>
+        <div class="stat-card"><div class="num">${totalOrders}</div><div class="label">📋 总订单</div></div>
+        <div class="stat-card"><div class="num">${totalMembers}</div><div class="label">👥 会员总数</div></div>
+        <div class="stat-card"><div class="num">¥${totalRevenue}</div><div class="label">💰 已完成订单金额</div></div>
+        <div class="stat-card"><div class="num" style="color:var(--warning)">${pendingOrders}</div><div class="label">⏳ 待发货</div></div>
+        <div class="stat-card"><div class="num" style="color:${stockWarnings > 0 ? 'var(--danger)' : 'var(--success)'}">${stockWarnings}</div><div class="label">⚠️ 库存预警</div></div>
+      </div>
+
+      <!-- 趋势图 -->
+      <div class="chart-grid">
+        <div class="chart-card">
+          <h4>📈 会员注册趋势</h4>
+          <canvas id="chartMembers"></canvas>
+        </div>
+        <div class="chart-card">
+          <h4>📊 订单量 & 订单金额趋势</h4>
+          <canvas id="chartOrders"></canvas>
+        </div>
+        <div class="chart-card">
+          <h4>🎟️ 卡券发放 & 核销趋势</h4>
+          <canvas id="chartCoupons"></canvas>
+        </div>
+        <div class="chart-card">
+          <h4>⭐ 积分发放 & 核销趋势</h4>
+          <canvas id="chartPoints"></canvas>
+        </div>
+      </div>
+    `;
+    // 根据日期范围绘制图表
+    setTimeout(() => {
+      drawLineChart('chartMembers', chartLabels, [{ label: '新注册会员', data: f(raw.members) }], ['#2f2118']);
+      drawLineChart('chartOrders', chartLabels, [
+        { label: '订单量（笔）', data: f(raw.orderCount) },
+        { label: '订单金额（¥）', data: f(raw.orderAmount) },
+      ], ['#5a3d2b', '#c8a26d']);
+      drawLineChart('chartCoupons', chartLabels, [
+        { label: '发放数量', data: f(raw.couponsIssued) },
+        { label: '核销数量', data: f(raw.couponsRedeemed) },
+      ], ['#2e7d32', '#c0392b']);
+      drawLineChart('chartPoints', chartLabels, [
+        { label: '积分发放', data: f(raw.pointsIssued) },
+        { label: '积分核销', data: f(raw.pointsRedeemed) },
+      ], ['#e67e22', '#4a148c']);
+    }, 50);
+}
+
+// ---- Products ----
+function renderProducts(filter = '') {
+  const list = filter ? MOCK.products.filter(p => p.name.includes(filter)) : MOCK.products;
+  $('pageContent').innerHTML = `
+    <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div>
+        <h2>📦 商品管理</h2>
+        <p>管理商品上下架、价格和库存</p>
+      </div>
+      <button class="btn btn-primary" onclick="showNewProductForm()">＋ 新增商品</button>
+    </div>
+    <div class="search-bar">
+      <input placeholder="搜索商品名称..." oninput="renderProducts(this.value)" value="${filter}" />
+    </div>
+    <div class="card">
+      <div class="card-header">📋 全部商品（${list.length}）</div>
+      <div class="card-body">
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th></th><th>商品名称</th><th>编号</th><th>价格</th><th>库存</th><th>销量</th><th>状态</th><th>操作</th>
+            </tr></thead>
+            <tbody>
+              ${list.map(p => `<tr>
+                <td style="font-size:24px">${p.image}</td>
+                <td><strong>${p.name}</strong></td>
+                <td style="color:var(--text3);font-size:12px">${p.code || '-'}</td>
+                <td><strong>¥${p.price}</strong></td>
+                <td style="color:${p.stock === 0 ? 'var(--danger)' : p.stock < 20 ? 'var(--warning)' : 'inherit'}">
+                  ${p.showStock === false ? '隐藏' : p.stock === 0 ? '❌ 缺货' : p.stock}
+                </td>
+                <td>${p.sales}</td>
+                <td><span class="tag ${p.status === '上架' ? 'tag-active' : 'tag-expired'}">${p.status}</span></td>
+                <td>
+                  <button class="btn btn-sm btn-outline" onclick="editProduct(${p.id})">编辑</button>
+                  <button class="btn btn-sm ${p.status === '上架' ? 'btn-danger' : 'btn-primary'}" onclick="toggleProduct(${p.id})">${p.status === '上架' ? '下架' : '上架'}</button>
+                </td>
+              </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function showNewProductForm() {
+  const now = new Date().toISOString().slice(0, 16);
+  openModal(`
+    <h3 style="margin-bottom:8px">新建商品</h3>
+    <p style="font-size:12px;color:var(--text3);margin-bottom:20px">填写以下信息创建新商品</p>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div class="form-group"><label>🏷️ 商品名称 *</label><input id="npName" placeholder="输入商品名称" /></div>
+      <div class="form-group"><label>⚖️ 净重/规格</label><input id="npMemory" placeholder="如：200g/袋、500g/袋、10包/盒" /></div>
+      <div class="form-group"><label>📐 排序</label><input id="npSort" type="number" placeholder="数字越小越靠前" value="0" /></div>
+      <div class="form-group"><label>📦 起购数量 *</label><input id="npMinQty" type="number" value="1" /></div>
+      <div class="form-group"><label>🛒 单次购买最大值</label><input id="npMaxQty" type="number" placeholder="不限制留空" /></div>
+    </div>
+
+    <div style="display:flex;gap:24px;margin:16px 0;flex-wrap:wrap">
+      <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer">
+        <input type="checkbox" id="npLimitPurchase" /> 是否限购
+      </label>
+      <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer">
+        <input type="checkbox" id="npShowStock" checked /> 展示库存
+      </label>
+      <label style="display:flex;align-items:center;gap:6px;font-size:13px;cursor:pointer">
+        <input type="checkbox" id="npSupportRefund" checked /> 支持退款
+      </label>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px">
+      <div class="form-group"><label>💰 商品价格（元）*</label><input id="npPrice" type="number" placeholder="0.00" step="0.01" /></div>
+      <div class="form-group"><label>⏰ 生效时间</label>
+        <input id="npEffectiveDate" type="datetime-local" value="${now}" />
+      </div>
+      <div class="form-group"><label>🎨 商品图标</label>
+        <select id="npLogo" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;outline:none;background:#fff">
+          <option value="🫘">🫘 咖啡豆</option>
+          <option value="🌱">🌱 单品</option>
+          <option value="🔄">🔄 拼配</option>
+          <option value="🌋">🌋 深烘</option>
+          <option value="🌤️">🌤️ 浅烘</option>
+          <option value="🏔️">🏔️ 中烘</option>
+          <option value="☕">☕ 意式</option>
+          <option value="🎁">🎁 礼盒</option>
+        </select>
+      </div>
+    </div>
+
+    <div class="form-group" style="margin-top:12px">
+      <label>🎟️ 优惠券选择</label>
+      <div style="display:flex;flex-wrap:wrap;gap:8px;margin-top:4px" id="npCouponTags">
+        ${MOCK.coupons.filter(c => c.type === '折扣').map((c, i) => `
+          <label style="display:flex;align-items:center;gap:4px;font-size:12px;padding:4px 10px;border-radius:6px;border:1px solid var(--border);cursor:pointer">
+            <input type="checkbox" name="npCoupon" value="${c.name}" />
+            ${c.name}（${formatCouponDiscount(c)}）
+          </label>
+        `).join('')}
+        ${MOCK.coupons.filter(c => c.type === '折扣').length === 0 ? '<span style="font-size:12px;color:var(--text3)">暂无折扣券，请先在卡券配置中创建</span>' : ''}
+      </div>
+    </div>
+
+    <div class="form-group" style="margin-top:12px">
+      <label>🖼️ 商品头图上传</label>
+      <input type="file" id="npHeaderImage" accept="image/*" style="font-size:12px;padding:8px 0" />
+      <div style="font-size:11px;color:var(--text3);margin-top:4px">支持 JPG/PNG，建议尺寸 750×480px</div>
+    </div>
+
+    <div style="display:grid;grid-template-columns:1fr 1fr;gap:16px;margin-top:12px">
+      <div class="form-group"><label>📝 商品详情</label><textarea id="npDetails" rows="4" placeholder="输入商品详情描述..." style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;outline:none"></textarea></div>
+      <div class="form-group"><label>📋 购买须知</label><textarea id="npPurchaseNotes" rows="4" placeholder="输入购买须知..." style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;outline:none"></textarea></div>
+    </div>
+
+    <div class="form-group" style="margin-top:12px">
+      <label>🔗 分享设置</label>
+      <div style="display:grid;grid-template-columns:1fr 1fr;gap:12px">
+        <input id="npShareTitle" placeholder="分享标题（默认：商品名称）" style="padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;outline:none" />
+        <input id="npShareDesc" placeholder="分享描述" style="padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;outline:none" />
+      </div>
+    </div>
+
+    <div class="modal-actions" style="margin-top:24px">
+      <button class="btn btn-outline" onclick="closeModal()">取消</button>
+      <button class="btn btn-primary" onclick="saveNewProduct()">🚀 创建</button>
+    </div>
+  `);
+}
+
+function saveNewProduct() {
+  const name = document.getElementById('npName')?.value.trim();
+  if (!name) { showToast('请输入商品名称', 'error'); return; }
+  // 自动生成商品编号：GB + 日期 + 序号
+  const now = new Date();
+  const dateStr = now.toISOString().slice(0,10).replace(/-/g, '');
+  const seq = String(MOCK.products.length + 1).padStart(3, '0');
+  const code = `GB-${dateStr}-${seq}`;
+  const price = Number(document.getElementById('npPrice')?.value);
+  if (!price) { showToast('请输入商品价格', 'error'); return; }
+
+  // Collect selected coupons
+  const couponCbs = document.querySelectorAll('input[name="npCoupon"]:checked');
+  const coupons = Array.from(couponCbs).map(cb => cb.value);
+
+  // File name for header image
+  const fileInput = document.getElementById('npHeaderImage');
+  const headerImageName = fileInput?.files?.[0]?.name || '';
+
+  const newProduct = {
+    id: Date.now(),
+    name,
+    code,
+    price,
+    stock: 999,
+    sales: 0,
+    status: '上架',
+    image: document.getElementById('npLogo')?.value || '☕',
+    category: '咖啡豆',
+    memory: document.getElementById('npMemory')?.value || '',
+    sortOrder: Number(document.getElementById('npSort')?.value || 0),
+    minPurchaseQty: Number(document.getElementById('npMinQty')?.value || 1),
+    maxPurchaseQty: document.getElementById('npMaxQty')?.value ? Number(document.getElementById('npMaxQty').value) : null,
+    purchaseLimit: document.getElementById('npLimitPurchase')?.checked || false,
+    showStock: document.getElementById('npShowStock')?.checked !== false,
+    supportRefund: document.getElementById('npSupportRefund')?.checked !== false,
+    effectiveDate: document.getElementById('npEffectiveDate')?.value || '',
+    coupons,
+    headerImage: headerImageName,
+    details: document.getElementById('npDetails')?.value || '',
+    purchaseNotes: document.getElementById('npPurchaseNotes')?.value || '',
+    shareTitle: document.getElementById('npShareTitle')?.value || name,
+    shareDesc: document.getElementById('npShareDesc')?.value || '',
+  };
+
+  MOCK.products.unshift(newProduct);
+  closeModal();
+  renderProducts();
+  showToast(`✅ 商品「${name}」创建成功`, 'success');
+}
+
+function editProduct(id) {
+  const p = MOCK.products.find(x => x.id === id);
+  openModal(`
+    <h3>编辑商品：${p.name}</h3>
+    <div class="form-group"><label>🏷️ 商品名称</label><input id="fpName" value="${p.name}" /></div>
+    <div class="form-group"><label>🔢 编号</label><input id="fpCode" value="${p.code || ''}" readonly style="background:#f5f2ed;color:var(--text3)" /></div>
+    <div class="form-row">
+      <div class="form-group"><label>💰 价格（元）</label><input id="fpPrice" type="number" value="${p.price}" /></div>
+      <div class="form-group"><label>📦 库存</label><input id="fpStock" type="number" value="${p.stock}" /></div>
+    </div>
+    <div class="form-group"><label>⚖️ 净重/规格</label><input id="fpMemory" value="${p.memory || ''}" /></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">取消</button>
+      <button class="btn btn-primary" onclick="saveProduct(${id})">保存</button>
+    </div>
+  `);
+}
+
+function saveProduct(id) {
+  const p = MOCK.products.find(x => x.id === id);
+  p.name = $('fpName').value;
+  p.code = $('fpCode').value;
+  p.price = Number($('fpPrice').value);
+  p.stock = Number($('fpStock').value);
+  p.memory = $('fpMemory').value;
+  closeModal(); renderProducts(); showToast('✅ 商品已更新', 'success');
+}
+
+function toggleProduct(id) {
+  const p = MOCK.products.find(x => x.id === id);
+  p.status = p.status === '上架' ? '下架' : '上架';
+  renderProducts(); showToast(`✅ 已${p.status}：${p.name}`, 'success');
+}
+
+// ---- Orders ----
+function renderOrders() {
+  function statusTag(s) {
+    const m = { '待发货': 'tag-pending', '配送中': 'tag-shipped', '已完成': 'tag-active', '已取消': 'tag-expired' };
+    return `<span class="tag ${m[s] || ''}">${s}</span>`;
+  }
+  const sources = [...new Set(MOCK.orders.map(o => o.source).filter(s => s))];
+  const filterSource = new URLSearchParams(location.hash.slice(1)).get('source') || '';
+  let filtered = MOCK.orders;
+  if (filterSource) filtered = filtered.filter(o => o.source === filterSource);
+  $('pageContent').innerHTML = `
+    <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div><h2>🚚 订单管理</h2><p>查看订单信息、管理发货</p></div>
+      <div style="display:flex;gap:8px">
+        <select id="filterSource" onchange="navigate('orders?source='+this.value)" style="padding:8px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:var(--card)">
+          <option value="">📋 全部来源</option>
+          ${sources.map(s => `<option value="${s}" ${s === filterSource ? 'selected' : ''}>${s}</option>`).join('')}
+        </select>
+        <button class="btn btn-outline btn-sm" onclick="exportOrders()">📥 导出Excel</button>
+      </div>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card"><div class="num">${filtered.length}</div><div class="label">📋 ${filterSource ? filterSource : '全部'}订单</div></div>
+      <div class="stat-card"><div class="num" style="color:var(--warning)">${filtered.filter(o=>o.status==='待发货').length}</div><div class="label">⏳ 待发货</div></div>
+      <div class="stat-card"><div class="num" style="color:var(--success)">${filtered.filter(o=>o.status==='已完成').length}</div><div class="label">✅ 已完成</div></div>
+      <div class="stat-card"><div class="num" style="color:var(--text2)">${filterSource ? '¥' + filtered.reduce((s,o) => s + o.total, 0) : '-'}</div><div class="label">💰 筛选金额</div></div>
+    </div>
+    <div class="card">
+      <div class="card-header">📋 全部订单 ${filterSource ? `（来源：${filterSource}）` : ''}</div>
+      <div class="card-body">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>订单号</th><th>客户</th><th>商品</th><th>金额</th><th>状态</th><th>来源</th><th>日期</th><th>操作</th></tr></thead>
+            <tbody>
+              ${filtered.map(o => `<tr>
+                <td><strong>${o.id}</strong></td>
+                <td>${o.customer}</td>
+                <td>${o.items.join('、')}</td>
+                <td><strong>¥${o.total}</strong></td>
+                <td>${statusTag(o.status)}</td>
+                <td>${o.source ? `<span class="tag" style="background:#e8e0d6;color:#5a3d2b">${o.source}</span>` : '<span style="color:#ccc">-</span>'}</td>
+                <td>${o.date}</td>
+                <td>
+                  <button class="btn btn-sm btn-outline" onclick="viewOrder('${o.id}')">详情</button>
+                  ${o.status === '待发货' ? `<button class="btn btn-sm btn-primary" onclick="shipOrder('${o.id}')">发货</button>` : ''}
+                </td>
+              </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function exportOrders() {
+  const rows = MOCK.orders.map(o => [o.id, o.customer, o.items.join('、'), '¥' + o.total, o.status, o.source || '', o.date]);
+  const header = ['订单号','客户','商品','金额','状态','来源','日期'];
+  const csv = [header.join(','), ...rows.map(r => r.map(v => '"' + v + '"').join(','))].join('\\n');
+  const blob = new Blob(['\\uFEFF' + csv], { type: 'text/csv;charset=utf-8;' });
+  const a = document.createElement('a');
+  a.href = URL.createObjectURL(blob);
+  a.download = '云咖铺子_订单导出_' + new Date().toISOString().slice(0,10) + '.csv';
+  a.click();
+  showToast('✅ 订单已导出', 'success');
+}
+
+function viewOrder(id) {
+  const o = MOCK.orders.find(x => x.id === id);
+  openModal(`
+    <h3>订单详情 #${o.id}</h3>
+    <div class="member-detail" style="box-shadow:none;padding:0">
+      <div class="row"><span class="label">客户</span><span class="value">${o.customer}</span></div>
+      <div class="row"><span class="label">商品</span><span class="value">${o.items.join('、')}</span></div>
+      <div class="row"><span class="label">金额</span><span class="value">¥${o.total}</span></div>
+      <div class="row"><span class="label">状态</span><span class="value">${o.status}</span></div>
+      <div class="row"><span class="label">来源</span><span class="value">${o.source || '-'}</span></div>
+      <div class="row"><span class="label">下单日期</span><span class="value">${o.date}</span></div>
+      ${o.tracking ? `<div class="row"><span class="label">快递单号</span><span class="value">${o.tracking}</span></div>` : ''}
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">关闭</button>
+    </div>
+  `);
+}
+
+function shipOrder(id) {
+  const o = MOCK.orders.find(x => x.id === id);
+  openModal(`
+    <h3>发货确认</h3>
+    <p style="margin-bottom:16px;font-size:14px;color:var(--text2)">订单 #${o.id} · ${o.customer}</p>
+    <div class="form-group"><label>快递单号</label><input id="shipTracking" placeholder="输入快递单号" /></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">取消</button>
+      <button class="btn btn-primary" onclick="confirmShip('${id}')">确认发货</button>
+    </div>
+  `);
+}
+
+function confirmShip(id) {
+  const o = MOCK.orders.find(x => x.id === id);
+  o.tracking = $('shipTracking').value || 'SF' + Date.now();
+  o.status = '配送中';
+  closeModal(); renderOrders(); showToast('✅ 已标记为配送中', 'success');
+}
+
+// ---- Members ----
+function renderMembers() {
+  $('pageContent').innerHTML = `
+    <div class="page-header">
+      <h2>👥 会员管理</h2>
+      <p>查询会员信息、调整等级和积分</p>
+    </div>
+    <div class="search-bar">
+      <input placeholder="搜索会员昵称或手机号..." oninput="searchMember(this.value)" />
+    </div>
+    <div class="stats-row">
+      <div class="stat-card"><div class="num">${MOCK.members.length}</div><div class="label">👥 总会员</div></div>
+      <div class="stat-card"><div class="num" style="color:#bf360c">${MOCK.members.filter(m=>m.tier===3).length}</div><div class="label">👑 臻金会员</div></div>
+      <div class="stat-card"><div class="num" style="color:#4a148c">${MOCK.members.filter(m=>m.tier===2).length}</div><div class="label">🥈 银焙会员</div></div>
+    </div>
+    <div id="memberList">
+      ${MOCK.members.map(m => `
+        <div class="card" style="cursor:pointer" onclick="showMemberDetail('${m.id}')">
+          <div class="card-body" style="display:flex;justify-content:space-between;align-items:center">
+            <div style="display:flex;align-items:center;gap:12px">
+              <span style="font-size:28px">${m.avatar}</span>
+              <div>
+                <strong style="font-size:15px">${m.nickname}</strong>
+                <div style="font-size:12px;color:var(--text3);margin-top:2px">${m.phone} · ${m.totalOrders} 单</div>
+              </div>
+            </div>
+            <div style="text-align:right">
+              <div><span class="tag tag-${m.tier}">${m.tierName}</span></div>
+              <div style="font-size:12px;color:var(--text3);margin-top:4px">⭐ ${m.totalPoints} 积分</div>
+            </div>
+          </div>
+        </div>
+      `).join('')}
+    </div>
+  `;
+}
+
+function searchMember(keyword) {
+  const list = document.getElementById('memberList');
+  if (!keyword) { renderMembers(); return; }
+  const filtered = MOCK.members.filter(m => m.nickname.includes(keyword) || (m.phone || '').includes(keyword));
+  if (filtered.length === 0) {
+    list.innerHTML = '<div class="empty-state"><span class="icon">🔍</span><span class="text">未找到匹配的会员</span></div>';
+    return;
+  }
+  if (filtered.length === 1) {
+    showMemberDetail(filtered[0].id);
+    return;
+  }
+  list.innerHTML = filtered.map(m => `
+    <div class="card" style="cursor:pointer" onclick="showMemberDetail('${m.id}')">
+      <div class="card-body" style="display:flex;justify-content:space-between;align-items:center">
+        <div style="display:flex;align-items:center;gap:12px">
+          <span style="font-size:28px">${m.avatar}</span>
+          <div>
+            <strong style="font-size:15px">${m.nickname}</strong>
+            <div style="font-size:12px;color:var(--text3);margin-top:2px">${m.phone} · ${m.totalOrders} 单</div>
+          </div>
+        </div>
+        <div style="text-align:right">
+          <div><span class="tag tag-${m.tier}">${m.tierName}</span></div>
+          <div style="font-size:12px;color:var(--text3);margin-top:4px">⭐ ${m.totalPoints} 积分</div>
+        </div>
+      </div>
+    </div>
+  `).join('');
+}
+
+function showMemberDetail(id) {
+  const m = MOCK.members.find(x => x.id === id);
+  openModal(`
+    <h3 style="display:flex;align-items:center;gap:8px"><span style="font-size:28px">${m.avatar}</span> ${m.nickname}</h3>
+    <div class="member-detail" style="box-shadow:none;padding:0">
+      <div class="row"><span class="label">等级</span><span class="value"><span class="tag tag-${m.tier}">${m.tierName}</span></span></div>
+      <div class="row"><span class="label">总积分</span><span class="value" style="font-weight:700;color:var(--warning)">${m.totalPoints}</span></div>
+      <div class="row"><span class="label">已使用积分</span><span class="value">${m.usedPoints}</span></div>
+      <div class="row"><span class="label">累计消费</span><span class="value"><strong>¥${formatMoney(m.totalSpendCents)}</strong></span></div>
+      <div class="row"><span class="label">订单数</span><span class="value">${m.totalOrders} 单</span></div>
+      <div class="row"><span class="label">手机</span><span class="value">${m.phone || '未填写'}</span></div>
+      <div class="row"><span class="label">生日</span><span class="value">${m.birthday || '未设置'}</span></div>
+      <div class="row"><span class="label">注册时间</span><span class="value">${m.createdAt}</span></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-sm btn-outline" onclick="changeMemberTier('${m.id}')">调整等级</button>
+      <button class="btn btn-sm btn-outline" onclick="adjustMemberPoints('${m.id}')">调整积分</button>
+      <button class="btn btn-sm btn-outline" onclick="closeModal()">关闭</button>
+    </div>
+  `);
+}
+
+function changeMemberTier(id) {
+  const m = MOCK.members.find(x => x.id === id);
+  const tierNames = MOCK.tiers.map(t => t.name);
+  const items = tierNames.map((name, i) => `<div class="menu-card" onclick="setMemberTier('${id}', ${i})" style="margin-bottom:8px">
+    <span class="icon">${i === 0 ? '🟢' : i === 1 ? '🥈' : '👑'}</span>
+    <div class="name">${name}</div>
+    <div class="desc">${MOCK.tiers[i].benefits.map(b => b.desc).join(' · ')}</div>
+  </div>`).join('');
+  openModal(`
+    <h3>调整 ${m.nickname} 的等级</h3>
+    <p style="font-size:13px;color:var(--text3);margin-bottom:16px">当前等级：${m.tierName}</p>
+    ${items}
+    <div class="modal-actions"><button class="btn btn-outline" onclick="closeModal()">取消</button></div>
+  `);
+}
+
+function setMemberTier(id, tierIdx) {
+  const m = MOCK.members.find(x => x.id === id);
+  const t = MOCK.tiers[tierIdx];
+  m.tier = t.level;
+  m.tierName = t.name;
+  closeModal(); showToast(`✅ ${m.nickname} 等级已更新为 ${t.name}`, 'success');
+}
+
+function adjustMemberPoints(id) {
+  const m = MOCK.members.find(x => x.id === id);
+  openModal(`
+    <h3>调整 ${m.nickname} 的积分</h3>
+    <p style="font-size:13px;color:var(--text3);margin-bottom:8px">当前积分：${m.totalPoints}</p>
+    <div class="form-group"><label>调整数值（正数增加，负数扣除）</label><input id="pointsAdjust" type="number" placeholder="例如：100 或 -50" /></div>
+    <div class="form-group"><label>备注</label><input id="pointsNote" value="管理员调整" /></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">取消</button>
+      <button class="btn btn-primary" onclick="savePointsAdjust('${id}')">确认调整</button>
+    </div>
+  `);
+}
+
+function savePointsAdjust(id) {
+  const m = MOCK.members.find(x => x.id === id);
+  const delta = Number($('pointsAdjust').value) || 0;
+  m.totalPoints = Math.max(0, m.totalPoints + delta);
+  closeModal(); renderMembers(); showToast(`✅ 已调整 ${m.nickname} 积分（${delta > 0 ? '+' : ''}${delta}）`, 'success');
+}
+
+// ---- Tiers ----
+function renderTiers() {
+  $('pageContent').innerHTML = `
+    <div class="page-header">
+      <h2>🏅 等级配置</h2>
+      <p>编辑会员等级名称、权益和升级门槛</p>
+    </div>
+    ${MOCK.tiers.map((t, i) => `
+      <div class="tier-card" style="border-left-color:${i === 0 ? '#4CAF50' : i === 1 ? '#9C27B0' : '#FF6F00'}">
+        <div class="header">
+          <span style="font-size:28px">${i === 0 ? '🟢' : i === 1 ? '🥈' : '👑'}</span>
+          <span class="name">${t.name}</span>
+          <span class="level">Lv.${t.level}</span>
+        </div>
+        <div class="info">
+          <span class="info-row">${t.conditions.registerFree ? '✅ 免费注册即可加入' : `🎯 升级条件：消费 ¥${formatMoney(t.conditions.entryRequirements.totalSpendCents)} 或购卡 ¥${formatMoney(t.conditions.entryRequirements.orPurchaseCardCents)}`}</span>
+        </div>
+        <div class="benefits">
+          ${t.benefits.map(b => `<span class="benefit-tag">✅ ${b.desc}</span>`).join('')}
+        </div>
+        <div class="btn-area">
+          <button class="btn btn-sm btn-primary" onclick="editTier(${i})">编辑等级</button>
+        </div>
+      </div>
+    `).join('')}
+  `;
+}
+
+function editTier(idx) {
+  const t = JSON.parse(JSON.stringify(MOCK.tiers[idx]));
+  editingTier = idx;
+  openModal(`
+    <h3>编辑等级：${t.name}</h3>
+    <div class="form-group"><label>等级名称</label><input id="etName" value="${t.name}" /></div>
+    <div class="form-group" style="display:flex;align-items:center;gap:8px">
+      <input type="checkbox" id="etFree" ${t.conditions.registerFree ? 'checked' : ''} />
+      <label for="etFree" style="margin:0">免费注册即可加入</label>
+    </div>
+    <div id="etUpgradeFields" style="display:${t.conditions.registerFree ? 'none' : 'block'}">
+      <div class="form-row">
+        <div class="form-group"><label>消费门槛（元）</label><input id="etSpend" type="number" value="${t.conditions.entryRequirements.totalSpendCents / 100}" /></div>
+        <div class="form-group"><label>购卡金额（元）</label><input id="etCard" type="number" value="${t.conditions.entryRequirements.orPurchaseCardCents / 100}" /></div>
+      </div>
+    </div>
+    <div class="form-group"><label>权益列表（每行一个）</label>
+      <textarea id="etBenefits" rows="4">${t.benefits.map(b => b.desc).join('\n')}</textarea>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">取消</button>
+      <button class="btn btn-primary" onclick="saveTier(${idx})">保存</button>
+    </div>
+  `);
+  // Show/hide upgrade fields based on checkbox
+  setTimeout(() => {
+    const cb = $('etFree');
+    cb.addEventListener('change', () => {
+      $('etUpgradeFields').style.display = cb.checked ? 'none' : 'block';
+    });
+  }, 100);
+}
+
+function saveTier(idx) {
+  const t = MOCK.tiers[idx];
+  t.name = $('etName').value;
+  t.conditions.registerFree = $('etFree').checked;
+  if (!t.conditions.registerFree) {
+    t.conditions.entryRequirements.totalSpendCents = Number($('etSpend').value || 0) * 100;
+    t.conditions.entryRequirements.orPurchaseCardCents = Number($('etCard').value || 0) * 100;
+  }
+  const lines = $('etBenefits').value.split('\n').filter(Boolean);
+  t.benefits = lines.map((desc, i) => ({ type: ['birthday','pointMultiplier','freeMonthly','discount','newProduct','custom'][i] || 'custom', desc }));
+  closeModal(); renderTiers(); showToast('✅ 等级配置已保存', 'success');
+}
+
+// ---- Benefits ----
+function renderBenefits() {
+  const active = MOCK.benefits.filter(b => b.status === 'active').length;
+  const used = MOCK.benefits.filter(b => b.status === 'used').length;
+  const expired = MOCK.benefits.filter(b => b.status === 'expired').length;
+  $('pageContent').innerHTML = `
+    <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div><h2>🎁 权益管理</h2><p>批量发放会员权益、查看核销记录</p></div>
+      <button class="btn btn-primary" onclick="createBenefitForm()">+ 发放权益</button>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card"><div class="num">${MOCK.benefits.length}</div><div class="label">总权益</div></div>
+      <div class="stat-card"><div class="num" style="color:var(--success)">${active}</div><div class="label">可用</div></div>
+      <div class="stat-card"><div class="num" style="color:var(--text3)">${used}</div><div class="label">已使用</div></div>
+      <div class="stat-card"><div class="num" style="color:var(--danger)">${expired}</div><div class="label">已过期</div></div>
+    </div>
+    <div id="benefitList">
+      ${MOCK.benefits.map(b => `
+        <div class="benefit-item">
+          <div class="left">
+            <div class="title">${b.description}</div>
+            <div class="meta">等级：${b.tierSource} · ${b.createdAt}</div>
+          </div>
+          <span class="tag ${b.status === 'active' ? 'tag-active' : b.status === 'used' ? 'tag-used' : 'tag-expired'}">
+            ${b.status === 'active' ? '可用' : b.status === 'used' ? '已使用' : '已过期'}
+          </span>
+        </div>
+      `).join('')}
+      ${MOCK.benefits.length === 0 ? '<div class="empty-state"><span class="icon">🎁</span><span class="text">暂无权益记录</span></div>' : ''}
+    </div>
+  `;
+}
+
+function createBenefitForm() {
+  openModal(`
+    <h3>发放权益</h3>
+    <div class="form-group"><label>权益描述</label><input id="nbDesc" placeholder="如：免费饮品券" /></div>
+    <div class="form-group"><label>发放对象</label>
+      <select id="nbTier">
+        <option value="通用">通用（全部会员）</option>
+        ${MOCK.tiers.map(t => `<option value="${t.name}">${t.name} 会员</option>`).join('')}
+      </select>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">取消</button>
+      <button class="btn btn-primary" onclick="createBenefit()">确认发放</button>
+    </div>
+  `);
+}
+
+function createBenefit() {
+  const desc = $('nbDesc').value.trim();
+  if (!desc) { showToast('请输入权益描述', 'error'); return; }
+  MOCK.benefits.unshift({
+    _id: 'B' + Date.now(), description: desc,
+    tierSource: $('nbTier').value, status: 'active',
+    createdAt: new Date().toISOString().slice(0, 10)
+  });
+  closeModal(); renderBenefits(); showToast('✅ 权益已发放', 'success');
+}
+
+// ---- Coupons ----
+// ===== 卡券状态 =====
+let couponsTab = 'templates'; // 'templates' | 'records'
+
+function formatCouponDiscount(c) {
+  if (c.type === '折扣') {
+    const rate = c.discount * 10;
+    return (rate % 1 === 0 ? rate : rate.toFixed(1)) + '折';
+  }
+  // 满减
+  return '满¥' + (c.minSpend / 100).toFixed(0) + '减¥' + c.discount;
+}
+
+function toggleCouponFields() {
+  const type = document.getElementById('ncType').value;
+  document.getElementById('ncDiscountFields').style.display = type === '折扣' ? '' : 'none';
+  document.getElementById('ncMinSpendFields').style.display = type === '满减' ? '' : 'none';
+}
+
+function toggleEditCouponFields() {
+  const type = document.getElementById('ecType').value;
+  document.getElementById('ecDiscountFields').style.display = type === '折扣' ? '' : 'none';
+  document.getElementById('ecMinSpendFields').style.display = type === '满减' ? '' : 'none';
+}
+
+function renderCoupons() {
+  if (couponsTab === 'records') { renderCouponRecords(); return; }
+  const list = MOCK.coupons;
+  const activeCount = list.filter(c=>c.status==='进行中').length;
+  const endedCount = list.filter(c=>c.status==='已结束').length;
+  $('pageContent').innerHTML = `
+    <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
+      <div>
+        <h2>🎟️ 卡券配置</h2>
+        <p>创建和管理优惠券模板</p>
+      </div>
+      <button class="btn btn-primary" onclick="showNewCouponForm()">＋ 新增卡券</button>
+    </div>
+
+    <!-- 标签切换 -->
+    <div style="display:flex;gap:0;margin-bottom:20px;background:var(--bg);border-radius:8px;padding:4px;width:fit-content">
+      <button class="btn btn-sm" style="border:none;background:${couponsTab==='templates'?'var(--primary)':'transparent'};color:${couponsTab==='templates'?'#fff':'var(--text2)'};padding:8px 20px;border-radius:6px;cursor:pointer" onclick="couponsTab='templates';renderCoupons()">📋 卡券模板</button>
+      <button class="btn btn-sm" style="border:none;background:${couponsTab==='records'?'var(--primary)':'transparent'};color:${couponsTab==='records'?'#fff':'var(--text2)'};padding:8px 20px;border-radius:6px;cursor:pointer" onclick="couponsTab='records';renderCoupons()">🔍 查询记录</button>
+    </div>
+
+    <div class="stats-row">
+      <div class="stat-card"><div class="num">${list.length}</div><div class="label">🎟️ 总卡券</div></div>
+      <div class="stat-card"><div class="num" style="color:var(--success)">${activeCount}</div><div class="label">✅ 进行中</div></div>
+      <div class="stat-card"><div class="num" style="color:var(--text3)">${endedCount}</div><div class="label">📦 已结束</div></div>
+    </div>
+
+    <div class="card">
+      <div class="card-header">🎟️ 卡券模板列表</div>
+      <div class="card-body">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>卡券编码</th><th>名称</th><th>类型</th><th>优惠</th><th>最低消费</th><th>总量</th><th>已使用</th><th>使用率</th><th>有效期</th><th>状态</th><th>操作</th></tr></thead>
+            <tbody>
+              ${list.map(c => {
+                const rate = c.total > 0 ? (c.used / c.total * 100).toFixed(0) : 0;
+                const validUntil = c.validUntil || '-';
+                return `<tr>
+                  <td style="font-size:12px;color:var(--text3)">${c.code || '-'}</td>
+                  <td><strong>${c.name}</strong></td>
+                  <td><span class="tag-carrier">${c.type}</span></td>
+                  <td>${formatCouponDiscount(c)}</td>
+                  <td>${c.minSpend === 0 ? '无' : '¥' + (c.minSpend / 100).toFixed(2)}</td>
+                  <td>${c.total}</td>
+                  <td>${c.used}</td>
+                  <td><div style="display:flex;align-items:center;gap:8px"><div style="width:60px;height:6px;background:var(--bg);border-radius:3px;overflow:hidden"><div style="width:${rate}%;height:100%;background:${Number(rate) > 80 ? 'var(--success)' : Number(rate) > 50 ? 'var(--warning)' : 'var(--accent)'};border-radius:3px"></div></div>${rate}%</div></td>
+                  <td style="font-size:12px">${validUntil}</td>
+                  <td><span class="tag ${c.status === '进行中' ? 'tag-active' : 'tag-expired'}">${c.status}</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-outline" onclick="editCoupon(${c.id})">编辑</button>
+                    <button class="btn btn-sm btn-danger" onclick="deleteCoupon(${c.id})">删除</button>
+                  </td>
+                </tr>`;
+              }).join('')}
+              ${list.length === 0 ? '<tr><td colspan="11" style="text-align:center;padding:40px;color:var(--text3)">暂无卡券模板，点击上方按钮新增</td></tr>' : ''}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 支付计算流程说明 -->
+    <div class="card" style="margin-top:24px;border-left:4px solid #2e86c1">
+      <div class="card-header">🧮 支付计算顺序（下单时自动执行）</div>
+      <div class="card-body">
+        <div style="display:flex;align-items:center;gap:12px;flex-wrap:wrap;font-size:14px">
+          <span style="background:#f0f7ee;padding:6px 12px;border-radius:6px;font-weight:600">① 商品原价</span>
+          <span style="color:var(--text3)">→</span>
+          <span style="background:#fff8e1;padding:6px 12px;border-radius:6px;font-weight:600">② 折扣券（单商品打折）</span>
+          <span style="color:var(--text3)">→</span>
+          <span style="background:#fce4ec;padding:6px 12px;border-radius:6px;font-weight:600">③ 满减券（订单满额立减）</span>
+          <span style="color:var(--text3)">→</span>
+          <span style="background:#e3f2fd;padding:6px 12px;border-radius:6px;font-weight:600">④ 减：积分抵扣</span>
+          <span style="color:var(--text3)">→</span>
+          <span style="background:#e8f5e9;padding:6px 12px;border-radius:6px;font-weight:600;color:#2e7d32">⑤ 最终支付金额</span>
+        </div>
+        <div style="margin-top:12px;padding:12px 16px;background:var(--bg);border-radius:8px;font-size:13px;color:var(--text2);line-height:2">
+          <div>📐 计算公式：<strong>最终金额 = 商品折后价 − 满减券减免 − (用户积分 ÷ 10)</strong></div>
+          <div>🎯 <strong>折扣券</strong>：对适用商品各自打折（如9折券 → 单品价 × 0.9），折扣券在商品管理中勾选关联</div>
+          <div>🎯 <strong>满减券</strong>：订单总价（折后）满足最低消费后，减免固定金额</div>
+          <div>📌 示例：商品 ¥50（关联9折券）+ ¥30，使用满50减15券，有200积分 → (¥50×0.9 + ¥30) − ¥15 − ¥20 = <strong style="color:#2e7d32">¥40</strong></div>
+          <div>⚠️ 积分抵扣上限为配置值（默认每单最多抵 ¥20），不足 10 积分部分不参与抵扣</div>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+function renderCouponRecords() {
+  const records = MOCK.couponRecords || [];
+  $('pageContent').innerHTML = `
+    <div class="page-header">
+      <h2>🔍 卡券查询</h2>
+      <p>查看卡券发放、使用和核销记录</p>
+    </div>
+
+    <!-- 标签切换 -->
+    <div style="display:flex;gap:0;margin-bottom:20px;background:var(--bg);border-radius:8px;padding:4px;width:fit-content">
+      <button class="btn btn-sm" style="border:none;background:transparent;color:var(--text2);padding:8px 20px;border-radius:6px;cursor:pointer" onclick="couponsTab='templates';renderCoupons()">📋 卡券模板</button>
+      <button class="btn btn-sm" style="border:none;background:var(--primary);color:#fff;padding:8px 20px;border-radius:6px;cursor:pointer" onclick="couponsTab='records';renderCoupons()">🔍 查询记录</button>
+    </div>
+
+    <!-- 查询栏 - 拆分搜索 -->
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-body">
+        <div style="display:grid;grid-template-columns:1fr 1fr 1fr 1fr;gap:12px;margin-bottom:12px">
+          <div class="form-group" style="margin:0"><label>📱 手机号</label><input id="crPhone" placeholder="输入手机号..." oninput="filterCouponRecords()" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:13px;outline:none" /></div>
+          <div class="form-group" style="margin:0"><label>🆔 会员ID</label><input id="crMemberId" placeholder="输入会员ID..." oninput="filterCouponRecords()" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:13px;outline:none" /></div>
+          <div class="form-group" style="margin:0"><label>🔖 模板编码</label><input id="crTplCode" placeholder="如：CPN-NEW10" oninput="filterCouponRecords()" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:13px;outline:none" /></div>
+          <div class="form-group" style="margin:0"><label>🆔 实例编码</label><input id="crInstCode" placeholder="如：CPN-INST-001" oninput="filterCouponRecords()" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:13px;outline:none" /></div>
+        </div>
+        <div style="display:flex;gap:12px;align-items:end">
+          <div class="form-group" style="margin:0;flex:1">
+            <label>📋 使用状态</label>
+            <select id="crStatusFilter" onchange="filterCouponRecords()" style="width:100%;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:13px;outline:none;background:#fff">
+              <option value="">全部状态</option>
+              <option value="active">未使用</option>
+              <option value="used">已核销</option>
+              <option value="expired">已过期</option>
+            </select>
+          </div>
+          <button class="btn btn-outline" onclick="document.getElementById('crPhone').value='';document.getElementById('crMemberId').value='';document.getElementById('crTplCode').value='';document.getElementById('crInstCode').value='';document.getElementById('crStatusFilter').value='';filterCouponRecords()" style="height:40px;align-self:end">🔄 重置</button>
+        </div>
+      </div>
+    </div>
+
+    <!-- 统计 -->
+    <div class="stats-row">
+      <div class="stat-card"><div class="num">${records.length}</div><div class="label">📦 总发放</div></div>
+      <div class="stat-card"><div class="num" style="color:var(--success)">${records.filter(r=>r.status==='used').length}</div><div class="label">✅ 已核销</div></div>
+      <div class="stat-card"><div class="num" style="color:var(--warning)">${records.filter(r=>r.status==='active').length}</div><div class="label">⏳ 未使用</div></div>
+      <div class="stat-card"><div class="num" style="color:var(--text3)">${records.filter(r=>r.status==='expired').length}</div><div class="label">📅 已过期</div></div>
+    </div>
+
+    <!-- 记录列表 -->
+    <div id="couponRecordList">
+      ${records.map(r => renderCouponRecordCard(r)).join('')}
+      ${records.length === 0 ? '<div class="empty-state"><span class="icon">🎟️</span><span class="text">暂无发放记录</span></div>' : ''}
+    </div>
+  `;
+}
+
+function renderCouponRecordCard(r) {
+  const statusClass = r.status === 'used' ? 'tag-shipped' : r.status === 'active' ? 'tag-active' : 'tag-expired';
+  const statusLabel = r.status === 'used' ? '已核销' : r.status === 'active' ? '未使用' : '已过期';
+  return `
+    <div class="tracking-card">
+      <div class="left">
+        <div class="num">${r.couponName}</div>
+        <div class="meta">
+          <span>🔖 模板编码：${r.couponCode}</span>
+          <span>🆔 实例编码：<strong>${r.instanceCode || '-'}</strong></span>
+          <span>👤 ${r.issuedTo}</span>
+          <span>📱 ${r.phone || '-'}</span>
+          <span>🆔 会员 ${r.memberId || '-'}</span>
+          <span>📤 ${r.issuedAt}</span>
+          ${r.redeemedAt ? `<span>✅ 核销于 ${r.redeemedAt}</span>` : ''}
+        </div>
+      </div>
+      <div class="right">
+        <span class="tag ${statusClass}">${statusLabel}</span>
+      </div>
+    </div>
+  `;
+}
+
+function filterCouponRecords() {
+  const phone = (document.getElementById('crPhone')?.value || '').trim().toLowerCase();
+  const memberId = (document.getElementById('crMemberId')?.value || '').trim().toLowerCase();
+  const tplCode = (document.getElementById('crTplCode')?.value || '').trim().toLowerCase();
+  const instCode = (document.getElementById('crInstCode')?.value || '').trim().toLowerCase();
+
+  let list = MOCK.couponRecords || [];
+  if (phone) list = list.filter(r => (r.phone || '').toLowerCase().includes(phone));
+  if (memberId) list = list.filter(r => (r.memberId || '').toLowerCase().includes(memberId));
+  if (tplCode) list = list.filter(r => r.couponCode.toLowerCase().includes(tplCode));
+  if (instCode) list = list.filter(r => (r.instanceCode || '').toLowerCase().includes(instCode));
+  const statusFilter = document.getElementById('crStatusFilter')?.value || '';
+  if (statusFilter) list = list.filter(r => r.status === statusFilter);
+
+  const container = document.getElementById('couponRecordList');
+  if (!container) return;
+
+  container.innerHTML = list.length === 0
+    ? '<div class="empty-state"><span class="icon">🔍</span><span class="text">未找到匹配记录</span></div>'
+    : list.map(r => renderCouponRecordCard(r)).join('');
+}
+
+function showNewCouponForm() {
+  openModal(`
+    <h3 style="margin-bottom:8px">新增卡券模板</h3>
+    <p style="font-size:12px;color:var(--text3);margin-bottom:20px">创建新的优惠券模板</p>
+    <div class="form-row">
+      <div class="form-group"><label>🏷️ 卡券名称 *</label><input id="ncName" placeholder="如：满50减15" /></div>
+      <div class="form-group"><label>🎯 卡券类型</label>
+        <select id="ncType" onchange="toggleCouponFields()" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;outline:none;background:#fff">
+          <option value="折扣">折扣券（按商品价格打折）</option>
+          <option value="满减">满减券（按订单总价减免）</option>
+        </select>
+      </div>
+    </div>
+    <div id="ncDiscountFields">
+      <div class="form-row" id="ncDiscountRow">
+        <div class="form-group"><label>📉 折扣率</label><input id="ncDiscountRate" type="number" step="0.01" placeholder="如 0.9 = 9折" value="0.9" /></div>
+        <div class="form-group"><label>📋 发放总量</label><input id="ncTotal" type="number" placeholder="不限制留空" /></div>
+      </div>
+    </div>
+    <div id="ncMinSpendFields" style="display:none">
+      <div class="form-row">
+        <div class="form-group"><label>💰 满减金额（元）</label><input id="ncDiscountAmt" type="number" placeholder="如：15" value="15" /></div>
+        <div class="form-group"><label>📦 最低消费（元）</label><input id="ncMinSpend" type="number" placeholder="如：50" value="50" /></div>
+      </div>
+      <div class="form-row" style="margin-top:12px">
+        <div class="form-group"><label>📋 发放总量</label><input id="ncTotal2" type="number" placeholder="不限制留空" /></div>
+        <div></div>
+      </div>
+    </div>
+    <div class="form-row" style="margin-top:12px">
+      <div class="form-group"><label>📅 有效期至</label><input id="ncValidUntil" type="date" /></div>
+      <div class="form-group"><label>🔖 卡券编码（自动生成）</label>
+        <input id="ncCode" placeholder="系统自动分配" readonly style="background:#f5f2ed;color:var(--text3)" />
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">取消</button>
+      <button class="btn btn-primary" onclick="saveNewCoupon()">创建卡券</button>
+    </div>
+  `);
+  // 自动填充编码
+  const autoCode = `CPN-${Date.now().toString(36).toUpperCase()}`;
+  document.getElementById('ncCode').value = autoCode;
+}
+
+function saveNewCoupon() {
+  const name = document.getElementById('ncName')?.value.trim();
+  if (!name) { showToast('请输入卡券名称', 'error'); return; }
+  const type = document.getElementById('ncType')?.value || '折扣';
+  let discount, minSpend, total;
+  if (type === '折扣') {
+    discount = Number(document.getElementById('ncDiscountRate')?.value || 0.9);
+    minSpend = 0;
+    total = Number(document.getElementById('ncTotal')?.value || 0) || 9999;
+  } else {
+    discount = Number(document.getElementById('ncDiscountAmt')?.value || 0);
+    minSpend = Number(document.getElementById('ncMinSpend')?.value || 50) * 100;
+    total = Number(document.getElementById('ncTotal2')?.value || 0) || 9999;
+  }
+  const newCoupon = {
+    id: Date.now(),
+    code: document.getElementById('ncCode')?.value || `CPN-${Date.now()}`,
+    name,
+    type,
+    discount,
+    minSpend,
+    total,
+    used: 0,
+    status: '进行中',
+    validUntil: document.getElementById('ncValidUntil')?.value || '',
+  };
+  MOCK.coupons.unshift(newCoupon);
+  closeModal();
+  renderCoupons();
+  showToast(`✅ 卡券「${name}」创建成功`, 'success');
+}
+
+function editCoupon(id) {
+  const c = MOCK.coupons.find(x => x.id === id);
+  if (!c) return;
+  const isDiscount = c.type === '折扣';
+  const rateVal = isDiscount ? c.discount : 0.9;
+  const amtVal = !isDiscount ? c.discount : 15;
+  openModal(`
+    <h3>编辑卡券：${c.name}</h3>
+    <div class="form-row">
+      <div class="form-group"><label>🏷️ 卡券名称</label><input id="ecName" value="${c.name}" /></div>
+      <div class="form-group"><label>🎯 类型</label>
+        <select id="ecType" onchange="toggleEditCouponFields()" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;outline:none;background:#fff">
+          <option value="折扣" ${isDiscount?'selected':''}>折扣券（按商品价格打折）</option>
+          <option value="满减" ${!isDiscount?'selected':''}>满减券（按订单总价减免）</option>
+        </select>
+      </div>
+    </div>
+    <div id="ecDiscountFields" ${isDiscount ? '' : 'style="display:none"'}>
+      <div class="form-row">
+        <div class="form-group"><label>📉 折扣率</label><input id="ecDiscountRate" type="number" step="0.01" value="${rateVal}" /></div>
+        <div class="form-group"><label>📋 发放总量</label><input id="ecTotal" type="number" value="${c.total}" /></div>
+      </div>
+    </div>
+    <div id="ecMinSpendFields" ${!isDiscount ? '' : 'style="display:none"'}>
+      <div class="form-row">
+        <div class="form-group"><label>💰 满减金额（元）</label><input id="ecDiscountAmt" type="number" value="${amtVal}" /></div>
+        <div class="form-group"><label>📦 最低消费（元）</label><input id="ecMinSpend" type="number" value="${c.minSpend / 100}" /></div>
+      </div>
+      <div class="form-row" style="margin-top:12px">
+        <div class="form-group"><label>📋 发放总量</label><input id="ecTotal2" type="number" value="${c.total}" /></div>
+        <div></div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>📅 有效期</label><input id="ecValidUntil" type="date" value="${c.validUntil || ''}" /></div>
+      <div class="form-group"><label>🔖 编码</label><input value="${c.code || ''}" readonly style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;background:#f5f2ed;color:var(--text3)" /></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">取消</button>
+      <button class="btn btn-primary" onclick="saveEditCoupon(${id})">保存</button>
+    </div>
+  `);
+}
+
+function saveEditCoupon(id) {
+  const c = MOCK.coupons.find(x => x.id === id);
+  c.name = document.getElementById('ecName')?.value || c.name;
+  c.type = document.getElementById('ecType')?.value || c.type;
+  if (c.type === '折扣') {
+    c.discount = Number(document.getElementById('ecDiscountRate')?.value || 0.9);
+    c.minSpend = 0;
+    c.total = Number(document.getElementById('ecTotal')?.value || 9999);
+  } else {
+    c.discount = Number(document.getElementById('ecDiscountAmt')?.value || 0);
+    c.minSpend = Number(document.getElementById('ecMinSpend')?.value || 50) * 100;
+    c.total = Number(document.getElementById('ecTotal2')?.value || 9999);
+  }
+  c.validUntil = document.getElementById('ecValidUntil')?.value || c.validUntil;
+  closeModal();
+  renderCoupons();
+  showToast('✅ 卡券已更新', 'success');
+}
+
+function deleteCoupon(id) {
+  const c = MOCK.coupons.find(x => x.id === id);
+  if (!c) return;
+  if (!confirm(`确定删除卡券「${c.name}」吗？`)) return;
+  MOCK.coupons = MOCK.coupons.filter(x => x.id !== id);
+  renderCoupons();
+  showToast(`已删除：${c.name}`, 'success');
+}
+
+// ---- Tracking ----
+function renderTracking() {
+  const list = MOCK.tracking;
+  const carriers = [...new Set(list.map(t => t.carrier))];
+  function statusTag(s) {
+    const m = { delivered: 'tag-active', shipping: 'tag-shipped', pending: 'tag-pending' };
+    const l = { delivered: '已签收', shipping: '运输中', pending: '待揽收' };
+    return `<span class="tag ${m[s] || ''}">${l[s] || s}</span>`;
+  }
+
+  $('pageContent').innerHTML = `
+    <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start;flex-wrap:wrap;gap:12px">
+      <div>
+        <h2>🚚 物流查询</h2>
+        <p>上传快递单号，实时查看物流轨迹</p>
+      </div>
+      <button class="btn btn-primary" onclick="showAddTrackingForm()">＋ 添加物流单</button>
+    </div>
+
+    <!-- 快速查询 -->
+    <div class="card" style="margin-bottom:20px">
+      <div class="card-body" style="display:flex;gap:12px;flex-wrap:wrap">
+        <input id="trackSearchInput" placeholder="输入快递单号查询..." style="flex:1;min-width:200px;padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:14px;outline:none" />
+        <select id="trackCarrierFilter" style="padding:10px 14px;border:1px solid var(--border);border-radius:8px;font-size:13px;outline:none;background:#fff">
+          <option value="">全部快递公司</option>
+          ${carriers.map(c => `<option value="${c}">${c}</option>`).join('')}
+        </select>
+        <button class="btn btn-primary" onclick="searchTracking()">🔍 查询</button>
+        <button class="btn btn-outline" onclick="document.getElementById('trackSearchInput').value='';document.getElementById('trackCarrierFilter').value='';searchTracking()">重置</button>
+      </div>
+    </div>
+
+    <!-- 统计 -->
+    <div class="stats-row">
+      <div class="stat-card"><div class="num">${list.length}</div><div class="label">📦 总快递单</div></div>
+      <div class="stat-card"><div class="num" style="color:var(--success)">${list.filter(t=>t.status==='delivered').length}</div><div class="label">✅ 已签收</div></div>
+      <div class="stat-card"><div class="num" style="color:var(--warning)">${list.filter(t=>t.status==='shipping').length}</div><div class="label">🚚 运输中</div></div>
+      <div class="stat-card"><div class="num" style="color:var(--text3)">${list.filter(t=>t.status==='pending').length}</div><div class="label">⏳ 待揽收</div></div>
+    </div>
+
+    <!-- 物流列表 -->
+    <div id="trackingList">
+      ${list.map(t => `
+        <div class="tracking-card" onclick="showTrackingDetail('${t.id}')">
+          <div class="left">
+            <div class="num">${t.number} <span class="carrier">${t.carrier}</span></div>
+            <div class="meta">
+              <span>📤 ${t.sender}</span>
+              <span>📥 ${t.receiver}</span>
+              <span>📍 ${t.address}</span>
+            </div>
+          </div>
+          <div class="right">
+            <div>${statusTag(t.status)}</div>
+            <div class="time">${t.updateTime}</div>
+          </div>
+        </div>
+      `).join('')}
+      ${list.length === 0 ? '<div class="empty-state"><span class="icon">📦</span><span class="text">暂无物流记录，点击上方按钮添加</span></div>' : ''}
+    </div>
+  `;
+}
+
+function searchTracking() {
+  const keyword = document.getElementById('trackSearchInput')?.value?.trim().toLowerCase() || '';
+  const carrier = document.getElementById('trackCarrierFilter')?.value || '';
+  let list = MOCK.tracking;
+  if (keyword) list = list.filter(t => t.number.toLowerCase().includes(keyword) || t.receiver.includes(keyword));
+  if (carrier) list = list.filter(t => t.carrier === carrier);
+
+  function statusTag(s) {
+    const m = { delivered: 'tag-active', shipping: 'tag-shipped', pending: 'tag-pending' };
+    const l = { delivered: '已签收', shipping: '运输中', pending: '待揽收' };
+    return `<span class="tag ${m[s] || ''}">${l[s] || s}</span>`;
+  }
+
+  document.getElementById('trackingList').innerHTML = list.length === 0
+    ? '<div class="empty-state"><span class="icon">🔍</span><span class="text">未找到匹配的物流单</span></div>'
+    : list.map(t => `
+      <div class="tracking-card" onclick="showTrackingDetail('${t.id}')">
+        <div class="left">
+          <div class="num">${t.number} <span class="carrier">${t.carrier}</span></div>
+          <div class="meta">
+            <span>📤 ${t.sender}</span>
+            <span>📥 ${t.receiver}</span>
+            <span>📍 ${t.address}</span>
+          </div>
+        </div>
+        <div class="right">
+          <div>${statusTag(t.status)}</div>
+          <div class="time">${t.updateTime}</div>
+        </div>
+      </div>
+    `).join('');
+}
+
+function showAddTrackingForm() {
+  openModal(`
+    <h3 style="margin-bottom:8px">添加物流快递</h3>
+    <p style="font-size:12px;color:var(--text3);margin-bottom:20px">填写快递信息后系统将自动跟踪物流状态</p>
+    <div class="form-group"><label>🔢 快递单号 *</label><input id="atNumber" placeholder="输入快递单号" /></div>
+    <div class="form-row">
+      <div class="form-group"><label>🏢 快递公司</label>
+        <select id="atCarrier" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;outline:none;background:#fff">
+          <option value="顺丰速运">顺丰速运</option>
+          <option value="圆通速递">圆通速递</option>
+          <option value="中通快递">中通快递</option>
+          <option value="韵达快递">韵达快递</option>
+          <option value="京东快递">京东快递</option>
+          <option value="极兔速递">极兔速递</option>
+        </select>
+      </div>
+      <div class="form-group"><label>📤 发件方</label><input id="atSender" value="云咖铺子总部" /></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>📥 收件人 *</label><input id="atReceiver" placeholder="收件人姓名" /></div>
+      <div class="form-group"><label>📍 收件地址</label><input id="atAddress" placeholder="收件地址" /></div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">取消</button>
+      <button class="btn btn-primary" onclick="saveNewTracking()">添加并跟踪</button>
+    </div>
+  `);
+}
+
+function saveNewTracking() {
+  const number = document.getElementById('atNumber')?.value.trim();
+  if (!number) { showToast('请输入快递单号', 'error'); return; }
+  const receiver = document.getElementById('atReceiver')?.value.trim();
+  if (!receiver) { showToast('请输入收件人', 'error'); return; }
+
+  const now = new Date();
+  const timeStr = now.toISOString().slice(0, 16).replace('T', ' ');
+
+  MOCK.tracking.unshift({
+    id: 'T' + Date.now(),
+    number,
+    carrier: document.getElementById('atCarrier')?.value || '顺丰速运',
+    status: 'pending',
+    sender: document.getElementById('atSender')?.value || '云咖铺子总部',
+    receiver,
+    address: document.getElementById('atAddress')?.value || '',
+    updateTime: timeStr,
+    traces: [{ time: timeStr, desc: '已提交物流信息，等待快递员取件' }],
+  });
+  closeModal();
+  renderTracking();
+  showToast(`✅ 已添加物流单：${number}`, 'success');
+}
+
+function showTrackingDetail(id) {
+  const t = MOCK.tracking.find(x => x.id === id);
+  if (!t) return;
+  function dotIcon(s, i, arr) {
+    if (i === 0) return 'current';
+    if (s.status === 'delivered' && i < arr.length - 1) return 'done';
+    if (s.status === 'delivered') return 'done';
+    if (s.status !== 'delivered' && s.status === 'pending' && i === 0) return 'pending';
+    return 'done';
+  }
+  function dotText(i) {
+    if (i === 0) return '●';
+    return '●';
+  }
+
+  const statusLabel = t.status === 'delivered' ? '✅ 已签收' : t.status === 'shipping' ? '🚚 运输中' : '⏳ 待揽收';
+
+  openModal(`
+    <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:16px">
+      <h3 style="margin:0">📦 ${t.number}</h3>
+      <span class="tag-carrier">${t.carrier}</span>
+    </div>
+    <p style="font-size:14px;margin-bottom:16px">${statusLabel} · 更新于 ${t.updateTime}</p>
+
+    <div class="member-detail" style="box-shadow:none;padding:0;margin-bottom:20px">
+      <div class="row"><span class="label">发件方</span><span class="value">${t.sender}</span></div>
+      <div class="row"><span class="label">收件人</span><span class="value">${t.receiver}</span></div>
+      <div class="row"><span class="label">收件地址</span><span class="value">${t.address}</span></div>
+    </div>
+
+    <h4 style="font-size:14px;font-weight:600;margin-bottom:12px">📍 物流轨迹</h4>
+    <div class="timeline">
+      ${t.traces.map((tr, i) => {
+        const dotClass = i === 0 ? 'current' : 'done';
+        const dotEmoji = i === 0 ? '📍' : '✅';
+        return `
+          <div class="timeline-item">
+            <div class="timeline-dot ${dotClass}">${dotEmoji}</div>
+            <div class="timeline-body">
+              <div class="desc">${tr.desc}</div>
+              <div class="time">${tr.time}</div>
+            </div>
+          </div>
+        `;
+      }).join('')}
+    </div>
+
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">关闭</button>
+    </div>
+  `);
+}
+
+// ---- QR Codes ----
+let qrCodeIdCounter = MOCK.qrcodes.length;
+
+function renderQRCodes() {
+  const qs = MOCK.qrcodes;
+  $('pageContent').innerHTML = `
+    <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div><h2>📱 二维码管理</h2><p>创建带参二维码，追踪用户来源</p></div>
+      <button class="btn btn-primary" onclick="showCreateQR()">➕ 新建二维码</button>
+    </div>
+    <div class="card">
+      <div class="card-header">📋 二维码列表</div>
+      <div class="card-body">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>名称</th><th>场景值</th><th>扫码次数</th><th>转化订单</th><th>创建时间</th><th>操作</th></tr></thead>
+            <tbody>
+              ${qs.map(q => `<tr>
+                <td><strong>${q.name}</strong></td>
+                <td><code style="background:var(--bg);padding:2px 8px;border-radius:4px;font-size:12px">${q.scene}</code></td>
+                <td>${q.scanCount}</td>
+                <td>${q.orderCount}</td>
+                <td>${q.createdAt}</td>
+                <td>
+                  <button class="btn btn-sm btn-primary" onclick="downloadQR('${q.scene}', '${q.name}')">📥 生成二维码</button>
+                  <button class="btn btn-sm btn-outline" onclick="deleteQR('${q.id}')">🗑️ 删除</button>
+                </td>
+              </tr>`).join('')}
+            </tbody>
+          </table>
+        </div>
+        ${qs.length === 0 ? '<div class="empty-state"><span class="icon">📱</span><span class="text">暂无二维码，点击右上角新建</span></div>' : ''}
+      </div>
+    </div>
+    <div class="card">
+      <div class="card-header">💡 使用说明</div>
+      <div class="card-body" style="font-size:13px;color:var(--text2);line-height:1.8">
+        <p>1. 点击「新建二维码」创建推广渠道（如：抖音推广、朋友圈广告）</p>
+        <p>2. 点击「生成二维码」下载对应带参二维码图片</p>
+        <p>3. 将二维码投放到对应渠道，用户扫码后订单会自动标记来源</p>
+        <p>4. 在订单管理页面可按来源筛选和导出数据</p>
+        <p style="margin-top:8px;color:var(--text3)">⚠️ 需要先在系统设置中配置 AppID 和 AppSecret 才能生成二维码</p>
+      </div>
+    </div>
+  `;
+}
+
+function showCreateQR() {
+  openModal(`
+    <h3>➕ 新建二维码</h3>
+    <div class="form-group"><label>推广渠道名称</label><input id="qrName" placeholder="如：抖音推广、朋友圈广告" /></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">取消</button>
+      <button class="btn btn-primary" onclick="createQR()">创建</button>
+    </div>
+  `);
+}
+
+function createQR() {
+  const name = $('qrName').value.trim();
+  if (!name) { showToast('请输入推广渠道名称', 'error'); return; }
+  qrCodeIdCounter++;
+  MOCK.qrcodes.push({
+    id: 'Q' + qrCodeIdCounter,
+    name,
+    scene: 'qr_' + name.replace(/\\s+/g, '').slice(0, 20),
+    createdAt: new Date().toISOString().slice(0, 10),
+    scanCount: 0,
+    orderCount: 0
+  });
+  closeModal();
+  renderQRCodes();
+  showToast('✅ 二维码已创建', 'success');
+}
+
+function deleteQR(id) {
+  if (!confirm('确定删除此二维码？')) return;
+  MOCK.qrcodes = MOCK.qrcodes.filter(q => q.id !== id);
+  renderQRCodes();
+  showToast('已删除', 'success');
+}
+
+function downloadQR(scene, name) {
+  const appid = MOCK.settings.wechat.appid;
+  const baseUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&data=';
+  const miniUrl = encodeURIComponent('weixin://dl/business/?appid=' + appid + '&path=pages%2Findex%2Findex%3Fscene%3D' + scene);
+  const imgUrl = baseUrl + miniUrl;
+
+  // 下载二维码图片
+  const a = document.createElement('a');
+  a.href = imgUrl;
+  a.download = name + '_二维码.png';
+  a.target = '_blank';
+  a.click();
+  showToast('✅ 二维码已下载（部署后端后可生成微信官方二维码）', 'success');
+}
+
+// ---- Settings ----
+function renderSettings() {
+  const s = MOCK.settings;
+  $('pageContent').innerHTML = `
+    <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div><h2>⚙️ 系统设置</h2><p>积分规则、运费、客服信息配置</p></div>
+      <button class="btn btn-primary" onclick="saveSettings()">💾 保存设置</button>
+    </div>
+
+    <div class="setting-section">
+      <div class="section-title">💰 积分规则</div>
+      <div class="form-group"><label>获取说明</label><input id="sEarnText" value="${s.points.earnText}" /></div>
+      <div class="form-group"><label>兑换说明</label><input id="sRedeemText" value="${s.points.redeemText}" /></div>
+    </div>
+
+    <div class="setting-section">
+      <div class="section-title">🔄 积分抵扣规则</div>
+      <div style="background:#f0f7ee;border:1px solid #c8e6c9;border-radius:8px;padding:14px 16px;margin-bottom:14px;font-size:13px;color:#2e7d32;display:flex;align-items:center;gap:8px">
+        <span style="font-size:18px">✅</span>
+        <span><strong>已启用</strong> — 用户下单时自动按 <strong>10 积分 = 1 元</strong> 比例抵扣金额，同时扣减相应积分</span>
+      </div>
+      <div class="form-row">
+        <div class="form-group"><label>积分抵扣比例</label>
+          <div style="display:flex;align-items:center;gap:8px">
+            <input id="sPointsRatio" type="number" value="${s.pointsDeduction?.ratio || 10}" style="width:80px;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;outline:none" />
+            <span style="font-size:13px;color:var(--text2)">积分 = 1 元</span>
+          </div>
+        </div>
+        <div class="form-group"><label>单笔抵扣上限（元）</label>
+          <input id="sPointsMax" type="number" value="${s.pointsDeduction?.maxDiscountCents/100 || 20}" style="padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;outline:none" />
+        </div>
+      </div>
+    </div>
+
+    <div class="setting-section">
+      <div class="section-title">🚚 运费设置</div>
+      <div class="form-row">
+        <div class="form-group"><label>运费（元）</label><input id="sFee" type="number" value="${s.shippingRule.feeCents / 100}" /></div>
+        <div class="form-group"><label>包邮门槛（元）</label><input id="sFreeThreshold" type="number" value="${s.shippingRule.freeThresholdCents / 100}" /></div>
+      </div>
+    </div>
+
+    <div class="setting-section">
+      <div class="section-title">📞 客服信息</div>
+      <div class="form-row">
+        <div class="form-group"><label>电话</label><input id="sPhone" value="${s.support.phone}" /></div>
+        <div class="form-group"><label>微信</label><input id="sWechat" value="${s.support.wechat}" /></div>
+      </div>
+    </div>
+
+    <div class="setting-section">
+      <div class="section-title">🔔 订阅模板 ID</div>
+      <div class="form-group"><label>优惠券到账</label><input id="sTmplCoupon" value="${s.subscribeTemplates.couponArrived}" /></div>
+      <div class="form-group"><label>复购提醒</label><input id="sTmplRepurchase" value="${s.subscribeTemplates.repurchaseReminder}" /></div>
+      <div class="form-group"><label>积分变动</label><input id="sTmplPoints" value="${s.subscribeTemplates.pointsChange}" /></div>
+    </div>
+
+    <div class="setting-section">
+      <div class="section-title">📱 微信配置（用于生成带参二维码）</div>
+      <div class="form-row">
+        <div class="form-group"><label>AppID</label><input id="sAppid" value="${s.wechat.appid}" readonly style="background:#f5f2ed" /></div>
+        <div class="form-group"><label>AppSecret</label><input id="sAppsecret" type="password" value="${s.wechat.appsecret}" placeholder="输入 AppSecret" /></div>
+      </div>
+      <div style="font-size:12px;color:var(--text3);margin-top:4px">AppID 已自动填写。AppSecret 请在微信公众平台 → 开发 → 基本配置中获取</div>
+    </div>
+  `;
+}
+
+function saveSettings() {
+  const s = MOCK.settings;
+  s.points.earnText = $('sEarnText').value;
+  s.points.redeemText = $('sRedeemText').value;
+  s.pointsDeduction = s.pointsDeduction || {};
+  s.pointsDeduction.ratio = Number($('sPointsRatio')?.value || 10);
+  s.pointsDeduction.maxDiscountCents = Number($('sPointsMax')?.value || 20) * 100;
+  s.shippingRule.feeCents = Number($('sFee').value || 0) * 100;
+  s.shippingRule.freeThresholdCents = Number($('sFreeThreshold').value || 0) * 100;
+  s.support.phone = $('sPhone').value;
+  s.support.wechat = $('sWechat').value;
+  s.subscribeTemplates.couponArrived = $('sTmplCoupon').value;
+  s.subscribeTemplates.repurchaseReminder = $('sTmplRepurchase').value;
+  s.subscribeTemplates.pointsChange = $('sTmplPoints').value;
+  s.wechat.appsecret = $('sAppsecret').value;
+  showToast('✅ 系统设置已保存', 'success');
+}
+
+// ===== INIT =====
+renderDashboard();
+</script>
+</body>
+</html>
