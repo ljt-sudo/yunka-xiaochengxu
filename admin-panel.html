@@ -374,6 +374,8 @@ const MOCK = {
     { id: 'C2', code: 'CPN-FULL50', name: '满50减15', total: 300, used: 98, type: '满减', discount: 15, minSpend: 5000, status: '进行中', validUntil: '2026-12-31' },
     { id: 'C3', code: 'CPN-DIS9', name: '全场9折券', total: 200, used: 45, type: '折扣', discount: 0.9, minSpend: 0, status: '进行中', validUntil: '2026-09-30' },
     { id: 'C5', code: 'CPN-DIS85', name: '咖啡类85折券', total: 150, used: 32, type: '折扣', discount: 0.85, minSpend: 0, status: '进行中', validUntil: '2026-10-31' },
+    { id: 'C6', code: 'CPN-GIFT01', name: '挂耳咖啡兑换券', total: 100, used: 12, type: '实物券', productName: '挂耳咖啡·综合装', productImage: '🫘', productDesc: '兑换云南精品挂耳咖啡综合装一盒', status: '进行中', validUntil: '2026-12-31' },
+    { id: 'C7', code: 'CPN-CUP01', name: '定制随行杯兑换券', total: 50, used: 5, type: '实物券', productName: '云咖定制随行杯', productImage: '🥤', productDesc: '兑换云咖铺子品牌定制随行杯一个', status: '进行中', validUntil: '2026-12-31' },
   ],
   // 卡券发放记录（卡券查询用）
   couponRecords: [
@@ -385,6 +387,10 @@ const MOCK = {
     { id: 'R010', couponCode: 'CPN-DIS9', couponName: '全场9折券', instanceCode: 'CPN-INST-010', issuedTo: '喵喵咖啡控', phone: '139****2345', memberId: 'M002', issuedAt: '2026-07-12 13:45', status: 'active', redeemedAt: '' },
     { id: 'R013', couponCode: 'CPN-DIS85', couponName: '咖啡类85折券', instanceCode: 'CPN-INST-013', issuedTo: '赵婷', phone: '158****3456', memberId: 'M004', issuedAt: '2026-07-15 10:00', status: 'active', redeemedAt: '' },
     { id: 'R014', couponCode: 'CPN-DIS85', couponName: '咖啡类85折券', instanceCode: 'CPN-INST-014', issuedTo: '拿铁女孩', phone: '158****3456', memberId: 'M004', issuedAt: '2026-07-16 14:30', status: 'used', redeemedAt: '2026-07-18 11:15' },
+    // 实物券发放记录
+    { id: 'R015', couponCode: 'CPN-GIFT01', couponName: '挂耳咖啡兑换券', instanceCode: 'CPN-INST-015', issuedTo: '咖啡小王子', phone: '138****5678', memberId: 'M001', issuedAt: '2026-07-18 10:00', status: 'active', redeemedAt: '' },
+    { id: 'R016', couponCode: 'CPN-CUP01', couponName: '定制随行杯兑换券', instanceCode: 'CPN-INST-016', issuedTo: '一天三杯', phone: '136****8901', memberId: 'M003', issuedAt: '2026-07-19 14:00', status: 'active', redeemedAt: '' },
+    { id: 'R017', couponCode: 'CPN-GIFT01', couponName: '挂耳咖啡兑换券', instanceCode: 'CPN-INST-017', issuedTo: '喵喵咖啡控', phone: '139****2345', memberId: 'M002', issuedAt: '2026-07-20 09:30', status: 'used', redeemedAt: '2026-07-21 16:00' },
   ],
   // 快递物流数据
   tracking: [
@@ -460,6 +466,23 @@ const MOCK = {
     { id: 'PR8', member: '食甜专家', phone: '135****5678', product: '免费饮品券', points: 500, date: '2026-07-08 13:25', status: '已兑换' },
     { id: 'PR9', member: '冰美式yyds', phone: '187****1234', product: '新品试饮券', points: 300, date: '2026-07-07 10:00', status: '已兑换' },
     { id: 'PR10', member: '喵喵咖啡控', phone: '139****2345', product: '免费饮品券', points: 500, date: '2026-07-06 17:45', status: '已兑换' },
+  ],
+  // 会员券包（会员已获得的卡券）
+  memberCoupons: [
+    { instanceId: 'MC1', memberId: 'M001', couponCode: 'CPN-FULL50', couponName: '满50减15', type: '满减', issuedAt: '2026-07-05 08:00', expireAt: '2026-12-31', status: 'active', usedAt: '' },
+    { instanceId: 'MC2', memberId: 'M001', couponCode: 'CPN-GIFT01', couponName: '挂耳咖啡兑换券', type: '实物券', issuedAt: '2026-07-18 10:00', expireAt: '2026-12-31', status: 'active', usedAt: '', productName: '挂耳咖啡·综合装', productImage: '🫘' },
+    { instanceId: 'MC3', memberId: 'M001', couponCode: 'CPN-DIS85', couponName: '咖啡类85折券', type: '折扣', issuedAt: '2026-07-10 14:00', expireAt: '2026-09-30', status: 'used', usedAt: '2026-07-13 16:20' },
+    { instanceId: 'MC4', memberId: 'M002', couponCode: 'CPN-DIS9', couponName: '全场9折券', type: '折扣', issuedAt: '2026-07-12 13:45', expireAt: '2026-09-30', status: 'active', usedAt: '' },
+    { instanceId: 'MC5', memberId: 'M002', couponCode: 'CPN-GIFT01', couponName: '挂耳咖啡兑换券', type: '实物券', issuedAt: '2026-07-20 09:30', expireAt: '2026-12-31', status: 'used', usedAt: '2026-07-21 16:00', productName: '挂耳咖啡·综合装', productImage: '🫘' },
+    { instanceId: 'MC6', memberId: 'M003', couponCode: 'CPN-FULL50', couponName: '满50减15', type: '满减', issuedAt: '2026-07-05 08:00', expireAt: '2026-12-31', status: 'used', usedAt: '2026-07-10 17:50' },
+    { instanceId: 'MC7', memberId: 'M003', couponCode: 'CPN-CUP01', couponName: '定制随行杯兑换券', type: '实物券', issuedAt: '2026-07-19 14:00', expireAt: '2026-12-31', status: 'active', usedAt: '', productName: '云咖定制随行杯', productImage: '🥤' },
+    { instanceId: 'MC8', memberId: 'M003', couponCode: 'CPN-DIS9', couponName: '全场9折券', type: '折扣', issuedAt: '2026-07-22 10:00', expireAt: '2026-09-30', status: 'active', usedAt: '' },
+    { instanceId: 'MC9', memberId: 'M004', couponCode: 'CPN-DIS85', couponName: '咖啡类85折券', type: '折扣', issuedAt: '2026-07-15 10:00', expireAt: '2026-09-30', status: 'active', usedAt: '' },
+    { instanceId: 'MC10', memberId: 'M004', couponCode: 'CPN-DIS85', couponName: '咖啡类85折券', type: '折扣', issuedAt: '2026-07-16 14:30', expireAt: '2026-09-30', status: 'used', usedAt: '2026-07-18 11:15' },
+    { instanceId: 'MC11', memberId: 'M005', couponCode: 'CPN-FULL50', couponName: '满50减15', type: '满减', issuedAt: '2026-07-06 14:30', expireAt: '2026-12-31', status: 'used', usedAt: '2026-07-10 17:50' },
+    { instanceId: 'MC12', memberId: 'M006', couponCode: 'CPN-DIS9', couponName: '全场9折券', type: '折扣', issuedAt: '2026-07-08 11:20', expireAt: '2026-09-30', status: 'used', usedAt: '2026-07-12 09:38' },
+    { instanceId: 'MC13', memberId: 'M007', couponCode: 'CPN-DIS9', couponName: '全场9折券', type: '折扣', issuedAt: '2026-07-09 15:00', expireAt: '2026-09-30', status: 'active', usedAt: '' },
+    { instanceId: 'MC14', memberId: 'M007', couponCode: 'CPN-FULL50', couponName: '满50减15', type: '满减', issuedAt: '2026-07-15 11:00', expireAt: '2026-12-31', status: 'active', usedAt: '' },
   ],
 };
 
@@ -1148,8 +1171,39 @@ function searchMember(keyword) {
 
 function showMemberDetail(id) {
   const m = MOCK.members.find(x => x.id === id);
+  const mcList = MOCK.memberCoupons.filter(c => c.memberId === id);
+  const activeCount = mcList.filter(c => c.status === 'active').length;
+  const usedCount = mcList.filter(c => c.status === 'used').length;
   openModal(`
     <h3 style="display:flex;align-items:center;gap:8px"><span style="font-size:28px">${m.avatar}</span> ${m.nickname}</h3>
+    <div style="display:flex;gap:0;margin:12px 0 16px;background:var(--bg);border-radius:8px;padding:4px;width:fit-content">
+      <button class="btn btn-sm" style="border:none;background:var(--primary);color:#fff;padding:8px 20px;border-radius:6px;cursor:default;font-size:12px" onclick="showMemberInfoTab('${id}')">📋 基本信息</button>
+      <button class="btn btn-sm" style="border:none;background:transparent;color:var(--text2);padding:8px 20px;border-radius:6px;cursor:pointer;font-size:12px" onclick="showMemberCouponTab('${id}')">🎟️ 券包（${mcList.length}）</button>
+    </div>
+    <div id="memberTabContent">
+      <div class="member-detail" style="box-shadow:none;padding:0">
+        <div class="row"><span class="label">等级</span><span class="value"><span class="tag tag-${m.tier}">${m.tierName}</span></span></div>
+        <div class="row"><span class="label">总积分</span><span class="value" style="font-weight:700;color:var(--warning)">${m.totalPoints}</span></div>
+        <div class="row"><span class="label">已使用积分</span><span class="value">${m.usedPoints}</span></div>
+        <div class="row"><span class="label">累计消费</span><span class="value"><strong>¥${formatMoney(m.totalSpendCents)}</strong></span></div>
+        <div class="row"><span class="label">订单数</span><span class="value">${m.totalOrders} 单</span></div>
+        <div class="row"><span class="label">手机</span><span class="value">${m.phone || '未填写'}</span></div>
+        <div class="row"><span class="label">生日</span><span class="value">${m.birthday || '未设置'}</span></div>
+        <div class="row"><span class="label">注册时间</span><span class="value">${m.createdAt}</span></div>
+      </div>
+    </div>
+    <div class="modal-actions">
+      <button class="btn btn-sm btn-outline" onclick="changeMemberTier('${m.id}')">调整等级</button>
+      <button class="btn btn-sm btn-outline" onclick="adjustMemberPoints('${m.id}')">调整积分</button>
+      <button class="btn btn-sm btn-outline" onclick="issueCouponToMember('${m.id}')">发放卡券</button>
+      <button class="btn btn-sm btn-outline" onclick="closeModal()">关闭</button>
+    </div>
+  `);
+}
+
+function showMemberInfoTab(id) {
+  const m = MOCK.members.find(x => x.id === id);
+  document.getElementById('memberTabContent').innerHTML = `
     <div class="member-detail" style="box-shadow:none;padding:0">
       <div class="row"><span class="label">等级</span><span class="value"><span class="tag tag-${m.tier}">${m.tierName}</span></span></div>
       <div class="row"><span class="label">总积分</span><span class="value" style="font-weight:700;color:var(--warning)">${m.totalPoints}</span></div>
@@ -1160,12 +1214,82 @@ function showMemberDetail(id) {
       <div class="row"><span class="label">生日</span><span class="value">${m.birthday || '未设置'}</span></div>
       <div class="row"><span class="label">注册时间</span><span class="value">${m.createdAt}</span></div>
     </div>
-    <div class="modal-actions">
-      <button class="btn btn-sm btn-outline" onclick="changeMemberTier('${m.id}')">调整等级</button>
-      <button class="btn btn-sm btn-outline" onclick="adjustMemberPoints('${m.id}')">调整积分</button>
-      <button class="btn btn-sm btn-outline" onclick="closeModal()">关闭</button>
+  `;
+}
+
+function showMemberCouponTab(id) {
+  const m = MOCK.members.find(x => x.id === id);
+  const list = MOCK.memberCoupons.filter(c => c.memberId === id);
+  const active = list.filter(c => c.status === 'active');
+  const used = list.filter(c => c.status === 'used');
+  document.getElementById('memberTabContent').innerHTML = `
+    <div style="margin-bottom:12px;display:flex;gap:8px">
+      <span style="font-size:12px;padding:4px 12px;border-radius:6px;background:#e8f5e9;color:#2e7d32">✅ 可用 ${active.length} 张</span>
+      <span style="font-size:12px;padding:4px 12px;border-radius:6px;background:#f5f5f5;color:#999">📌 已用 ${used.length} 张</span>
     </div>
+    ${list.length === 0 ? '<div style="padding:24px;text-align:center;color:var(--text3);font-size:13px">该会员暂无卡券</div>' : ''}
+    ${list.map(c => `
+      <div style="background:${c.status === 'active' ? '#fff' : '#f9f9f9'};border-radius:10px;border:1px solid ${c.status === 'active' ? 'var(--accent)' : 'var(--border)'};padding:14px 16px;margin-bottom:8px;display:flex;align-items:center;gap:12px;opacity:${c.status === 'active' ? 1 : 0.6}">
+        <div style="font-size:28px">${c.type === '实物券' ? (c.productImage || '🎁') : c.type === '折扣' ? '🏷️' : '💰'}</div>
+        <div style="flex:1">
+          <div style="font-weight:600;font-size:14px;color:#1a1a1a">${c.couponName}</div>
+          <div style="font-size:12px;color:var(--text3);margin-top:2px">
+            ${c.type === '实物券' ? (c.productName || '实物商品') : c.type === '折扣' ? '折扣券' : '满减券'}
+            ${c.status === 'active' ? ' · 有效期至 ' + (c.expireAt || '长期') : ' · 已使用 ' + (c.usedAt || '')}
+          </div>
+        </div>
+        <div><span class="tag-sm tag ${c.status === 'active' ? 'tag-active' : 'tag-used'}">${c.status === 'active' ? '未使用' : '已使用'}</span></div>
+      </div>
+    `).join('')}
+  `;
+}
+
+function issueCouponToMember(id) {
+  const m = MOCK.members.find(x => x.id === id);
+  const couponOptions = MOCK.coupons.filter(c => c.status === '进行中');
+  openModal(`
+    <h3 style="margin-bottom:8px">向 ${m.nickname} 发放卡券</h3>
+    <p style="font-size:12px;color:var(--text3);margin-bottom:16px">选择要发放的卡券模板</p>
+    <div style="max-height:300px;overflow-y:auto">
+      ${couponOptions.map(c => `
+        <div class="menu-card" onclick="confirmIssueCoupon('${id}', '${c.code}', '${c.name}', '${c.type}', '${c.productName || ''}', '${c.productImage || ''}')" style="margin-bottom:8px;padding:14px 16px">
+          <div style="display:flex;justify-content:space-between;align-items:center">
+            <div>
+              <div class="name" style="font-size:14px">${c.name}</div>
+              <div class="desc" style="font-size:12px;margin-top:2px">${c.type} · 剩余 ${c.total - c.used} 张</div>
+            </div>
+            <span style="font-size:20px">${c.type === '实物券' ? (c.productImage || '🎁') : c.type === '折扣' ? '🏷️' : '💰'}</span>
+          </div>
+        </div>
+      `).join('')}
+      ${couponOptions.length === 0 ? '<div style="text-align:center;padding:24px;color:var(--text3);font-size:13px">暂无进行中的卡券模板</div>' : ''}
+    </div>
+    <div class="modal-actions"><button class="btn btn-outline" onclick="closeModal()">取消</button></div>
   `);
+}
+
+function confirmIssueCoupon(memberId, couponCode, couponName, type, productName, productImage) {
+  const coupon = MOCK.coupons.find(c => c.code === couponCode);
+  if (!coupon) { showToast('卡券模板不存在', 'error'); return; }
+  if (coupon.used >= coupon.total) { showToast('该卡券已发完', 'error'); return; }
+  // 发放记录
+  coupon.used++;
+  const instanceCode = 'CPN-INST-' + String(MOCK.couponRecords.length + 1).padStart(3,'0');
+  const member = MOCK.members.find(x => x.id === memberId);
+  MOCK.couponRecords.push({
+    id: 'R' + instanceCode, couponCode, couponName, instanceCode,
+    issuedTo: member.nickname, phone: member.phone, memberId,
+    issuedAt: new Date().toISOString().slice(0,16).replace('T',' '), status: 'active', redeemedAt: ''
+  });
+  // 会员券包
+  MOCK.memberCoupons.push({
+    instanceId: 'MC' + (MOCK.memberCoupons.length + 1),
+    memberId, couponCode, couponName, type, productName, productImage,
+    issuedAt: new Date().toISOString().slice(0,16).replace('T',' '),
+    expireAt: coupon.validUntil || '2026-12-31', status: 'active', usedAt: ''
+  });
+  closeModal();
+  showToast('✅ 已向 ' + member.nickname + ' 发放「' + couponName + '」', 'success');
 }
 
 function changeMemberTier(id) {
@@ -1357,6 +1481,9 @@ function formatCouponDiscount(c) {
     const rate = c.discount * 10;
     return (rate % 1 === 0 ? rate : rate.toFixed(1)) + '折';
   }
+  if (c.type === '实物券') {
+    return c.productName || '实物兑换';
+  }
   // 满减
   return '满¥' + (c.minSpend / 100).toFixed(0) + '减¥' + c.discount;
 }
@@ -1365,12 +1492,14 @@ function toggleCouponFields() {
   const type = document.getElementById('ncType').value;
   document.getElementById('ncDiscountFields').style.display = type === '折扣' ? '' : 'none';
   document.getElementById('ncMinSpendFields').style.display = type === '满减' ? '' : 'none';
+  document.getElementById('ncGiftFields').style.display = type === '实物券' ? '' : 'none';
 }
 
 function toggleEditCouponFields() {
   const type = document.getElementById('ecType').value;
   document.getElementById('ecDiscountFields').style.display = type === '折扣' ? '' : 'none';
   document.getElementById('ecMinSpendFields').style.display = type === '满减' ? '' : 'none';
+  document.getElementById('ecGiftFields').style.display = type === '实物券' ? '' : 'none';
 }
 
 function renderCoupons() {
@@ -1404,17 +1533,19 @@ function renderCoupons() {
       <div class="card-body">
         <div class="table-wrap">
           <table>
-            <thead><tr><th>卡券编码</th><th>名称</th><th>类型</th><th>优惠</th><th>最低消费</th><th>总量</th><th>已使用</th><th>使用率</th><th>有效期</th><th>状态</th><th>操作</th></tr></thead>
+            <thead><tr><th>卡券编码</th><th>名称</th><th>类型</th><th>优惠/商品</th><th>最低消费</th><th>总量</th><th>已使用</th><th>使用率</th><th>有效期</th><th>状态</th><th>操作</th></tr></thead>
             <tbody>
               ${list.map(c => {
                 const rate = c.total > 0 ? (c.used / c.total * 100).toFixed(0) : 0;
                 const validUntil = c.validUntil || '-';
+                const discountDisplay = c.type === '实物券' ? `${c.productImage || '🎁'} ${c.productName || '实物'}` : formatCouponDiscount(c);
+                const minSpendDisplay = c.type === '实物券' ? '-' : (c.minSpend === 0 ? '无' : '¥' + (c.minSpend / 100).toFixed(2));
                 return `<tr>
                   <td style="font-size:12px;color:var(--text3)">${c.code || '-'}</td>
                   <td><strong>${c.name}</strong></td>
                   <td><span class="tag-carrier">${c.type}</span></td>
-                  <td>${formatCouponDiscount(c)}</td>
-                  <td>${c.minSpend === 0 ? '无' : '¥' + (c.minSpend / 100).toFixed(2)}</td>
+                  <td>${discountDisplay}</td>
+                  <td>${minSpendDisplay}</td>
                   <td>${c.total}</td>
                   <td>${c.used}</td>
                   <td><div style="display:flex;align-items:center;gap:8px"><div style="width:60px;height:6px;background:var(--bg);border-radius:3px;overflow:hidden"><div style="width:${rate}%;height:100%;background:${Number(rate) > 80 ? 'var(--success)' : Number(rate) > 50 ? 'var(--warning)' : 'var(--accent)'};border-radius:3px"></div></div>${rate}%</div></td>
@@ -1570,7 +1701,27 @@ function showNewCouponForm() {
         <select id="ncType" onchange="toggleCouponFields()" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;outline:none;background:#fff">
           <option value="折扣">折扣券（按商品价格打折）</option>
           <option value="满减">满减券（按订单总价减免）</option>
+          <option value="实物券">实物券（兑换指定实物商品）</option>
         </select>
+      </div>
+    </div>
+    <div id="ncGiftFields" style="display:none">
+      <div class="form-row">
+        <div class="form-group"><label>🎁 兑换商品名称 *</label><input id="ncGiftName" placeholder="如：挂耳咖啡·综合装" /></div>
+        <div class="form-group"><label>🎨 商品图标</label>
+          <select id="ncGiftImage" style="padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;outline:none;background:#fff;width:100%">
+            <option value="🫘">🫘 咖啡豆</option>
+            <option value="🥤">🥤 随行杯</option>
+            <option value="🎁">🎁 礼盒</option>
+            <option value="👜">👜 帆布袋</option>
+            <option value="☕">☕ 咖啡</option>
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label>📝 商品描述</label><textarea id="ncGiftDesc" rows="2" placeholder="如：兑换云南精品挂耳咖啡综合装一盒" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;outline:none;resize:vertical"></textarea></div>
+      <div class="form-row" style="margin-top:12px">
+        <div class="form-group"><label>📋 发放总量</label><input id="ncGiftTotal" type="number" placeholder="不限制留空" /></div>
+        <div></div>
       </div>
     </div>
     <div id="ncDiscountFields">
@@ -1609,27 +1760,31 @@ function saveNewCoupon() {
   const name = document.getElementById('ncName')?.value.trim();
   if (!name) { showToast('请输入卡券名称', 'error'); return; }
   const type = document.getElementById('ncType')?.value || '折扣';
-  let discount, minSpend, total;
+  let discount, minSpend, total, productName, productImage, productDesc;
   if (type === '折扣') {
     discount = Number(document.getElementById('ncDiscountRate')?.value || 0.9);
     minSpend = 0;
     total = Number(document.getElementById('ncTotal')?.value || 0) || 9999;
-  } else {
+  } else if (type === '满减') {
     discount = Number(document.getElementById('ncDiscountAmt')?.value || 0);
     minSpend = Number(document.getElementById('ncMinSpend')?.value || 50) * 100;
     total = Number(document.getElementById('ncTotal2')?.value || 0) || 9999;
+  } else {
+    // 实物券
+    productName = document.getElementById('ncGiftName')?.value.trim();
+    if (!productName) { showToast('请输入兑换商品名称', 'error'); return; }
+    productImage = document.getElementById('ncGiftImage')?.value || '🎁';
+    productDesc = document.getElementById('ncGiftDesc')?.value || '';
+    discount = 0; minSpend = 0;
+    total = Number(document.getElementById('ncGiftTotal')?.value || 0) || 9999;
   }
   const newCoupon = {
     id: Date.now(),
     code: document.getElementById('ncCode')?.value || `CPN-${Date.now()}`,
-    name,
-    type,
-    discount,
-    minSpend,
-    total,
-    used: 0,
+    name, type, discount, minSpend, total, used: 0,
     status: '进行中',
     validUntil: document.getElementById('ncValidUntil')?.value || '',
+    productName, productImage, productDesc,
   };
   MOCK.coupons.unshift(newCoupon);
   closeModal();
@@ -1641,8 +1796,10 @@ function editCoupon(id) {
   const c = MOCK.coupons.find(x => x.id === id);
   if (!c) return;
   const isDiscount = c.type === '折扣';
+  const isFullReduce = c.type === '满减';
+  const isGift = c.type === '实物券';
   const rateVal = isDiscount ? c.discount : 0.9;
-  const amtVal = !isDiscount ? c.discount : 15;
+  const amtVal = isFullReduce ? c.discount : 15;
   openModal(`
     <h3>编辑卡券：${c.name}</h3>
     <div class="form-row">
@@ -1650,8 +1807,24 @@ function editCoupon(id) {
       <div class="form-group"><label>🎯 类型</label>
         <select id="ecType" onchange="toggleEditCouponFields()" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;outline:none;background:#fff">
           <option value="折扣" ${isDiscount?'selected':''}>折扣券（按商品价格打折）</option>
-          <option value="满减" ${!isDiscount?'selected':''}>满减券（按订单总价减免）</option>
+          <option value="满减" ${isFullReduce?'selected':''}>满减券（按订单总价减免）</option>
+          <option value="实物券" ${isGift?'selected':''}>实物券（兑换指定实物商品）</option>
         </select>
+      </div>
+    </div>
+    <div id="ecGiftFields" ${isGift ? '' : 'style="display:none"'}>
+      <div class="form-row">
+        <div class="form-group"><label>🎁 兑换商品名称</label><input id="ecGiftName" value="${c.productName || ''}" /></div>
+        <div class="form-group"><label>🎨 商品图标</label>
+          <select id="ecGiftImage" style="padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;outline:none;background:#fff;width:100%">
+            ${['🫘','🥤','🎁','👜','☕'].map(ico => `<option value="${ico}" ${ico === (c.productImage || '🎁') ? 'selected' : ''}>${ico}</option>`).join('')}
+          </select>
+        </div>
+      </div>
+      <div class="form-group"><label>📝 商品描述</label><textarea id="ecGiftDesc" rows="2" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;outline:none;resize:vertical">${c.productDesc || ''}</textarea></div>
+      <div class="form-row" style="margin-top:12px">
+        <div class="form-group"><label>📋 发放总量</label><input id="ecGiftTotal" type="number" value="${c.total}" /></div>
+        <div></div>
       </div>
     </div>
     <div id="ecDiscountFields" ${isDiscount ? '' : 'style="display:none"'}>
@@ -1689,10 +1862,16 @@ function saveEditCoupon(id) {
     c.discount = Number(document.getElementById('ecDiscountRate')?.value || 0.9);
     c.minSpend = 0;
     c.total = Number(document.getElementById('ecTotal')?.value || 9999);
-  } else {
+  } else if (c.type === '满减') {
     c.discount = Number(document.getElementById('ecDiscountAmt')?.value || 0);
     c.minSpend = Number(document.getElementById('ecMinSpend')?.value || 50) * 100;
     c.total = Number(document.getElementById('ecTotal2')?.value || 9999);
+  } else if (c.type === '实物券') {
+    c.productName = document.getElementById('ecGiftName')?.value || c.productName;
+    c.productImage = document.getElementById('ecGiftImage')?.value || c.productImage || '🎁';
+    c.productDesc = document.getElementById('ecGiftDesc')?.value || c.productDesc;
+    c.discount = 0; c.minSpend = 0;
+    c.total = Number(document.getElementById('ecGiftTotal')?.value || 9999);
   }
   c.validUntil = document.getElementById('ecValidUntil')?.value || c.validUntil;
   closeModal();
