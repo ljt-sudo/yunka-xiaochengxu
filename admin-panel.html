@@ -289,6 +289,7 @@ tr:hover td { background: var(--accent-bg); }
       <div class="nav-item" data-page="members"><span class="icon">👥</span><span class="label">会员管理</span></div>
       <div class="nav-item" data-page="tiers"><span class="icon">🏅</span><span class="label">等级配置</span></div>
       <div class="nav-item" data-page="benefits"><span class="icon">🎁</span><span class="label">权益管理</span></div>
+      <div class="nav-item" data-page="pointsMall"><span class="icon">🛍️</span><span class="label">积分商城</span></div>
       <div class="nav-item" data-page="tracking"><span class="icon">🚚</span><span class="label">物流查询</span></div>
       <div class="nav-item" data-page="qrcodes"><span class="icon">📱</span><span class="label">二维码管理</span></div>
       <div class="nav-item" data-page="settings"><span class="icon">⚙️</span><span class="label">系统设置</span></div>
@@ -438,6 +439,28 @@ const MOCK = {
     pointsIssued: [500, 1200, 800, 1800, 2500, 1500, 3200],   // 积分发放
     pointsRedeemed: [200, 400, 300, 600, 800, 500, 1000],     // 积分核销
   },
+  // 积分商城 mock 数据
+  pointsMall: [
+    { id: 'PM1', name: '免费饮品券', points: 500, stock: 100, redeemed: 38, image: '☕', desc: '云咖铺子任意饮品兑换券一张', status: '上架', createdAt: '2026-07-01', category: '饮品券', limitPerUser: 1 },
+    { id: 'PM2', name: '挂耳咖啡·综合装', points: 800, stock: 50, redeemed: 22, image: '🫘', desc: '云南精品挂耳咖啡综合装一盒（10包）', status: '上架', createdAt: '2026-07-01', category: '实物', limitPerUser: 0 },
+    { id: 'PM3', name: '云咖定制随行杯', points: 1200, stock: 30, redeemed: 15, image: '🥤', desc: '云咖铺子品牌定制随行杯，350ml', status: '上架', createdAt: '2026-07-05', category: '周边', limitPerUser: 0 },
+    { id: 'PM4', name: '精品咖啡豆·晨曦拼配', points: 2000, stock: 20, redeemed: 8, image: '🌤️', desc: '晨曦拼配咖啡豆200g装', status: '上架', createdAt: '2026-07-10', category: '实物', limitPerUser: 2 },
+    { id: 'PM5', name: '云咖帆布袋', points: 900, stock: 40, redeemed: 12, image: '👜', desc: '云咖铺子品牌帆布袋', status: '上架', createdAt: '2026-07-08', category: '周边', limitPerUser: 0 },
+    { id: 'PM6', name: '新品试饮券', points: 300, stock: 200, redeemed: 65, image: '🧪', desc: '云咖铺子新品试饮券一张', status: '上架', createdAt: '2026-07-03', category: '饮品券', limitPerUser: 1 },
+  ],
+  // 积分兑换记录
+  pointsRedemptions: [
+    { id: 'PR1', member: '咖啡小王子', phone: '138****5678', product: '免费饮品券', points: 500, date: '2026-07-15 14:30', status: '已兑换' },
+    { id: 'PR2', member: '喵喵咖啡控', phone: '139****2345', product: '挂耳咖啡·综合装', points: 800, date: '2026-07-14 10:15', status: '已发货' },
+    { id: 'PR3', member: '一天三杯', phone: '136****8901', product: '云咖定制随行杯', points: 1200, date: '2026-07-13 16:00', status: '已完成' },
+    { id: 'PR4', member: '拿铁女孩', phone: '158****3456', product: '新品试饮券', points: 300, date: '2026-07-12 09:45', status: '已兑换' },
+    { id: 'PR5', member: '抹茶星人', phone: '186****7890', product: '免费饮品券', points: 500, date: '2026-07-11 19:20', status: '已兑换' },
+    { id: 'PR6', member: '一天三杯', phone: '136****8901', product: '精品咖啡豆·晨曦拼配', points: 2000, date: '2026-07-10 11:30', status: '已发货' },
+    { id: 'PR7', member: '咖啡小王子', phone: '138****5678', product: '云咖帆布袋', points: 900, date: '2026-07-09 15:00', status: '已完成' },
+    { id: 'PR8', member: '食甜专家', phone: '135****5678', product: '免费饮品券', points: 500, date: '2026-07-08 13:25', status: '已兑换' },
+    { id: 'PR9', member: '冰美式yyds', phone: '187****1234', product: '新品试饮券', points: 300, date: '2026-07-07 10:00', status: '已兑换' },
+    { id: 'PR10', member: '喵喵咖啡控', phone: '139****2345', product: '免费饮品券', points: 500, date: '2026-07-06 17:45', status: '已兑换' },
+  ],
 };
 
 // ===== STATE =====
@@ -504,7 +527,7 @@ function navigate(page) {
   document.querySelectorAll('.nav-item').forEach(el => {
     el.classList.toggle('active', el.dataset.page === pageName);
   });
-  const titles = { dashboard:'仪表盘', products:'商品管理', orders:'订单管理', members:'会员管理', tiers:'等级配置', benefits:'权益管理', coupons:'优惠券', tracking:'物流查询', qrcodes:'二维码管理', settings:'系统设置' };
+  const titles = { dashboard:'仪表盘', products:'商品管理', orders:'订单管理', members:'会员管理', tiers:'等级配置', benefits:'权益管理', pointsMall:'积分商城', coupons:'优惠券', tracking:'物流查询', qrcodes:'二维码管理', settings:'系统设置' };
   $('pageTitle').textContent = titles[pageName] || pageName;
   renderPage(pageName);
 }
@@ -523,6 +546,7 @@ function renderPage(page) {
     case 'members': renderMembers(); break;
     case 'tiers': renderTiers(); break;
     case 'benefits': renderBenefits(); break;
+    case 'pointsMall': renderPointsMall(); break;
     case 'coupons': renderCoupons(); break;
     case 'tracking': renderTracking(); break;
     case 'qrcodes': renderQRCodes(); break;
@@ -2069,6 +2093,229 @@ function saveSettings() {
   s.subscribeTemplates.pointsChange = $('sTmplPoints').value;
   s.wechat.appsecret = $('sAppsecret').value;
   showToast('✅ 系统设置已保存', 'success');
+}
+
+// ===== 积分商城 =====
+let pointsMallIdCounter = MOCK.pointsMall.length;
+let pointsMallFilter = '';
+
+function renderPointsMall() {
+  const list = MOCK.pointsMall;
+  const totalProducts = list.length;
+  const totalRedeemed = MOCK.pointsRedemptions.length;
+  const activeProducts = list.filter(p => p.status === '上架').length;
+  const totalPointsSpent = MOCK.pointsRedemptions.reduce((s, r) => s + r.points, 0);
+
+  $('pageContent').innerHTML = `
+    <div class="page-header" style="display:flex;justify-content:space-between;align-items:flex-start">
+      <div><h2>🛍️ 积分商城</h2><p>管理积分兑换商品，查看兑换记录</p></div>
+      <button class="btn btn-primary" onclick="showNewPointsProduct()">➕ 新增积分商品</button>
+    </div>
+    <div class="stats-row">
+      <div class="stat-card"><div class="num">${activeProducts}</div><div class="label">🛍️ 在售商品</div></div>
+      <div class="stat-card"><div class="num">${totalRedeemed}</div><div class="label">📋 总兑换次数</div></div>
+      <div class="stat-card"><div class="num" style="color:var(--warning)">${totalPointsSpent.toLocaleString()}</div><div class="label">⭐ 累计消耗积分</div></div>
+      <div class="stat-card"><div class="num" style="color:var(--success)">${totalProducts - activeProducts}</div><div class="label">📦 已下架/已售罄</div></div>
+    </div>
+
+    <!-- 积分商品列表 -->
+    <div class="card">
+      <div class="card-header">🎁 积分商品（${list.length}）</div>
+      <div class="card-body">
+        <div style="display:flex;flex-wrap:wrap;gap:8px;margin-bottom:16px">
+          ${['全部','饮品券','实物','周边'].map(c => `
+            <button class="btn btn-sm ${(pointsMallFilter === c || (pointsMallFilter === '' && c === '全部')) ? 'btn-primary' : 'btn-outline'}"
+              onclick="pointsMallFilter='${c === '全部' ? '' : c}';renderPointsMall()">${c}</button>
+          `).join('')}
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead><tr>
+              <th></th><th>商品名称</th><th>所需积分</th><th>库存</th><th>已兑换</th><th>每人限兑</th><th>分类</th><th>状态</th><th>操作</th>
+            </tr></thead>
+            <tbody>
+              ${list.filter(p => !pointsMallFilter || p.category === pointsMallFilter).map(p => `
+                <tr>
+                  <td style="font-size:24px">${p.image}</td>
+                  <td><strong>${p.name}</strong></td>
+                  <td><strong style="color:var(--warning)">⭐ ${p.points.toLocaleString()}</strong></td>
+                  <td style="color:${p.stock <= 10 ? 'var(--danger)' : 'inherit'}">${p.stock}</td>
+                  <td>${p.redeemed}</td>
+                  <td>${p.limitPerUser > 0 ? '限 ' + p.limitPerUser + ' 次' : '<span style="color:var(--text3)">不限</span>'}</td>
+                  <td><span class="tag" style="background:var(--accent-bg);color:var(--primary)">${p.category}</span></td>
+                  <td><span class="tag ${p.status === '上架' ? 'tag-active' : 'tag-expired'}">${p.status}</span></td>
+                  <td>
+                    <button class="btn btn-sm btn-outline" onclick="editPointsProduct('${p.id}')">编辑</button>
+                    <button class="btn btn-sm ${p.status === '上架' ? 'btn-danger' : 'btn-primary'}" onclick="togglePointsProduct('${p.id}')">${p.status === '上架' ? '下架' : '上架'}</button>
+                    <button class="btn btn-sm btn-danger" onclick="deletePointsProduct('${p.id}')" style="margin-left:4px">删除</button>
+                  </td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- 兑换记录 -->
+    <div class="card">
+      <div class="card-header">📋 兑换记录（${MOCK.pointsRedemptions.length}）</div>
+      <div class="card-body">
+        <div class="table-wrap">
+          <table>
+            <thead><tr><th>会员</th><th>手机号</th><th>兑换商品</th><th>消耗积分</th><th>时间</th><th>状态</th></tr></thead>
+            <tbody>
+              ${MOCK.pointsRedemptions.slice().reverse().map(r => `
+                <tr>
+                  <td><strong>${r.member}</strong></td>
+                  <td style="color:var(--text3)">${r.phone}</td>
+                  <td>${r.product}</td>
+                  <td><strong style="color:var(--warning)">⭐ ${r.points}</strong></td>
+                  <td style="color:var(--text3)">${r.date}</td>
+                  <td><span class="tag ${r.status === '已完成' ? 'tag-active' : r.status === '已发货' ? 'tag-shipped' : 'tag-pending'}">${r.status}</span></td>
+                </tr>
+              `).join('')}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  `;
+}
+
+// 新增积分商品
+function showNewPointsProduct() {
+  openModal(`
+    <h3 style="margin-bottom:8px">➕ 新增积分商品</h3>
+    <p style="font-size:12px;color:var(--text3);margin-bottom:20px">设置积分兑换商品信息</p>
+    <div class="form-row">
+      <div class="form-group"><label>🏷️ 商品名称 *</label><input id="npmName" placeholder="如：免费饮品券" /></div>
+      <div class="form-group"><label>⭐ 所需积分 *</label><input id="npmPoints" type="number" placeholder="如：500" /></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>📦 库存</label><input id="npmStock" type="number" value="100" /></div>
+      <div class="form-group"><label>🔒 每人限兑</label>
+        <input id="npmLimit" type="number" value="1" placeholder="0=不限" />
+        <div style="font-size:11px;color:var(--text3);margin-top:2px">0 表示不限制，每人可多次兑换</div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>📂 分类</label>
+        <select id="npmCategory" style="padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;outline:none;background:#fff;width:100%">
+          <option value="饮品券">饮品券</option>
+          <option value="实物">实物</option>
+          <option value="周边">周边</option>
+        </select>
+      </div>
+    </div>
+    <div class="form-group"><label>🎨 图标</label>
+      <select id="npmImage" style="padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;outline:none;background:#fff;width:100%">
+        <option value="☕">☕ 咖啡</option>
+        <option value="🫘">🫘 咖啡豆</option>
+        <option value="🥤">🥤 杯子</option>
+        <option value="👜">👜 帆布袋</option>
+        <option value="🎁">🎁 礼盒</option>
+        <option value="🧪">🧪 新品</option>
+        <option value="🌤️">🌤️ 拼配</option>
+      </select>
+    </div>
+    <div class="form-group"><label>📝 商品描述</label><textarea id="npmDesc" rows="3" placeholder="兑换商品描述..." style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;outline:none;resize:vertical"></textarea></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">取消</button>
+      <button class="btn btn-primary" onclick="saveNewPointsProduct()">💾 保存</button>
+    </div>
+  `);
+}
+
+function saveNewPointsProduct() {
+  const name = document.getElementById('npmName')?.value.trim();
+  const points = Number(document.getElementById('npmPoints')?.value);
+  if (!name) { showToast('请输入商品名称', 'error'); return; }
+  if (!points || points < 1) { showToast('请输入有效积分值', 'error'); return; }
+  pointsMallIdCounter++;
+  MOCK.pointsMall.push({
+    id: 'PM' + pointsMallIdCounter,
+    name,
+    points,
+    stock: Number(document.getElementById('npmStock')?.value || 100),
+    redeemed: 0,
+    limitPerUser: Math.max(0, Number(document.getElementById('npmLimit')?.value || 0)),
+    image: document.getElementById('npmImage')?.value || '🎁',
+    desc: document.getElementById('npmDesc')?.value || '',
+    status: '上架',
+    createdAt: new Date().toISOString().slice(0,10),
+    category: document.getElementById('npmCategory')?.value || '实物',
+  });
+  closeModal();
+  renderPointsMall();
+  showToast('✅ 积分商品「' + name + '」已创建', 'success');
+}
+
+function editPointsProduct(id) {
+  const p = MOCK.pointsMall.find(x => x.id === id);
+  if (!p) return;
+  openModal(`
+    <h3 style="margin-bottom:8px">编辑积分商品</h3>
+    <p style="font-size:12px;color:var(--text3);margin-bottom:20px">${p.name}</p>
+    <div class="form-row">
+      <div class="form-group"><label>🏷️ 商品名称</label><input id="epmName" value="${p.name}" /></div>
+      <div class="form-group"><label>⭐ 所需积分</label><input id="epmPoints" type="number" value="${p.points}" /></div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>📦 库存</label><input id="epmStock" type="number" value="${p.stock}" /></div>
+      <div class="form-group"><label>🔒 每人限兑</label>
+        <input id="epmLimit" type="number" value="${p.limitPerUser || 0}" placeholder="0=不限" />
+        <div style="font-size:11px;color:var(--text3);margin-top:2px">0 表示不限制，每人可多次兑换</div>
+      </div>
+    </div>
+    <div class="form-row">
+      <div class="form-group"><label>📂 分类</label>
+        <select id="epmCategory" style="padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;outline:none;background:#fff;width:100%">
+          ${['饮品券','实物','周边'].map(c => `<option value="${c}" ${c === p.category ? 'selected' : ''}>${c}</option>`).join('')}
+        </select>
+      </div>
+    </div>
+    <div class="form-group"><label>🎨 图标</label>
+      <select id="epmImage" style="padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;outline:none;background:#fff;width:100%">
+        ${['☕','🫘','🥤','👜','🎁','🧪','🌤️'].map(ico => `<option value="${ico}" ${ico === p.image ? 'selected' : ''}>${ico}</option>`).join('')}
+      </select>
+    </div>
+    <div class="form-group"><label>📝 商品描述</label><textarea id="epmDesc" rows="3" style="width:100%;padding:10px 12px;border:1px solid var(--border);border-radius:8px;font-size:13px;outline:none;resize:vertical">${p.desc}</textarea></div>
+    <div class="modal-actions">
+      <button class="btn btn-outline" onclick="closeModal()">取消</button>
+      <button class="btn btn-primary" onclick="saveEditPointsProduct('${id}')">💾 保存</button>
+    </div>
+  `);
+}
+
+function saveEditPointsProduct(id) {
+  const p = MOCK.pointsMall.find(x => x.id === id);
+  if (!p) return;
+  p.name = document.getElementById('epmName')?.value || p.name;
+  p.points = Number(document.getElementById('epmPoints')?.value || p.points);
+  p.stock = Number(document.getElementById('epmStock')?.value || p.stock);
+  p.limitPerUser = Math.max(0, Number(document.getElementById('epmLimit')?.value || 0));
+  p.category = document.getElementById('epmCategory')?.value || p.category;
+  p.image = document.getElementById('epmImage')?.value || p.image;
+  p.desc = document.getElementById('epmDesc')?.value || p.desc;
+  closeModal();
+  renderPointsMall();
+  showToast('✅ 积分商品已更新', 'success');
+}
+
+function togglePointsProduct(id) {
+  const p = MOCK.pointsMall.find(x => x.id === id);
+  if (!p) return;
+  p.status = p.status === '上架' ? '下架' : '上架';
+  renderPointsMall();
+  showToast(p.status === '上架' ? '✅ 已上架' : '✅ 已下架', 'success');
+}
+
+function deletePointsProduct(id) {
+  if (!confirm('确定删除此积分商品？')) return;
+  MOCK.pointsMall = MOCK.pointsMall.filter(p => p.id !== id);
+  renderPointsMall();
+  showToast('✅ 已删除', 'success');
 }
 
 // ===== INIT =====
